@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Distance</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Anastasios Panagiotelis" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Distance
+## High Dimensional Data Analysis
+### Anastasios Panagiotelis
+### Lecture 3
+
+---
+
+
+class: inverse, center, middle
+
+# Why distance?
+
+
+
+---
+
+# Why distance?
+ 
+- Many problems that involve thinking about how *similar* or dissimilar two observations are.  For example:&lt;!--D--&gt;
+--
+
+  + May use the same marketing strategy for *similar* demographic groups.
+  + May lend money to applicants who are *similar* to those who pay debts back.&lt;!--D--&gt;
+--
+
+- Arguably the most important concept in data analysis is *distance*
+
+---
+
+# Simple example
+ 
+- Consider 3 individuals:&lt;!--D--&gt;
+--
+
+  + Mr Orange: 37 years of age earns $75k a year
+  + Mr Red: 31 years of age earns $67k a year
+  + Mr Blue: 30 years of age earns $68k a year&lt;!--D--&gt;
+--
+
+- Which two are the most similar?
+
+---
+
+# On a scatterplot
+ 
+
+&lt;img src="Distance_files/figure-html/scatter-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Distance as a number
+ 
+- It is easy to think about three individuals but what if there are thousands of individuals?&lt;!--D--&gt;
+--
+
+  + In this case it will be useful to attach some number to the distance between pairs of individuals&lt;!--D--&gt;
+--
+
+  + We will do it with a simple application of Pythagoras' theorem.
+
+---
+  
+# Finding the Distance
+ 
+
+&lt;img src="Distance_files/figure-html/pytha-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythb-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythc-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythd-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythe-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythf-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythg-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+  
+&lt;img src="Distance_files/figure-html/pythh-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="Distance_files/figure-html/pythi-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Euclidean distance
+ 
+- In general there are more than two variables.&lt;!--D--&gt;
+--
+
+- Is there a way to apply our intuition in 2 dimensions to higher dimensions?&lt;!--D--&gt;
+--
+
+  + Pythagoras' theorem can be *generalised* to higher dimensions.&lt;!--D--&gt;
+--
+
+  + This results in a concept of distance called *Euclidean distance*.
+
+---
+  
+# Euclidean distance
+ 
+
+We measure `\(p\)` variables for two observations: `\(x_{j}\)` is the measurement of variable `\(j\)` for observation `\({\mathbf x}\)`, `\(y_{j}\)` is the measurement of variable `\(j\)` for observation `\({\mathbf y}\)`.  *Euclidean* distance between `\({\mathbf x}\)` and `\({\mathbf y}\)` is:
+
+`$$D\left({\mathbf x},{\mathbf y}\right)=\sqrt{\sum\limits_{j=1}^p \left(x_{j}-y_{j}\right)^2}$$`
+
+---
+
+# Vectors
+
+- Notice that `\({\mathbf x}\)` and `\({\mathbf y}\)` are examples of **vectors**.
+--
+
+- For example `\({\mathbf x}=\begin{pmatrix}x_1\\x_2\end{pmatrix}\)` where `\(x_1\)` is age and `\(x_2\)` is income.
+--
+
+- We can think of a data point as 
+--
+
+  + A vector of attributes or measurements 
+--
+
+  + A point in space 
+--
+
+- These are the same thing.
+
+---
+
+# Other kinds of distance
+ 
+- We will nearly always use Euclidean Distance in this unit, however there are other ways of understanding distance 
+- One example is the *Manhattan Distance* also known as block distance.
+
+`$$D\left({\mathbf x},{\mathbf y}\right)=\sum\limits_{j=1}^p \left|x_{j}-y_{j}\right|$$`
+
+---
+
+# Manhattan Distance
+ 
+
+![Manhattan Distance](ManhattanDistance.png)
+
+---
+
+# Distance and Standardising data
+ 
+- We must be careful about the units of measurement.&lt;!--D--&gt;
+--
+
+- Euclidean (and Manhattan) distance change for variables measured in *different units*.&lt;!--D--&gt;
+--
+
+- For this reason, it is common to calculate distance after the *standardising* data.&lt;!--D--&gt;
+--
+
+- If the variables are all measured in the same units, then this standardisation is unecessary.&lt;!--D--&gt;
+--
+
+- Some distances are not sensitive to units of measurement (e.g. Mahalanobis Distance)
+
+---
+
+# Distance in R
+ 
+- R has its own special object for distances known as a `dist` object&lt;!--D--&gt;
+--
+
+- It can be obtained using the `dist()` function&lt;!--D--&gt;
+--
+
+- We are going to find Euclidean distances between the beers in the beers dataset. Use:&lt;!--D--&gt;  
+--
+
+  + Only beers with price greater than $4.50
+  + Only numeric variables.
+  + Standardised data
+  + Use the function `dist` to get the distances.
+---
+
+# Load packages and data
+ 
+
+
+```r
+library(dplyr)
+Beer&lt;-readRDS('Beer.rds')
+```
+
+---
+
+# Find Distances
+ 
+
+
+```r
+Beer%&gt;%filter(price&gt;4.5)%&gt;% #Only expensive Beers
+  select_if(is.numeric)%&gt;% #Only numeric variables
+  scale%&gt;%
+  dist-&gt;d
+```
+
+
+&lt;table class="table" style="font-size: 18px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.4298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.8333 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1632 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1950 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.4298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.3009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.8076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6260 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.8333 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.3009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.1482 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.2339 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.1632 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.8076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.1482 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.3188 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.1950 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6260 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.2339 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.3188 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Labels
+
+- Only numeric variables were used to compute distances. 
+- The names of the beers are not attached to the `dist` object.
+- This can be achived by assigning the beer names to `attributes(d)$Labels`
+- Here `d` is the `dist` object.
+
+---
+
+# Use Beer Names
+
+
+```r
+Beer%&gt;%filter(price&gt;4.5)%&gt;% #Only expensive Beers
+  pull(beer)-&gt; #Get beer names
+  attributes(d)$Labels #"Attach" them to dist object
+```
+&lt;table class="table" style="font-size: 18px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Anchor Steam          &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Becks                 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Heineken              &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Kirin                 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; St Pauli Girl         &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anchor Steam &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.4298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.8333 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1632 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1950 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Becks &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.4298 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.3009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.8076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6260 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Heineken &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.8333 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.3009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.1482 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.2339 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Kirin &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1632 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.8076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.1482 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.3188 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; St Pauli Girl &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.1950 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6260 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.2339 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.3188 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Your Turn
+ 
+- Compute the distance without standardising the data.&lt;!--D--&gt;
+--
+
+- Compute the Manhattan distance for standardised data.&lt;!--D--&gt;
+--
+
+- Compute the Manhattan distance for unstandardised data.
+
+---
+
+class:inverse, middle, center
+
+# Non-Metric
+
+---
+
+# Non-metric Data
+ 
+- Can we define distance when the variables are non metric?&lt;!--D--&gt;
+--
+
+- The answer is yes!&lt;!--D--&gt;
+--
+
+- We will discuss two approaches:&lt;!--D--&gt; 
+--
+
+  + Jaccard Similarity/ Distance
+  + Dummy Variables
+
+---
+  
+# First a motivation
+ 
+- Many people use music streaming services like Spotify.  &lt;!--D--&gt;
+--
+
+- One of the attractions of these services is they they recommend artists based on the favourite artists of other users who have similar taste in music.&lt;!--D--&gt;
+--
+
+- The data in this case is in the form of a list of favourite artists.
+
+---
+ 
+# Distance in musical taste
+
+- Suppose there are three customers with the following favourite artists&lt;!--D--&gt;
+--
+
+  + Customer A: Maroon 5, Ariana Grande, Ed Sheeran, Cardi B
+  + Customer B: Maroon 5, Ed Sheeran, BTS
+  + Customer C: Cardi B, Drake, Future&lt;!--D--&gt;
+--
+
+- How do we measure which customers have similar taste and which have different taste?
+
+---
+
+# Jaccard Similarity and Distance
+ 
+- Jaccard similarity gives us a measure of how close two *sets* are, in this case the set of each customers favourite musician.  The formula is
+`$$J(A,B)=\frac{|A\cap B|}{|A\cup B|}$$`
+- Where `\(|A\cap B|\)` is the number of elements in both set A and set B and `\(|A\cup B|\)` is the number of elements in either set A or set B.
+
+---
+
+# Jaccard Similarity
+
+- In our example&lt;!--D--&gt;
+--
+
+  + `\(A\cap B = \left\{\mbox{Maroon 5, Ed Sheeran}\right\}\)` 
+  + `\(|A\cap B|=2\)`
+  + `\(\begin{align}A\cup B =&amp; \{\mbox{Maroon 5, Ariana Grande,}\\&amp; \mbox{Ed Sheeran, Cardi B, BTS}\}\end{align}\)` 
+  + `\(|A\cup B|=5\)`&lt;!--D--&gt;
+--
+
+- The Jaccard similarity will be `\(J=2/5=0.4\)`.  The Jaccard *distance* is `\(d_J=1-J=1-0.4=0.6\)`
+
+---
+
+# Using dummy variables
+ 
+- Alternatively the same data can be coded using dummy variables:&lt;!--D--&gt;
+--
+
+  + `\(X_{j}=1\)` if artist `\(j\)` is a favourite of customer `\(x\)`
+  + `\(X_{j}=0\)` otherwise&lt;!--D--&gt;
+--
+
+- The usual distance measures such as Euclidean or Manhattan distance can then be used.
+
+---
+
+# Conclusions
+ 
+- That concludes the topic on distance.&lt;!--D--&gt;
+--
+
+- This is relevant to the following topics&lt;!--D--&gt;
+--
+
+  + Cluster Analysis&lt;!--D--&gt;
+--
+
+  + Multidimensional Scaling (MDS)&lt;!--D--&gt;
+--
+
+- Now one final exercise
+
+---
+
+# Distances between tweets
+ 
+
+- Find someone on Twitter or a similar social media site
+  + Find the first two tweets
+  + Think of a way to compute a Jaccard distance between their tweets
+- Hint: Think of the words used in the tweet as a *set*
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

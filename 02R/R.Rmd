@@ -1,0 +1,634 @@
+---
+title: "Getting Started with R"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 2"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+class: inverse, center, middle
+
+# Basics
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+rm(list=ls())
+```
+
+---
+
+
+# The R project
+
+- In this unit we use the software package R.
+--
+
+- R is one of the the most popular software tool for professionals in the fields of Business Analytics/Data Science.
+
+---
+
+# History of R
+
+- R is based on earlier statistical software called 'S' which was developed at Bell Labs in the 1970s.
+--
+
+- R was initially developed in the early 1990s by two academics at the University of Auckland, Ross Ihaka and Robert Gentlemen. 
+--
+
+- R has grown substantially since then and is now supported the not-for-profit R Foundation
+
+---
+
+# R is Free Software
+
+- R is free in two ways
+  - It doesn't cost any money.
+  - All of the source code of R is available meaning R can be customised, modified, and most importantly extended.
+- R is part of a big Free Software project known as the GNU Project
+
+---
+
+# Downloading R and R Studio
+
+- R can be downloaded [here](http://cloud.r-project.org/)
+--
+
+- Exact details of installing R will depend on whether you use Windows, Mac or Linux.
+--
+
+- A great tool for both new and experienced users of R is *RStudio*.
+--
+
+- It can be downloaded [here](https://www.rstudio.com/products/RStudio/) free of cost.
+--
+
+- If you haven't done so already try to download R and R Studio.
+
+---
+
+# Ways to use R
+
+- To keep track of your workflow use a **script**:
+  - Open a new script by typing Ctrl+Shift+N
+  - Run a single line of code by pressing Ctrl+Enter
+  - Run a whole script by pressing Ctrl+Shift+S or Ctrl+Shift+Enter
+- You can save scripts to run them anytime.
+--
+
+- Scripts allow you to keep analysis **replicable** which is important in research and business.
+
+---
+
+# Variables in R
+
+- In R everything is stored in a **variable**. 
+--
+
+- Here the word variable has a slightly different meaning to the usual statistical meaning. 
+--
+
+- In R, think of these as little boxes with names on them.
+--
+
+- We can put a number into these boxes, or words or matrices or entire blocks of data or even other boxes.
+
+---
+
+# Assigning Variables
+
+- How to store the number 1 in a variable `a` and the number 2 in a variable `b`?
+```{r, echo=TRUE}
+a<-1
+b=2
+```
+- Note that you can use either `<-` or `=` to assign variables. 
+
+---
+
+# Seeing results
+
+To see what is stored in a variable
+
+```{r, echo=TRUE}
+print(b)
+str(b)
+```
+
+---
+
+# Character variables
+
+- Text can also be stored in a variable.  
+- Try to store your own name in a variable called *name*.
+```{r, echo=TRUE,eval=TRUE}
+name<-'Anastasios'
+str(name)
+```
+- Use apostrophes so that R does not look for a variable called `Anastasios`.
+
+---
+
+# Workspace
+
+- All variables are kept in the **workspace**.  You can see what is in your workspace by using the command
+
+```{r,echo=TRUE}
+ls()
+```
+
+
+---
+
+# Clear Workspace
+
+- You can clear the workspace using
+
+```{r,eval=FALSE,echo=TRUE}
+rm(list=ls())
+```
+- If you try ls() again the workspace will be empty.  In RStudio you  can also see all the variables in the *Environment* tab.
+--
+
+- It is good practice to start every script with this command so that you do not accidentally use data from a different project.
+
+---
+
+# Working directory
+
+- If you read data stored on your computer, or if you save plots or data then the concept of a **working directory** is important.  
+--
+
+- To check your working directory type
+
+```{r,eval=FALSE,echo=TRUE}
+getwd()
+```
+
+- To change the Working directory use `setwd` 
+
+```{r,eval=FALSE,echo=TRUE}
+setwd("/home/anastasios/Documents")
+```
+
+---
+
+# Basic arithmetic in R
+
+- Basic arithmetic is fairly simple.  Try `a+b`.  Also we will put this in a new variable called `z`.
+
+```{r,echo=TRUE}
+z<-a+b
+str(z)
+```
+
+- To subtract use `-`, to multiply use `*`, to divide `/` and to take powers use `^`.
+
+---
+
+# Functions in R
+
+- Apart from very simple arithmetic, variables in R are manipulated using a **function**.  
+--
+
+- The input goes in parentheses, while the output is assigned to a new variable.  
+--
+
+- For example the function *sqrt* is used to take the square root.  
+
+```{r, eval=TRUE, echo=TRUE}
+rootb<-sqrt(b)
+str(rootb)
+```
+
+---
+
+#Garbage in/Garbage out
+
+What happens when you take a square root of something that is not a number?
+
+```{r, error=TRUE, eval=TRUE,echo=TRUE}
+rootname<-sqrt(name)
+```
+
+Many if not most of the mistakes you make in R occur because you enter the incorrect type of input in a function.
+---
+
+# Getting Help
+
+- If you aren't sure what a function does, use R help.  The easiest way is to simply use the `?`
+
+```{r, echo=TRUE,eval=FALSE}
+?sqrt
+```
+
+- If you want to do something and do not know the name of the relevant function you can search using `??`.  
+--
+
+- Find a function to do logarithms using
+
+```{r, echo=TRUE,eval=FALSE}
+??logarithms
+```
+
+---
+
+# Comments
+
+Anything after a `#` will not be executed by R.
+```{r, error=TRUE, eval=TRUE, echo=TRUE}
+a<-1 # Set the variable a to 1
+#x<-4 This line is not executed 
+str(a)
+str(x)
+```
+Comment multiple lines using Ctrl+Shift+C
+
+---
+
+# Vectors
+
+In stats we have many observations for each variable.  The function `c()` stores these in a **vector**. Suppose we have the following data:
+
+Names  | Drink | Consumption | Satisfaction
+------------- | ------------- | ------------- | ------------- 
+Andrew  | Coke | 50 | 5
+Boris  | Pepsi | 40 | 4
+Cathy  | Coke | 25 | 4
+Diana  | 7Up | 0 | 3
+
+
+---
+
+# Manually inputting data
+
+First let's create the variable Consumption
+```{r, echo=TRUE}
+Consumption<-c(50,40,25,0)
+print(Consumption)
+str(Consumption)
+```
+
+Put values of drink into a variable.
+
+---
+
+# Solution
+
+The solution is
+```{r, echo=TRUE, eval=TRUE}
+Drink<-c('Coke','Pepsi','Coke','7Up')
+print(Drink)
+str(Drink)
+```
+
+---
+
+# Vector
+
+These variables are example of a **vector**.  Sometimes when we apply a function to a vector, we apply the function to each element.
+
+```{r, echo=TRUE}
+logcons<-log(Consumption)
+str(logcons)
+```
+
+
+---
+
+# Vectors
+
+Other functions take a vector as an input and return a single number as the output
+
+```{r, echo=TRUE}
+meancons<-mean(Consumption)
+str(meancons)
+```
+
+---
+
+# Inf and NaN
+
+The values `Inf` and `-Inf` refer to positive and negative infinity.  The value `NaN` stands for not a number and indicates an error.
+
+```{r, echo=TRUE}
+log(-1)
+```
+
+It is important to distinguish `NaN` from `NA`. The latter is used for missing data.
+
+---
+
+# Data Frame
+
+- It is tedious to manually enter large datasets in this way.  You will usually import data from an external file.
+--
+
+- There are many ways to import data.  For files with the `.rds` extension it is easy
+
+```{r, echo=TRUE}
+Beer<-readRDS("Beer.rds")
+```
+
+- Get the location of the file right.  You can also open a file through the *file* tab
+
+---
+
+# Data Frame
+
+- There is only one variable here, the variable *Beer*.  However this is a very special case of variable known as a **Data Frame**.
+--
+
+- A data frame contains other variables.  For example *alcohol* content can be accessed via.
+
+```{r, echo=TRUE}
+str(Beer$alcohol)
+```
+
+---
+
+# Lists
+
+Another object common in R is known as a **list**.  A list can contain completely different variables.
+```{r, echo=TRUE}
+alist<-list(w=name, x=Drink, y=Beer)
+```
+elements of lists are accessed using `[[]]` or `$`
+```{r, echo=TRUE}
+alist[[1]]
+```
+
+---
+
+class: center, inverse middle
+
+# Packages
+
+---
+
+# R Packages
+
+- One of the biggest advantages of R is the use of add-on packages, which are are easily downloaded from an online repository called **CRAN**.  Using a package involves two steps:
+--
+
+  - Downloading and installing the package using the function `install.package`.
+  - Load the package using `library` function
+--
+
+- Both these steps can also be done in RStudio through the *Packages* tab.
+--
+
+- Try install and load the R package `ggplot2`
+
+---
+
+# Package Documentation
+
+- By downloading the package you also download all of the help documentation.
+
+```{r, eval=FALSE,echo=TRUE}
+install.packages('ggplot2')
+```
+To load the package
+```{r,echo=TRUE}
+library(ggplot2)
+```
+
+---
+
+# Graphics in R
+
+- Three different ways to do graphs in R
+  - Base graphics do not require any packages
+  - Trellis graphics (using package lattice)
+  - ggplot2
+--
+
+- In this unit you will mostly be given instruction on using `ggplot2`, however if you have learnt base graphics in another unit and prefer this, then you can use it.
+--
+
+- There are many resources for learning `ggplot2`, including some that are free online.
+
+---
+
+# MT cars dataset
+
+To demonstrate `ggplot2` we use the dataset `mpg`, which contains information on the fuel efficiency of different cars.  This can be loaded into R using the command
+
+```{r,echo=TRUE}
+data(mpg)
+```
+
+It is data that comes together with `ggplot2`.
+
+---
+
+# ggplot object
+
+- To make a plot, the first task is to create a ggplot object.  
+--
+
+- You need to specify the data frame and the **aesthetic**.  
+--
+
+- In a 2D plot we can compare two variables
+--
+
+- To start, think of the aesthetic as the x and y variable.
+--
+
+- Consider a plot to compare the fuel efficiency of a car in the city and on the highway.
+
+---
+
+# Number of Cylinders v MPG
+
+```{r,fig.align='center',echo=TRUE,fig.height=6}
+ggplot(mpg,aes(x=cty,y=hwy))
+```
+
+---
+
+# Geometry
+
+- This should produce some axes and labels but there is no plot yet.
+--
+
+- To produce a plot we need to tell R what type of plot we want.
+--
+
+- In the language of ggplot this is called a **geometry**
+--
+
+- For a scatter plot the geometry is `geom_point()`.
+
+---
+
+# Scatterplot in R
+
+```{r,fig.align='center',echo=TRUE,fig.height=6}
+ggplot(mpg,aes(x=cty,y=hwy))+geom_point()
+```
+
+---
+
+# Other aesthetics
+
+We can think of colour as a third aesthetic
+
+```{r,fig.height=4,fig.align='center',echo=TRUE}
+ggplot(mpg,aes(x=cty,y=hwy,col=cyl))+geom_point()
+```
+
+---
+
+# With a categorical variable
+
+```{r,fig.align='center',echo=TRUE, fig.height=6}
+ggplot(mpg,aes(x=cty,y=hwy,col=drv))+geom_point()
+```
+
+---
+
+# Quicker plots
+
+A useful function in `ggplot2` is to use `qplot` which will try to guess the plot you want.  Try these examples  
+
+```{r,eval=FALSE,fig.align='center',echo=TRUE}
+qplot(x=cty,y=hwy,data=mpg)
+qplot(x=cty,data=mpg)
+```
+
+---
+
+# Exporting graphics
+
+- You can export graphics using the *Export* tab in the *Plot* tab in Rstudio.  
+--
+
+- Many different file formats are available. As an alternative you can do the following:
+
+```{r,eval=FALSE,echo=TRUE}
+pdf('myplot.pdf')
+qplot(x=cty,data=mpg)
+dev.off()
+```
+
+- Other file formats such an png or jpeg can be used instead of pdf.
+
+---
+
+# Data Manipulation
+
+- There are several ways to manipulate data, but a particularly useful and easy package to use is called **dplyr**.
+--
+
+- We can exclude observations using the `filter` function.
+--
+
+- To really understand how to use this function it helps to know about **logical operators** (try `?Logic`) and **relational operators** (try `?Comparison`).
+--
+
+- We will do a few simple examples here
+
+---
+
+# Using dplyr
+
+To create a new data frame that only includes 4 wheel drives
+
+```{r,message=FALSE,echo=TRUE}
+library(dplyr)
+mpg_4wd<-filter(mpg,drv=='4')
+```
+
+To exclude all 4 wheel drives
+
+```{r,echo=TRUE}
+mpg_no4wd<-filter(mpg,drv!='4')
+```
+
+---
+
+# Two conditions
+
+Suppose we only want to consider cars that are 4 wheel drives **and** can drive more than 15 miles per gallon on the highway
+
+```{r,echo=TRUE}
+mpg_4wd_hwyg15<-filter(mpg,(drv=='4')&(hwy>15))
+```
+
+Or those that are either 4 wheel drives **or** can drive less than 15 miles per gallon in the city
+
+```{r,echo=TRUE}
+mpg_4wd_ctyl15<-filter(mpg,(drv=='4')|(cty<15))
+```
+
+---
+
+# Without dplyr
+
+- This sort of data manipulation can be done without `dplyr` but is more verbose.  
+- For example the last line would be
+```{r,echo=TRUE}
+mpg_4wd_ctyl15<-mpg[((mpg$drv=='4')|(mpg$cty<15)),]
+```
+- Both give the same result, use whichever you prefer.
+
+---
+
+# Summarise Fuction
+
+- Suppose we want the mean and standard deviation of the (filtered) data.
+
+```{r,echo=TRUE}
+mpg_4wd_ctyl15<-filter(mpg,(drv=='4')|(cty<15))
+mean_sd_hwy<-summarise(mpg_4wd_ctyl15,mean(hwy),sd(hwy))
+mean_sd_hwy
+```
+
+
+---
+
+# Pipes
+
+- Pipes from the *magrittr* package make this easier.
+
+```{r,echo=TRUE}
+filter(mpg,(drv=='4')|(cty<15))%>%
+  summarise(mean(hwy),sd(hwy))%>%
+  print
+```
+
+
+---
+
+# Conclusion
+
+- This lecture has given you a foundation in R
+--
+
+- You can use R to do much more including collecting data off the web, cleaning the data, fitting models to the data, creating web applications, or even creating documents (these slides were created in RStudio).
+--
+
+- This can be daunting, but remember the best thing about R is that there are lots of ways to teach yourself R.

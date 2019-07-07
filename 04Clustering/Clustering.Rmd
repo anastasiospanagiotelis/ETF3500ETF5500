@@ -1,0 +1,1812 @@
+---
+title: "Cluster Analysis"
+author: "High Dimensional Data Analysis"
+date: "Lecture 4"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+class: inverse, center, middle
+
+# Why Clustering?
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo=FALSE , fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+require(animation)
+require(deldir)
+require(SDMTools)
+```
+
+---
+
+# Market Segmentation
+
+- A common strategy in marketing is to analyse different segments of the market.<!--D--> 
+--
+
+- Sometimes the purpose is to segment based on a single variable:<!--D--> 
+--
+
+  + Gender<!--D--> 
+--
+
+  + Age<!--D--> 
+--
+
+  + Income<!--D--> 
+--
+
+- An alternative is to segment using all available information
+
+---
+
+# A 2-dimensional example
+
+- Consider that data is collected for customers’ *age* and *income*.<!--D-->
+--
+
+- These can be plotted on a scatterplot to see if any obvious
+segments or clusters are present.<!--D-->
+--
+
+- The following data are not real data but are simulated
+
+---
+
+# Age v Income
+
+```{r,echo=FALSE,fig.align='center'}
+library(mvtnorm)
+mu1<-c(35,60)
+mu2<-c(55,100)
+sigma<-matrix(c(25,-30,-30,49),2,2)
+x1<-rmvnorm(100,mu1,sigma)
+x2<-rmvnorm(50,mu2,sigma)
+x<-rbind(x1,x2)
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='Age (Years)',ylab='Income ($000)')
+```
+
+---
+
+# Obvious clusters
+
+```{r,echo=FALSE,fig.align='center'}
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='Age (Years)',ylab='Income ($000)')
+points(x1[,1],x1[,2],col='red',pch=20,cex=3)
+```
+
+---
+
+# Only income
+
+```{r,echo=FALSE,fig.align='center'}
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='Age (Years)',ylab='Income ($000)')
+points(x2[which.min(x2[,2]),1],x2[which.min(x2[,2]),2],col='red',pch=20,cex=3)
+points(x1[which.max(x1[,2]),1],x1[which.max(x1[,2]),2],col='red',pch=20,cex=3)
+```
+
+---
+
+# Only age
+
+
+```{r,echo=FALSE,fig.align='center'}
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='Age (Years)',ylab='Income ($000)')
+points(x2[which.min(x2[,1]),1],x2[which.min(x2[,1]),2],col='red',pch=20,cex=3)
+points(x1[which.max(x1[,1]),1],x1[which.max(x1[,1]),2],col='red',pch=20,cex=3)
+```
+
+---
+
+# Summary
+
+- Using just one variable can be misleading.<!--D-->
+--
+
+- When there are more than 2 variables just looking at a scatterplot doesn’t work.<!--D-->
+--
+
+- Instead algorithms can be used to find the clusters in a sensible way, even in high dimensions.
+
+```{r,include=FALSE,echo=FALSE, message=FALSE}
+library(tibble)
+library(magrittr)
+```
+
+---
+
+# Real Example 1
+
+- The dataset mtcars is an R dataset that originally came from a 1974 magazine called Motor Trends<!--D-->
+--
+
+- There are 32 cars which are measured on 11 variables such as miles per gallon, number of cylinders, horsepower and weight.<!--D-->
+--
+
+- It can be loaded into the workspace using the command `data(mtcars)`
+
+---
+
+# MT Cars data
+
+```{r,echo=FALSE}
+library(knitr)
+data('mtcars')
+mtcars%>%rownames_to_column(var="MakeModel")->mtcarsd
+kable(head(mtcarsd,9))%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+```
+
+---
+
+# Dendrogram
+
+```{r, echo=FALSE,fig.align='center'}
+CarsScaled<-scale(mtcars)
+CarsDistance<-dist(CarsScaled,method = "euclidean")
+CarsCluster<-hclust(CarsDistance,method = "complete")
+plot(CarsCluster,cex=1.5)
+rect.hclust(CarsCluster,k=2)
+MemberCluster<-cutree(CarsCluster,k=2)
+
+```
+
+---
+
+# Real Example 2
+
+- A business to business example with 440 customers of a wholesaler<!--D-->
+--
+
+- The variables are annual spend in the following 6 categories:<!--D-->
+--
+
+  + Fresh food
+  + Milk
+  + Groceries
+  + Frozen
+  + Detergents/Paper
+  + Delicatessen<!--D-->
+--
+
+- These data are available on Moodle.
+
+---
+
+# Cluster centroids
+
+After clustering we get the following cluster means.
+
+```{r,echo=FALSE}
+Wholesale<-readRDS('Wholesale.rds')
+WholesaleCluster<-kmeans(Wholesale,3)
+WholesaleCluster$centers%>%round%>%as.data.frame()%>%rownames_to_column(var="Cluster")%>%kable%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="200px")
+```
+The clusters may represent hotels, supermarkets and cafes.
+
+---
+
+# Approaches to Clustering
+
+- Hierarchical: Path of solutions:<!--D-->
+--
+
+  + Agglomerative: At start every observation is a cluster. Merge the most similar clusters step by step until all observations in one cluster.<!--D-->
+--
+
+  + Divisive: At start all observations in one cluster. Split step by step until each observation is in its own cluster.<!--D-->
+--
+
+- Non-hierarchical: Choose the number of clusters ex ante. No merging or splitting.
+
+---
+
+# Our focus
+
+- Our main focus will be on agglomerative hierarchical methods.<!--D-->
+--
+
+- Divisive agglomerative methods are very slow and we do not cover them at all.<!--D-->
+--
+
+- We consider one example of a non-hierarchical method known as the **k-means** algorithm.
+
+---
+
+# Definition of Clustering
+
+- Oxford Dictionary: A group of similar things or people positioned or occurring closely together<!--D-->
+--
+
+- Collins Dictionary: A number of things growing, fastened, or occurring close together<!--D-->
+--
+
+- Note the importance of closeness or distance.  We need two concepts of distance<!--D-->
+--
+
+  1. Distance between **observations**.
+  2. Distance between **clusters**.
+
+---
+
+# A distance between clusters
+
+- Let $\mathcal{A}$ be a cluster with observations $\left\{{\mathbf a}_1, {\mathbf a}_2, \ldots, {\mathbf a}_I \right\}$ and $\mathcal{B}$ be a cluster with points $\left\{{\mathbf b}_1, {\mathbf b}_2, \ldots, {\mathbf b}_J \right\}$.
+--
+
+- The calligraphic script $\mathcal{A}$ or $\mathcal{B}$ denotes a cluster with possibly more than one point.  
+--
+
+- The bold scipt ${\mathbf a}_i$ or ${\mathbf b}_j$ denotes a vector of attributes (e.g. age and income) for each observation.
+--
+
+- Rather than vectors, it is much easier to think of each observation as a point in a scatterplot. 
+
+---
+
+#Single Linkage
+
+One way of defining the distance between clusters $\mathcal{A}$ and $\mathcal{B}$ is
+
+$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\min}D({\mathbf a}_i,{\mathbf b}_j)$$
+
+This is called **single linkage** or **nearest neighbour**.
+
+---
+
+# Single Linkage
+
+```{r slinkp,echo=FALSE,fig.align='center'}
+
+set.seed(4)
+mu1<-c(15,30)
+mu2<-c(85,120)
+sigma<-matrix(c(25,30,30,49),2,2)
+x1<-rmvt(30,df=5,sigma)+mu1
+x2<-rmvnorm(25,mu2,sigma)
+x<-rbind(x1,x2)
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+
+```
+
+---
+
+# Single Linkage
+
+
+```{r slink,echo=FALSE,fig.align='center'}
+
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+points(x2[,1],x2[,2],col='red',pch=20,cex=3)
+lines(c(x1[12,1],x2[6,1]),c(x1[12,2],x2[6,2]),lwd=4)
+text(mean(c(x1[12,1],x2[6,1])),mean(c(x1[12,2],x2[6,2])),labels='68.83',pos=4,cex=3)
+```
+
+---
+
+# Complete Linkage
+
+Another way of defining the distance between $\mathcal{A}$ and $\mathcal{B}$ is
+
+$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\max}D({\mathbf a}_i,{\mathbf b}_j)$$
+
+This is called **complete linkage** or **furthest neighbour**.
+
+
+---
+
+# Complete Linkage
+
+```{r clinkp,echo=FALSE,fig.align='center'}
+
+set.seed(4)
+mu1<-c(15,30)
+mu2<-c(85,120)
+sigma<-matrix(c(25,30,30,49),2,2)
+x1<-rmvt(30,df=5,sigma)+mu1
+x2<-rmvnorm(25,mu2,sigma)
+x<-rbind(x1,x2)
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+
+```
+
+---
+
+# Complete Linkage
+
+
+```{r clink,echo=FALSE,fig.align='center'}
+
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+points(x2[,1],x2[,2],col='red',pch=20,cex=3)
+lines(c(x1[23,1],x2[4,1]),c(x1[23,2],x2[4,2]),lwd=4)
+text(mean(c(x1[23,1],x2[4,1])),mean(c(x1[23,2],x2[4,2])),labels='160.01',pos=4,cex=3)
+```
+
+---
+
+# Complete linkage
+
+- In the previous example **all** points in the red cluster are within a distance of 160.01 of **all** points in the blue cluster.
+- This is why it is called **complete** linkage.
+
+---
+
+# A simple example
+
+- Over the next couple of slides we will go through the entire process of agglomerative clustering<!--D-->
+--
+
+  + We will use Euclidean distance to define distance between points<!--D-->
+--
+
+  + We will use single linkage to define the distance between clusters<!--D-->
+--
+
+- There are only five observations and two variables
+
+---
+
+# Agglomerative clustering
+
+```{r,echo=FALSE,fig.align='center',message=FALSE,warning=FALSE}
+library(xtable)
+library(plotrix)
+m<-2
+n<-5
+
+set.seed(5)
+x<-matrix(runif(n*m),n,m)
+lets<-LETTERS[seq(1,n,)]
+row.names(x)<-lets
+dd<-dist(x,diag=TRUE)
+cols<-rainbow(5)
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+lines(c(x[1,1],x[4,1]),c(x[1,2],x[4,2]),lwd=3)
+#points(x[4,1],x[4,2],col=cols[1],pch=18,cex=1)
+#text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=1)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+lines(c(x[1,1],x[4,1]),c(x[1,2],x[4,2]),lwd=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+lines(c(x[2,1],x[3,1]),c(x[2,2],x[3,2]),lwd=3)
+#points(x[2,1],x[2,2],col=cols[3],pch=18,cex=1)
+#text(x[2,1],x[2,2],labels=lets[4],pos=1,col=cols[3],cex=1)
+#draw.circle(mean(c(x[2,1],x[3,1])),mean(c(x[2,2],x[3,2])),radius=dd[5]/1.9,border=cols[3],lwd=3)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+lines(c(x[2,1],x[3,1]),c(x[2,2],x[3,2]),lwd=3)
+points(x[2,1],x[2,2],col=cols[3],pch=18,cex=3)
+text(x[2,1],x[2,2],labels=lets[2],pos=1,col=cols[3],cex=3)
+#draw.circle(mean(c(x[2,1],x[3,1])),mean(c(x[2,2],x[3,2])),radius=dd[5]/1.9,border=cols[3],lwd=3)
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+#lines(c(x[2,1],x[3,1]),c(x[2,2],x[3,2]),lwd=3)
+points(x[2,1],x[2,2],col=cols[3],pch=18,cex=3)
+text(x[2,1],x[2,2],labels=lets[2],pos=1,col=cols[3],cex=3)
+draw.circle(mean(c(x[2,1],x[3,1])),mean(c(x[2,2],x[3,2])),radius=dd[5]/1.7,border=cols[3],lwd=3)
+
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+#lines(c(x[2,1],x[3,1]),c(x[2,2],x[3,2]),lwd=3)
+points(x[2,1],x[2,2],col=cols[1],pch=18,cex=3)
+text(x[2,1],x[2,2],labels=lets[2],pos=1,col=cols[1],cex=3)
+points(x[3,1],x[3,2],col=cols[1],pch=18,cex=3)
+text(x[3,1],x[3,2],labels=lets[3],pos=1,col=cols[1],cex=3)
+draw.circle(mean(c(x[2,1],x[3,1])),mean(c(x[2,2],x[3,2])),radius=dd[5]/1.7,border=cols[1],lwd=3)
+
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols,main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols,cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+#draw.circle(mean(c(x[1,1],x[4,1])),mean(c(x[1,2],x[4,2])),radius=dd[3]/1.9,border=cols[1],lwd=3)
+#lines(c(x[2,1],x[3,1]),c(x[2,2],x[3,2]),lwd=3)
+points(x[2,1],x[2,2],col=cols[1],pch=18,cex=3)
+text(x[2,1],x[2,2],labels=lets[2],pos=1,col=cols[1],cex=3)
+points(x[3,1],x[3,2],col=cols[1],pch=18,cex=3)
+text(x[3,1],x[3,2],labels=lets[3],pos=1,col=cols[1],cex=3)
+
+
+draw.circle(mean(x[1:4,1]),mean(x[1:4,2]),radius=0.45,border=cols[1],lwd=3)
+
+```
+
+---
+
+# Agglomerative clustering
+
+
+```{r,echo=FALSE,fig.align='center'}
+
+par(bg='gray')
+plot(x[,1],x[,2],col=cols[1],main="Cluster Analysis",pch=18,cex=3,xlim=c(-0,1),ylim=c(-0,1),xlab='',ylab='')
+text(x[,1],x[,2],labels=lets,pos=1,col=cols[1],cex=3)
+points(x[4,1],x[4,2],col=cols[1],pch=18,cex=3)
+text(x[4,1],x[4,2],labels=lets[4],pos=1,col=cols[1],cex=3)
+```
+
+---
+
+# Hierarchical Clustering
+
+- 5-cluster solution A and B and C and D and E
+--
+
+- 4-cluster solution \{A,D\} and B and C and E  
+--
+
+- 3-cluster solution \{A,D\} and \{B, C\} and E
+--
+
+- 2-cluster solution \{A,B, C,D\} and E
+--
+
+- 1-cluster solution \{A,B, C,D E\}
+
+---
+
+# Dendrogram
+
+- The Dendrogram is a useful tool for analysing a cluster solution.<!--D-->
+--
+
+  + Observations are on one axis (usually x)<!--D-->
+--
+
+  + The distance between clusters is on other axis (usually y).<!--D-->
+--
+
+  + From the Dendrogram one can see the order in which the clusters are merged.
+
+---
+
+# Dendrogram
+
+```{r,echo=FALSE,fig.align='center'}
+sl<-hclust(dist(x),method = 'single')
+plot(sl,cex=3)
+```
+
+---
+
+# Interpretation of Dendrogram
+
+- Think of the axis with distance (y-axis) as the measuring a 'tolerance level'<!--D-->
+--
+
+- If the distance between two clusters is within the tolerance they are merged into one cluster.<!--D-->
+--
+
+- As tolerance increases more and more clusters are merged leading to less clusters overall.<!--D-->
+
+---
+
+# Clustering in R
+
+- Clustering in R requires at most 3 steps<!--D-->
+--
+
+  1. Standardise the data if they are in different units (using the function `scale`)<!--D-->
+--
+
+  2. Find the distance between all pairs of observations (using the function `dist`)<!--D-->
+--
+
+  3. Cluster the data using the function `hclust`<!--D-->
+--
+
+- Try this with the `mtcars` dataset. Use Euclidean distance and complete linkage. 
+- Store the result of `hclust` in a variable called CarsCluster.
+
+---
+
+# Clustering in R
+
+```{r,echo=TRUE,eval=TRUE}
+data(mtcars)
+mtcars%>%
+  scale%>%
+  dist%>%
+  hclust(method="complete")->
+  CarsCluster
+```
+
+---
+
+# Dendrogram in R
+
+```{r,echo=TRUE,eval=TRUE,fig.align='center'}
+plot(CarsCluster,cex=0.5)
+```
+
+
+---
+
+# Identifying clusters
+
+```{r,echo=TRUE,eval=TRUE,fig.align='center',fig.height=6.5}
+CarsCluster%>%plot(cex=0.5)
+CarsCluster%>%rect.hclust(k=2)
+```
+
+---
+
+# Dendrogram in R
+
+For an interactive tool try:
+```{r,echo=TRUE,eval=FALSE}
+identify(CarsCluster)
+```
+
+Press the escape key when you are finished.
+
+---
+class: inverse, center, middle
+
+#Choosing the number of clusters
+
+---
+
+# Choosing clusters
+
+- Although hierarchical clustering gives a solution for any number of clusters, ultimately we only want to focus on one of these solutions.
+--
+
+- There is no *correct* number of clusters.  Choosing the number of clusters depends on the context.
+--
+
+- There are however *poor* choices for the number of clusters.
+
+---
+
+# Choosing clusters
+
+- Do not choose too many clusters:
+--
+  
+  + A firm developing a different marketing strategy for each market segment may not have the resources to develop a large number of unique strategies.
+--
+
+- Do not choose too few clusters:
+--
+
+  + If you choose the 1-cluster solution there is no point in doing clustering at all.
+
+
+---
+
+# Using dendrogram
+
+- One criterion is that the number of clusters is stable over a wide range of tolerance.<!--D-->
+--
+
+- The plot on the next slide shows a 3 cluster solution.<!--D-->
+
+---
+
+# Three cluster solution
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+CarsCluster%>%plot(cex=0.5)
+CarsCluster%>%rect.hclust(k=3)
+```
+
+---
+
+# Stability
+
+
+- The tolerance for a three cluster solution is about 5.9. 
+--
+
+- If the tolerance is increased *by a very small amount* then we will have a two cluster solution.
+--
+
+- If the tolerance is decreased *by a very small amount* then we will have a four cluster solution.
+
+---
+
+# Two cluster solution
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+CarsCluster%>%plot(cex=0.5)
+CarsCluster%>%rect.hclust(k=2)
+```
+
+---
+
+
+# Four cluster solution
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+CarsCluster%>%plot(cex=0.5)
+CarsCluster%>%rect.hclust(k=4)
+```
+
+---
+
+# Stability
+
+- In the previous example
+--
+
+  + The three cluster solution in not stable
+--
+
+  + The two and four cluster solutions are stable
+--
+
+- In general look for a long stretch of tolerance, over which the number of clusters does not change.
+  
+
+---
+
+# Extracting the clusters
+
+For a given number of clusters we can create a new variable indicating cluster membership via the `cutree` function.
+
+```{r,echo=TRUE,eval=TRUE}
+mem<-cutree(CarsCluster,2)
+```
+```{r,echo=FALSE,eval=TRUE}
+kable(mem)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="200px", width="300px")
+```
+
+---
+
+# Pros and Cons of Single Linkage
+
+- Pros:
+  + Single linkage is very easy to understand.
+  + Single linkage is a very fast algorithm.<!--D-->
+--
+
+- Cons:
+  + Single linkage is very sensitive to single observations which leads to chaining.
+  + Complete linkage avoids this problem and gives more compact clusters with a similar diameter.
+
+---
+
+# Chaining
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center', warning=FALSE}
+
+RNGversion("2.15.2")
+set.seed(7)
+library(mvtnorm)
+library(stats)
+mu1<-c(5,10)
+mu2<-c(10,5)
+mu3<-c(10,10)
+
+Sigma<-matrix(c(0.5,0.1,0.1,0.5),2,2)
+x1<-rmvt(15,df=10,Sigma)+t(matrix(rep(mu1,15),2,15))
+x2<-rmvt(20,df=8,Sigma)+t(matrix(rep(mu2,20),2,20))
+x3<-rmvt(10,df=5,Sigma)+t(matrix(rep(mu3,10),2,10))
+
+x<-rbind(x1,x2,x3)
+xm<-x[c(1:45),]
+par(bg='gray')
+plot(xm[,1],xm[,2],pch=19,cex=3,main="Data",xlab='',ylab='',asp = 1)
+```
+
+---
+
+# Single Linkage Dendrogram
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+ddm<-dist(xm)
+sls<-hclust(ddm,method = "single")
+
+plot(sls,hang=-1,xlab='',sub='')
+```
+
+---
+
+# Single Linkage
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+
+inds<-cutree(sls,k=3)
+
+par(bg='gray')
+plot(xm[,1],xm[,2],pch=19,cex=3,main="3-cluster solution",xlab='',ylab='',asp = 1)
+points(xm[(inds==1),1],xm[(inds==1),2],pch=19,cex=3,col='red')
+points(xm[(inds==2),1],xm[(inds==2),2],pch=19,cex=3,col='blue')
+points(xm[(inds==3),1],xm[(inds==3),2],pch=19,cex=3,col='green')
+```
+
+---
+
+# Add one observation
+
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+
+x<-rbind(x,c(10,7.5))
+
+dd<-dist(x)
+sls<-hclust(dd,method = "single")
+
+
+par(bg='gray')
+plot(x[,1],x[,2],pch=19,cex=3,main="Data",xlab='',ylab='',asp = 1)
+points(x[46,1],x[46,2],pch=19,cex=3,col='magenta')
+```
+
+---
+
+# New solution
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+inds<-cutree(sls,k=3)
+par(bg='gray')
+plot(x[,1],x[,2],pch=18,main="3-cluster solution",xlab='',ylab='',asp = 1)
+points(x[(inds==1),1],x[(inds==1),2],pch=19,col='red',cex=3)
+points(x[(inds==2),1],x[(inds==2),2],pch=19,col='blue',cex=3)
+points(x[(inds==3),1],x[(inds==3),2],pch=19,col='green',cex=3)
+```
+
+---
+
+# Dendrogram with Chaining
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+
+plot(sls,hang=-1,xlab='',sub='')
+```
+
+---
+
+# Robustness
+
+- In general adding a single observation should not dramtically change the analysis.
+--
+
+- In this instance the new observation was not even an *outlier*.
+--
+
+- A term used for such an observation is an *inlier*.
+--
+
+- Methods that are not affected by single observations are often called **robust**.
+--
+
+- Let's see if complete linkage is *robust* to the inlier.
+
+---
+
+# Complete Linkage
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+cls<-hclust(dd,method = "complete")
+
+indc<-cutree(cls,k=3)
+par(bg='gray')
+plot(x[,1],x[,2],pch=19,cex=3,main="3-cluster solution",xlab='',ylab='',asp = 1)
+points(x[(indc==1),1],x[(indc==1),2],pch=19,cex=3,col='red')
+points(x[(indc==2),1],x[(indc==2),2],pch=19,cex=3,col='blue')
+points(x[(indc==3),1],x[(indc==3),2],pch=19,cex=3,col='green')
+```
+
+---
+
+# Complete Linkage: Dendrogram
+
+```{r,echo=FALSE,eval=TRUE,fig.align='center'}
+
+
+plot(cls,hang=-1,xlab='',sub='')
+```
+
+---
+
+# Disadvantages of CL
+
+- Complete Linkage overcomes *chaining* and is robust to inliers
+--
+
+- However, since the distance between clusters only depends on two observations it can still be sensitive to outliers.<!--D-->
+--
+
+- The following methods are more robust and should be preferred<!--D-->
+--
+
+  + Average Linkage
+  + Centroid Method
+  + Ward’s Method
+
+---
+
+# Average Linkage
+
+The distance between two clusters can be defined so that it is based on all the pairwise distances between the elements of each cluster.
+$$D(\mathcal{A},\mathcal{B})=\frac{1}{|\mathcal{A}||\mathcal{B}|}\sum\limits_{i=1}^{|\mathcal{A}|}\sum\limits_{j=1}^{|\mathcal{B}|}D({\mathbf a}_i,{\mathbf b}_j)$$
+Here $|\mathcal{A}|$ is the number of observations in cluster $\mathcal{A}$ and $|\mathcal{B}|$ is the number of observations in cluster $\mathcal{B}$
+
+---
+
+#Average Linkage
+
+- Average linkage can be called different things<!--D-->
+--
+
+  + Between groups method.
+  + Unweighted Pair Group Method with Arithmetic mean (UPGMA)
+
+---
+
+# Pairwise distances (one obs.)
+
+```{r,echo=FALSE,fig.align='center'}
+set.seed(4)
+mu1<-c(15,30)
+mu2<-c(85,120)
+sigma<-matrix(c(25,30,30,49),2,2)
+x1<-rmvt(30,df=5,sigma)+mu1
+x2<-rmvnorm(25,mu2,sigma)
+x<-rbind(x1,x2)
+
+plot(x[21:35,1],x[21:35,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+points(x2[1:5,1],x2[1:5,2],col='red',pch=20,cex=3)
+for (i in 1:5){
+lines(c(x1[21,1],x2[i,1]),c(x1[21,2],x2[i,2]),lwd=2.5)
+}
+```
+
+---
+
+# All pairwise distances
+
+```{r,echo=FALSE,fig.align='center'}
+
+plot(x[21:35,1],x[21:35,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+points(x2[1:5,1],x2[1:5,2],col='red',pch=20,cex=3)
+for (i in 1:5){
+  for (j in 21:30){
+    lines(c(x1[j,1],x2[i,1]),c(x1[j,2],x2[i,2]),lwd=0.5)
+  }
+}
+```
+
+---
+
+# Centroid Method
+
+- The centroid of a cluster can be defined as the mean of all the
+points in the cluster.<!--D-->
+--
+
+- If $\mathcal{A}$ is a cluster containing the observations ${\mathbf a}$ then the **centroid** of $\mathcal{A}$ is given by.<!--D-->
+--
+
+$${\mathbf{\bar{a}}}=\frac{1}{|\mathcal{A}|}\sum_{\mathbf{a}_i\in\mathcal{A}}\mathbf{a}_i$$<!--D-->
+--
+
+- The distance between two clusters can then be defined as the distance between the respective centroids.
+
+---
+
+# Vector mean
+
+- Recall that $\mathbf{a}_i$ is a vector of attributes, e.g income and age.
+--
+
+- In this case $\bar{\mathbf{a}}$ is also a vector of attributes.
+--
+
+- Each element of $\bar{\mathbf{a}}$ is the mean of a different attribute, e.g. mean income, mean age.
+
+---
+
+# Centroid method
+
+```{r,echo=FALSE,fig.align='center', warning=FALSE, message=FALSE}
+RNGversion("2.15.2")
+set.seed(7)
+library(mvtnorm)
+library(stats)
+mu1<-c(5,10)
+mu2<-c(10,5)
+mu3<-c(10,10)
+
+Sigma<-matrix(c(0.5,0.1,0.1,0.5),2,2)
+x1<-rmvt(15,df=10,Sigma)+t(matrix(rep(mu1,15),2,15))
+x2<-rmvt(20,df=8,Sigma)+t(matrix(rep(mu2,20),2,20))
+x3<-rmvt(10,df=5,Sigma)+t(matrix(rep(mu3,10),2,10))
+
+x<-rbind(x1,x2,x3)
+dd<-dist(x)
+cls<-hclust(dd,method = "complete")
+
+indc<-cutree(cls,k=3)
+
+par(bg='gray')
+plot(x[,1],x[,2],pch=18,main="3-cluster solution",xlab='',ylab='',asp = 1)
+points(x[(indc==1),1],x[(indc==1),2],pch=18,col='red',cex=3)
+points(x[(indc==2),1],x[(indc==2),2],pch=18,col='blue',cex=3)
+points(x[(indc==3),1],x[(indc==3),2],pch=18,col='green',cex=3)
+```
+
+---
+
+# Centroid method
+
+```{r,echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot(x[,1],x[,2],pch=18,main="3-cluster solution",xlab='',ylab='',asp = 1)
+points(x[(indc==1),1],x[(indc==1),2],pch=18,col='red',cex=3)
+points(x[(indc==2),1],x[(indc==2),2],pch=18,col='blue',cex=3)
+points(x[(indc==3),1],x[(indc==3),2],pch=18,col='green',cex=3)
+points(mean(x[(indc==1),1]),mean(x[(indc==1),2]),pch=10,col='black',cex=5)
+points(mean(x[(indc==2),1]),mean(x[(indc==2),2]),pch=10,col='black',cex=5)
+lines(c(mean(x[(indc==1),1]),mean(x[(indc==2),1])),c(mean(x[(indc==1),2]),mean(x[(indc==2),2])),lwd=5)
+```
+
+---
+
+# Average Linkage v Centroid
+
+- Consider an example with one variable (although everything works with vectors too).<!--D-->
+--
+
+- Suppose we have the clusters $\mathcal{A}=\left\{0,2\right\}$ and $\mathcal{B}=\left\{3,5\right\}$<!--D-->
+--
+
+- Find the distance $\mathcal{A}$ and $\mathcal{B}$ using<!--D-->
+--
+
+  + Average Linkage
+  + Centroid Method
+
+---
+
+# Average Linkage
+
+- Must find distances between all pairs of observations<!--D-->
+--
+
+  + $D(a_1,b_1)=3$
+  + $D(a_1,b_2)=5$
+  + $D(a_2,b_1)=1$
+  + $D(a_2,b_2)=3$<!--D-->
+--
+
+- Averaging these, the distance is 3.
+
+---
+
+# Centroid method
+
+- First find centroids<!--D-->
+--
+
+  + $\bar{a}=1$
+  + $\bar{b}=4$<!--D-->
+--
+
+- The distance is 3.<!--D-->
+--
+
+- Here both methods give the same answer but when vectors are used instead they do not give the same answer in general.
+
+
+---
+
+# Average Linkage v Centroid
+
+- In average linkage<!--D-->
+--
+
+  1. Compute the distances between pairs of observations
+  2. Average these distances<!--D-->
+--
+
+- In the centroid method<!--D-->
+--
+
+  1. Average the observations to obtain the centroid of each cluster.
+  2. Find the distance between centroids
+
+---
+
+# Ward's method
+
+- All methods so far, merge two clusters when the distance between them is small.<!--D-->
+--
+
+- Ward’s method merges two clusters to minimise within cluster variance.<!--D-->
+--
+
+- Two variations implemented in R.<!--D-->
+--
+
+  + `Ward.D2` is the same as the original Ward paper.
+  + `Ward.D` is actually based on a mistake but can still work quite well.
+
+
+---
+
+# Within Cluster Variance
+
+- The within-cluster variance for a cluster $\mathcal{A}$ is defined as
+
+$$\mbox{V}_{\mbox{w}}(\mathcal{A})=\frac{1}{|\mathcal{A}|-1}S(\mathcal{A})$$
+
+where 
+$$S(\mathcal{A})=\sum_{\mathbf{a}_i\in\mathcal{A}}\left[\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)\right]$$
+
+---
+
+# Vector notation
+
+- The term $S(\mathcal{A})=\sum\limits_{\mathbf{a}_i\in\mathcal{A}}\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)$ uses vector notation, but the idea is simple.
+--
+
+- Take the difference of each attribute from its mean (e.g. income, age, etc.)
+--
+
+- Then square them and add together over attributes **and** observations.
+--
+
+- The within cluster variance is a total variance across all attributes.
+
+---
+
+# Ward's algorithm
+
+- At each step we must merge two clusters to form a single cluster.
+--
+
+- Suppose we pick a cluster $\mathcal{A}$ and $\mathcal{B}$ to form a new cluster $\mathcal{C}$.
+--
+
+- Ward's algorithm chooses $\mathcal{A}$ and $\mathcal{B}$ so that $V_{W}(\mathcal{C})$ is as small as possible.
+
+---
+
+class: middle, center, inverse
+
+# Non-hierarchical Clustering
+
+---
+
+# Non-hierarchical Clustering
+
+- In some analyses the exact number of clusters may be known.
+--
+
+- If so non-hierachical clustering may be used.
+--
+
+- Perhaps the most widely used non-hierarchical method is k-means clustering.
+
+---
+
+# k-means
+
+- In general $k$-means seeks to find $k$ clusters.
+--
+
+- The following condition must be satisfied:
+--
+
+  + Each point in a must be closest to the mean of its **own** cluster mean.
+--
+
+  + A point cannot be closer to the mean of a different cluster.
+  
+
+---
+
+# Optimality
+
+- The objective of k-means clustering is to find centroids is a way that minimises within-cluster sum of squares.
+--
+
+- Let ${\mathbf C}=\left\{\mathcal{C}_1,\ldots,\mathcal{C}_k\right\}$ be a partitioning of all points into $k$ clusters.
+--
+
+- The objective of k-means is to find
+$$\underset{{\mathbf C}}{\mbox{argmin}}\sum\limits_{h=1}^k S(\mathcal{C}_h)$$
+
+---
+
+#NP hard
+
+- It is an example of an NP-hard problem
+--
+
+- The bad news is that NP-hard problems cannot be easily solved by computers.
+--
+
+- The good news is that your credit card security also relies on an NP-hard problem.
+
+---
+
+# Heuristic
+
+- Fortunately there are algorithms that either provide either a reasonably good solution to the k-mean.
+--
+
+- In some cases they may provide the exact solution, although there are no guarantees.
+--
+
+- We will now cover **Lloyd's algorithm** which provides good intuition into the k-means problem.
+--
+
+- By default, R implements the more sophisticated (and complicated **Hartigan Wong** algorithm).
+
+---
+
+# Lloyd's algorithm
+
+1. Choose initial centroids (possibly at random).<!--D-->
+--
+
+2. Allocate each observation to cluster corresponding with nearest centroid<!--D-->
+--
+
+3. Re-compute centroids as the mean of all observations in the cluster<!--D-->
+--
+
+4. Repeat steps 2 and 3 until convergence
+
+---
+
+# Raw Data
+
+```{r, echo=FALSE,fig.align='center',message=FALSE, warning=FALSE}
+RNGversion("2.15.2")
+set.seed(3)
+library(mvtnorm)
+library(stats)
+mu1<-c(5,10)
+mu2<-c(10,5)
+mu3<-c(10,10)
+mu4<-c(5,5)
+Sigma<-diag(rep(1,2))
+x1<-rmvnorm(15,mu1,Sigma)
+x2<-rmvnorm(15,mu2,Sigma)
+x3<-rmvnorm(15,mu3,Sigma)
+x4<-rmvnorm(15,mu4,Sigma)
+
+x<-rbind(x1,x2,x3,x4)
+init<-sample(60,4)
+par(bg='gray')
+plot(x[,1],x[,2],pch=19,main="k-Means Clustering",xlab='',ylab='',asp = 1,cex=2)
+```
+
+---
+
+# Initial Centroids
+
+
+```{r, echo=FALSE,fig.align='center'}
+collt<-c('red','blue','magenta','green')
+par(bg='gray')
+plot(x[,1],x[,2],pch=19,main="k-Means Clustering",xlab='',ylab='',asp = 1,cex=3)
+points(x[init,1],x[init,2],pch=19,col=collt,cex=3)
+```
+
+---
+
+# Initial Allocation
+
+```{r, echo=FALSE,fig.align='center',message=FALSE, warning=FALSE}
+dd<-deldir(x[init,1],x[init,2],rw=c(2,14,3,13))
+tt<-tile.list(dd)
+cm<-rep(0,60)
+for (j in 1:4){
+  tmp<-pnt.in.poly(x,cbind(tt[[j]]$x,tt[[j]]$y))
+  cm[tmp$pip==1]<-j
+}
+
+par(bg='gray')
+plot.tile.list(tt,main="k-Means Clustering",xlab='',ylab='',asp = 1)
+points(x[,1],x[,2],pch=19,cex=0.1)
+points(x[init,1],x[init,2],cex=3,pch=19,col=collt)
+points(x[init,1],x[init,2],cex=3,pch=10,col=collt)
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+```
+
+---
+
+# Re-compute Centroids
+
+
+```{r, echo=FALSE,fig.align='center'}
+#Recompute centroids
+cents<-matrix(0,4,2)
+for (i in 1:4){
+  cents[i,1]<-mean(x[(cm==i),1])
+  cents[i,2]<-mean(x[(cm==i),2])
+}
+
+par(bg='gray')
+plot.tile.list(tt,main="k-Means Clustering",xlab='',ylab='',asp = 1)
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+```
+
+---
+
+# Reallocate
+
+
+```{r, echo=FALSE,fig.align='center'}
+
+###Step 2
+
+dd2<-deldir(cents[,1],cents[,2],rw=c(2,14,3,13))
+tt2<-tile.list(dd2)
+
+par(bg='gray')
+plot.tile.list(tt2)
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+```
+---
+
+# Reallocate
+
+
+```{r, echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot.tile.list(tt2)
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+
+for (j in 1:4){
+  tmp<-pnt.in.poly(x,cbind(tt2[[j]]$x,tt2[[j]]$y))
+  cm[tmp$pip==1]<-j
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+
+cents<-matrix(0,4,2)
+for (i in 1:4){
+  cents[i,1]<-mean(x[(cm==i),1])
+  cents[i,2]<-mean(x[(cm==i),2])
+}
+
+```
+
+---
+
+# Recompute Centroids
+
+
+```{r, echo=FALSE,fig.align='center'}
+
+
+par(bg='gray')
+plot.tile.list(tt2)
+
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+```
+
+---
+
+# Reallocate
+
+
+```{r, echo=FALSE,fig.align='center'}
+##Step 3
+
+dd3<-deldir(cents[,1],cents[,2],rw=c(2,14,3,13))
+tt3<-tile.list(dd3)
+
+
+par(bg='gray')
+plot.tile.list(tt3)
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+```
+
+---
+
+# Reallocate
+
+
+```{r, echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot.tile.list(tt3)
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+
+for (j in 1:4){
+  tmp<-pnt.in.poly(x,cbind(tt3[[j]]$x,tt3[[j]]$y))
+  cm[tmp$pip==1]<-j
+}
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+
+
+
+cents<-matrix(0,4,2)
+for (i in 1:4){
+  cents[i,1]<-mean(x[(cm==i),1])
+  cents[i,2]<-mean(x[(cm==i),2])
+}
+
+```
+
+---
+
+# Stable solution
+
+
+```{r, echo=FALSE,fig.align='center'}
+par(bg='gray')
+plot.tile.list(tt3)
+
+for (j in 1:4){
+  points(cents[j,1],cents[j,2],pch=10,cex=3,col=collt[j])
+}
+
+
+for (j in 1:4){
+  points(x[cm==j,1],x[cm==j,2],pch=19,cex=3,col=collt[j])
+}
+
+
+
+```
+
+
+---
+
+# Wholesaler Data
+
+- Recall the Wholesaler data from earlier in the lecture<!--D-->
+--
+
+- The variables are annual spend in 6 categories.<!--D-->
+--
+
+- Should the data be standardised?<!--D-->
+--
+
+- Try to carry out k means clustering using the R function `kmeans`<!--D-->
+--
+
+- Find a solution with 3 clusters.
+
+---
+
+# k-means in R
+
+To do a three cluster solution
+
+```{r,echo=TRUE,eval=TRUE}
+
+WholesaleCluster<-kmeans(Wholesale,3)
+```
+
+If the data are in a data.frame you may need to select the numeric variables.
+
+---
+
+# R output
+
+- The result of the R function kmeans will be a list containing
+several entries. The most interesting are<!--D-->
+--
+
+  + A variable indicating cluster membership is given in `cluster`<!--D-->
+--
+
+  + The centroids for each cluster are given in `centers`<!--D-->
+--
+
+  + The number of observations in each cluster is given by `size`<!--D-->
+--
+
+  + The cluster centroids can be useful for profiling the clusters.
+
+---
+
+# Cluster Centroids
+
+```{r, echo=FALSE}
+kable(WholesaleCluster$centers)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="300px")
+```
+
+---
+
+# Robustness Check
+
+Since values are sensitive to starting values, we can run the algorithm with many different starting values using the `nstart` option
+```{r,echo=TRUE,eval=TRUE}
+WholesaleCluster<-kmeans(Wholesale,3,nstart = 25)
+```
+```{r, echo=FALSE}
+kable(WholesaleCluster$centers)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="200px")
+```
+
+---
+
+# Label switching
+
+- Two slides back the second cluster had the highest spend on fresh food.
+--
+
+- One slide back the first cluster that had the highest spend on fresh food.
+--
+
+- The centroids were identical, they were just flipped around.  This is called **Label switching**.  
+--
+
+- It does not matter which cluster is first, second or third.  The means are important.
+
+---
+
+# Number of clusters
+
+- The motivation of k means clustering is that the number of clusters is already known.
+--
+
+- In principal different choices of $k$ can be used and compared to one another.
+--
+
+- However, unlike hierarchical clustering, these different solutions can contradict one another.
+
+---
+
+# The meaning of non hierarchical
+
+- Consider the two cluster solution (Solution A) and three cluster solution (Solution B) for **hierarchical** clustering.<!--D-->
+--
+
+  + If two variables are in the same cluster in Solution B then they will be in the same cluster in Solution A<!--D-->
+--
+
+- The same is not true for **non-hierarchical** clustering including k-means clustering.
+
+---
+
+# Hierarchical Clustering
+
+Together we will use Ward's method to do hierarchical clustering on the Wholesale data and get the cluster membership from the two and three cluster solutions.
+
+Then you can try the same for k-means
+
+---
+
+# Solution
+
+```{r,echo=TRUE,eval=FALSE}
+Wholesale%>%
+  dist%>%
+  hclust(method='ward.D2')->hiercl
+cl2<-cutree(hiercl,2)
+cl3<-cutree(hiercl,3)
+table(cl2,cl3)
+```
+```{r,echo=FALSE}
+Wholesale%>%
+  dist%>%
+  hclust(method='ward.D2')->
+  hiercl
+cl2<-cutree(hiercl,2)
+cl3<-cutree(hiercl,3)
+kable(table(cl2,cl3),row.names = TRUE)
+```
+
+---
+
+# Same exercise for k-means
+
+```{r,echo=TRUE,eval=FALSE}
+km2<-kmeans(Wholesale,2)
+kmcl2<-km2$cluster
+km3<-kmeans(Wholesale,2)
+kmcl3<-km2$cluster
+table(kmcl2,kmcl3)
+```
+```{r,echo=FALSE,eval=TRUE}
+km2<-kmeans(Wholesale,2)
+kmcl2<-km2$cluster
+km3<-kmeans(Wholesale,3)
+kmcl3<-km3$cluster
+kable(table(kmcl2,kmcl3),row.names = TRUE)
+```
+
+---
+
+# Non-hierarchical
+
+- Consider the observations in Cluster 3 when $k=3$.  When we go from $k=3$ to $k=2$<!--D-->
+--
+
+  + There are 6 of these observations that go to the new cluster 1.<!--D-->
+--
+
+  + The remaining 44 observations go to the new cluster 2.<!--D-->
+--
+
+- Notice that there is some label switching as well.
+
+---
+class: inverse, middle, center
+
+# Comparing Cluster solutions
+---
+
+# Comparing Cluster solutions
+- A challenging aspect of cluster analysis is that it is difficult to evaluate a cluster solution.<!--D-->
+--
+
+  + In forecasting compare forecasts to outcomes.<!--D-->
+--
+
+  + In regression look at goodness of fit.<!--D-->
+--
+
+- There is also very little theory to guide us.<!--D-->
+--
+
+  + In regression we know least squares is BLUE under certain assumptions.<!--D-->
+--
+
+- How do we choose a clustering algorithm?
+
+---
+
+
+# Choosing a method
+
+- There is no *ideal* method to do hierarchical clustering.
+--
+
+- A good strategy is to try a few different methods.
+--
+
+- If there is a clear structure in the data then most methods will give similar results.
+  - It is not unusual to find one method yielding very different results.
+--
+
+- If all methods give vastly different results then perhaps there are no clear clusters in the data.
+
+---
+
+# Robustness
+
+- We can check if a clustering solution is robust to different algorithms.<!--D-->
+--
+
+- For example if the centroid method, average linkage, Ward method and k-means all give similar clusters then we can be confident that the clusters are truly a feature of the data.<!--D-->
+--
+
+- One way to evaluate this is to look at the Rand Index.
+
+---
+
+# Rand Index
+
+- Suppose we have two cluster solutions, Solution A and Solution B.<!--D-->
+--
+
+- Pick two observations at random ${\mathbf x}$ and ${\mathbf y}$.
+--
+
+  1. ${\mathbf x}$ and ${\mathbf y}$ are in the same cluster in Solution A and the same cluster in Solution B<!--D-->
+--
+
+  2. ${\mathbf x}$ and ${\mathbf y}$ are in different clusters in Solution A and different clusters in Solution B<!--D-->
+--
+
+  3. ${\mathbf x}$ and ${\mathbf y}$ are in the same cluster in Solution A and the different cluster in Solution B<!--D-->
+--
+
+  4. ${\mathbf x}$ and ${\mathbf y}$ are in different clusters in Solution A and same clusters in Solution B
+
+---
+
+# Rand Index
+
+- Scenario 1 and scenario 2 both suggest that the cluster solutions are in **agreement**<!--D-->
+--
+
+- Scenario 3 and scenario 4 both suggest that the cluster solutions are in **disagreement**<!--D-->
+--
+
+- The **Rand Index** gives the probability of picking two observations at random that are in agreement.<!--D-->
+--
+
+- The **Rand Index** lies between 0 and 1 and higher numbers indicate agreement.
+
+---
+
+# Adjusted Rand Index
+
+- Even if observations are clustered at random, there will still be some agreement due to chance.<!--D-->
+--
+
+- The adjusted Rand index is designed to be 0 if the level of agreement is equivalent to the case where clustering is done at random.<!--D-->
+--
+
+- It is still only equal to 1 if the two clustering solutions are in perfect agreement.<!--D-->
+--
+
+- The adjusted Rand Index can be computed using the `adjustedRandIndex` function in the package `mclust`
+
+---
+
+# Conclusion
+
+- There are many methods for clustering.
+--
+
+- For this reason a cluster analysis should be carried out carefully and transparently.
+--
+
+- Although we have focused on algorithms in the lecture, remember that the objective of cluster analysis is to explore the data.
+--
+
+- As such remember to profile the clusters and to provide insight into what these clusters may represent.

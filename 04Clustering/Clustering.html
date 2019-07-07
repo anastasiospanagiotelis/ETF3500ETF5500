@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Cluster Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="High Dimensional Data Analysis" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Cluster Analysis
+### High Dimensional Data Analysis
+### Lecture 4
+
+---
+
+
+class: inverse, center, middle
+
+# Why Clustering?
+
+
+
+---
+
+# Market Segmentation
+
+- A common strategy in marketing is to analyse different segments of the market.&lt;!--D--&gt; 
+--
+
+- Sometimes the purpose is to segment based on a single variable:&lt;!--D--&gt; 
+--
+
+  + Gender&lt;!--D--&gt; 
+--
+
+  + Age&lt;!--D--&gt; 
+--
+
+  + Income&lt;!--D--&gt; 
+--
+
+- An alternative is to segment using all available information
+
+---
+
+# A 2-dimensional example
+
+- Consider that data is collected for customers’ *age* and *income*.&lt;!--D--&gt;
+--
+
+- These can be plotted on a scatterplot to see if any obvious
+segments or clusters are present.&lt;!--D--&gt;
+--
+
+- The following data are not real data but are simulated
+
+---
+
+# Age v Income
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Obvious clusters
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Only income
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Only age
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Summary
+
+- Using just one variable can be misleading.&lt;!--D--&gt;
+--
+
+- When there are more than 2 variables just looking at a scatterplot doesn’t work.&lt;!--D--&gt;
+--
+
+- Instead algorithms can be used to find the clusters in a sensible way, even in high dimensions.
+
+
+
+---
+
+# Real Example 1
+
+- The dataset mtcars is an R dataset that originally came from a 1974 magazine called Motor Trends&lt;!--D--&gt;
+--
+
+- There are 32 cars which are measured on 11 variables such as miles per gallon, number of cylinders, horsepower and weight.&lt;!--D--&gt;
+--
+
+- It can be loaded into the workspace using the command `data(mtcars)`
+
+---
+
+# MT Cars data
+
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; MakeModel &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; mpg &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; cyl &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; disp &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; hp &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; drat &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; wt &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; qsec &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; vs &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; am &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; gear &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; carb &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mazda RX4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 160.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.620 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.46 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mazda RX4 Wag &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 160.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.875 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Datsun 710 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 108.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 93 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.85 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.320 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hornet 4 Drive &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 258.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.215 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hornet Sportabout &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 360.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 175 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.440 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valiant &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 225.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.460 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Duster 360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 360.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 245 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.570 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 240D &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 146.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.190 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 230 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 140.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.92 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.150 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+---
+
+# Dendrogram
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Real Example 2
+
+- A business to business example with 440 customers of a wholesaler&lt;!--D--&gt;
+--
+
+- The variables are annual spend in the following 6 categories:&lt;!--D--&gt;
+--
+
+  + Fresh food
+  + Milk
+  + Groceries
+  + Frozen
+  + Detergents/Paper
+  + Delicatessen&lt;!--D--&gt;
+--
+
+- These data are available on Moodle.
+
+---
+
+# Cluster centroids
+
+After clustering we get the following cluster means.
+
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; Cluster &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Fresh &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Milk &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Grocery &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Frozen &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Detergents_Paper &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Delicassen &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35056 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39514 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45266 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8483 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19867 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9937 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4422 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9892 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1528 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6487 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1636 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14550 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3042 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3823 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3570 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 835 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1227 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+The clusters may represent hotels, supermarkets and cafes.
+
+---
+
+# Approaches to Clustering
+
+- Hierarchical: Path of solutions:&lt;!--D--&gt;
+--
+
+  + Agglomerative: At start every observation is a cluster. Merge the most similar clusters step by step until all observations in one cluster.&lt;!--D--&gt;
+--
+
+  + Divisive: At start all observations in one cluster. Split step by step until each observation is in its own cluster.&lt;!--D--&gt;
+--
+
+- Non-hierarchical: Choose the number of clusters ex ante. No merging or splitting.
+
+---
+
+# Our focus
+
+- Our main focus will be on agglomerative hierarchical methods.&lt;!--D--&gt;
+--
+
+- Divisive agglomerative methods are very slow and we do not cover them at all.&lt;!--D--&gt;
+--
+
+- We consider one example of a non-hierarchical method known as the **k-means** algorithm.
+
+---
+
+# Definition of Clustering
+
+- Oxford Dictionary: A group of similar things or people positioned or occurring closely together&lt;!--D--&gt;
+--
+
+- Collins Dictionary: A number of things growing, fastened, or occurring close together&lt;!--D--&gt;
+--
+
+- Note the importance of closeness or distance.  We need two concepts of distance&lt;!--D--&gt;
+--
+
+  1. Distance between **observations**.
+  2. Distance between **clusters**.
+
+---
+
+# A distance between clusters
+
+- Let `\(\mathcal{A}\)` be a cluster with observations `\(\left\{{\mathbf a}_1, {\mathbf a}_2, \ldots, {\mathbf a}_I \right\}\)` and `\(\mathcal{B}\)` be a cluster with points `\(\left\{{\mathbf b}_1, {\mathbf b}_2, \ldots, {\mathbf b}_J \right\}\)`.
+--
+
+- The calligraphic script `\(\mathcal{A}\)` or `\(\mathcal{B}\)` denotes a cluster with possibly more than one point.  
+--
+
+- The bold scipt `\({\mathbf a}_i\)` or `\({\mathbf b}_j\)` denotes a vector of attributes (e.g. age and income) for each observation.
+--
+
+- Rather than vectors, it is much easier to think of each observation as a point in a scatterplot. 
+
+---
+
+#Single Linkage
+
+One way of defining the distance between clusters `\(\mathcal{A}\)` and `\(\mathcal{B}\)` is
+
+`$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\min}D({\mathbf a}_i,{\mathbf b}_j)$$`
+
+This is called **single linkage** or **nearest neighbour**.
+
+---
+
+# Single Linkage
+
+&lt;img src="Clustering_files/figure-html/slinkp-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage
+
+
+&lt;img src="Clustering_files/figure-html/slink-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete Linkage
+
+Another way of defining the distance between `\(\mathcal{A}\)` and `\(\mathcal{B}\)` is
+
+`$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\max}D({\mathbf a}_i,{\mathbf b}_j)$$`
+
+This is called **complete linkage** or **furthest neighbour**.
+
+
+---
+
+# Complete Linkage
+
+&lt;img src="Clustering_files/figure-html/clinkp-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete Linkage
+
+
+&lt;img src="Clustering_files/figure-html/clink-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete linkage
+
+- In the previous example **all** points in the red cluster are within a distance of 160.01 of **all** points in the blue cluster.
+- This is why it is called **complete** linkage.
+
+---
+
+# A simple example
+
+- Over the next couple of slides we will go through the entire process of agglomerative clustering&lt;!--D--&gt;
+--
+
+  + We will use Euclidean distance to define distance between points&lt;!--D--&gt;
+--
+
+  + We will use single linkage to define the distance between clusters&lt;!--D--&gt;
+--
+
+- There are only five observations and two variables
+
+---
+
+# Agglomerative clustering
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Hierarchical Clustering
+
+- 5-cluster solution A and B and C and D and E
+--
+
+- 4-cluster solution \{A,D\} and B and C and E  
+--
+
+- 3-cluster solution \{A,D\} and \{B, C\} and E
+--
+
+- 2-cluster solution \{A,B, C,D\} and E
+--
+
+- 1-cluster solution \{A,B, C,D E\}
+
+---
+
+# Dendrogram
+
+- The Dendrogram is a useful tool for analysing a cluster solution.&lt;!--D--&gt;
+--
+
+  + Observations are on one axis (usually x)&lt;!--D--&gt;
+--
+
+  + The distance between clusters is on other axis (usually y).&lt;!--D--&gt;
+--
+
+  + From the Dendrogram one can see the order in which the clusters are merged.
+
+---
+
+# Dendrogram
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Interpretation of Dendrogram
+
+- Think of the axis with distance (y-axis) as the measuring a 'tolerance level'&lt;!--D--&gt;
+--
+
+- If the distance between two clusters is within the tolerance they are merged into one cluster.&lt;!--D--&gt;
+--
+
+- As tolerance increases more and more clusters are merged leading to less clusters overall.&lt;!--D--&gt;
+
+---
+
+# Clustering in R
+
+- Clustering in R requires at most 3 steps&lt;!--D--&gt;
+--
+
+  1. Standardise the data if they are in different units (using the function `scale`)&lt;!--D--&gt;
+--
+
+  2. Find the distance between all pairs of observations (using the function `dist`)&lt;!--D--&gt;
+--
+
+  3. Cluster the data using the function `hclust`&lt;!--D--&gt;
+--
+
+- Try this with the `mtcars` dataset. Use Euclidean distance and complete linkage. 
+- Store the result of `hclust` in a variable called CarsCluster.
+
+---
+
+# Clustering in R
+
+
+```r
+data(mtcars)
+mtcars%&gt;%
+  scale%&gt;%
+  dist%&gt;%
+  hclust(method="complete")-&gt;
+  CarsCluster
+```
+
+---
+
+# Dendrogram in R
+
+
+```r
+plot(CarsCluster,cex=0.5)
+```
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Identifying clusters
+
+
+```r
+CarsCluster%&gt;%plot(cex=0.5)
+CarsCluster%&gt;%rect.hclust(k=2)
+```
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Dendrogram in R
+
+For an interactive tool try:
+
+```r
+identify(CarsCluster)
+```
+
+Press the escape key when you are finished.
+
+---
+class: inverse, center, middle
+
+#Choosing the number of clusters
+
+---
+
+# Choosing clusters
+
+- Although hierarchical clustering gives a solution for any number of clusters, ultimately we only want to focus on one of these solutions.
+--
+
+- There is no *correct* number of clusters.  Choosing the number of clusters depends on the context.
+--
+
+- There are however *poor* choices for the number of clusters.
+
+---
+
+# Choosing clusters
+
+- Do not choose too many clusters:
+--
+  
+  + A firm developing a different marketing strategy for each market segment may not have the resources to develop a large number of unique strategies.
+--
+
+- Do not choose too few clusters:
+--
+
+  + If you choose the 1-cluster solution there is no point in doing clustering at all.
+
+
+---
+
+# Using dendrogram
+
+- One criterion is that the number of clusters is stable over a wide range of tolerance.&lt;!--D--&gt;
+--
+
+- The plot on the next slide shows a 3 cluster solution.&lt;!--D--&gt;
+
+---
+
+# Three cluster solution
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Stability
+
+
+- The tolerance for a three cluster solution is about 5.9. 
+--
+
+- If the tolerance is increased *by a very small amount* then we will have a two cluster solution.
+--
+
+- If the tolerance is decreased *by a very small amount* then we will have a four cluster solution.
+
+---
+
+# Two cluster solution
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Four cluster solution
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Stability
+
+- In the previous example
+--
+
+  + The three cluster solution in not stable
+--
+
+  + The two and four cluster solutions are stable
+--
+
+- In general look for a long stretch of tolerance, over which the number of clusters does not change.
+  
+
+---
+
+# Extracting the clusters
+
+For a given number of clusters we can create a new variable indicating cluster membership via the `cutree` function.
+
+
+```r
+mem&lt;-cutree(CarsCluster,2)
+```
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:300px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; x &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mazda RX4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mazda RX4 Wag &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Datsun 710 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hornet 4 Drive &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hornet Sportabout &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valiant &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Duster 360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 240D &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 230 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 280 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 280C &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 450SE &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 450SL &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Merc 450SLC &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Cadillac Fleetwood &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Lincoln Continental &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Chrysler Imperial &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fiat 128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Honda Civic &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Toyota Corolla &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Toyota Corona &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Dodge Challenger &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; AMC Javelin &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Camaro Z28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Pontiac Firebird &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fiat X1-9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Porsche 914-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Lotus Europa &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ford Pantera L &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ferrari Dino &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Maserati Bora &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Volvo 142E &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+---
+
+# Pros and Cons of Single Linkage
+
+- Pros:
+  + Single linkage is very easy to understand.
+  + Single linkage is a very fast algorithm.&lt;!--D--&gt;
+--
+
+- Cons:
+  + Single linkage is very sensitive to single observations which leads to chaining.
+  + Complete linkage avoids this problem and gives more compact clusters with a similar diameter.
+
+---
+
+# Chaining
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage Dendrogram
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Add one observation
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# New solution
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Dendrogram with Chaining
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Robustness
+
+- In general adding a single observation should not dramtically change the analysis.
+--
+
+- In this instance the new observation was not even an *outlier*.
+--
+
+- A term used for such an observation is an *inlier*.
+--
+
+- Methods that are not affected by single observations are often called **robust**.
+--
+
+- Let's see if complete linkage is *robust* to the inlier.
+
+---
+
+# Complete Linkage
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete Linkage: Dendrogram
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-36-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Disadvantages of CL
+
+- Complete Linkage overcomes *chaining* and is robust to inliers
+--
+
+- However, since the distance between clusters only depends on two observations it can still be sensitive to outliers.&lt;!--D--&gt;
+--
+
+- The following methods are more robust and should be preferred&lt;!--D--&gt;
+--
+
+  + Average Linkage
+  + Centroid Method
+  + Ward’s Method
+
+---
+
+# Average Linkage
+
+The distance between two clusters can be defined so that it is based on all the pairwise distances between the elements of each cluster.
+`$$D(\mathcal{A},\mathcal{B})=\frac{1}{|\mathcal{A}||\mathcal{B}|}\sum\limits_{i=1}^{|\mathcal{A}|}\sum\limits_{j=1}^{|\mathcal{B}|}D({\mathbf a}_i,{\mathbf b}_j)$$`
+Here `\(|\mathcal{A}|\)` is the number of observations in cluster `\(\mathcal{A}\)` and `\(|\mathcal{B}|\)` is the number of observations in cluster `\(\mathcal{B}\)`
+
+---
+
+#Average Linkage
+
+- Average linkage can be called different things&lt;!--D--&gt;
+--
+
+  + Between groups method.
+  + Unweighted Pair Group Method with Arithmetic mean (UPGMA)
+
+---
+
+# Pairwise distances (one obs.)
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-37-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# All pairwise distances
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Centroid Method
+
+- The centroid of a cluster can be defined as the mean of all the
+points in the cluster.&lt;!--D--&gt;
+--
+
+- If `\(\mathcal{A}\)` is a cluster containing the observations `\({\mathbf a}\)` then the **centroid** of `\(\mathcal{A}\)` is given by.&lt;!--D--&gt;
+--
+
+`$${\mathbf{\bar{a}}}=\frac{1}{|\mathcal{A}|}\sum_{\mathbf{a}_i\in\mathcal{A}}\mathbf{a}_i$$`&lt;!--D--&gt;
+--
+
+- The distance between two clusters can then be defined as the distance between the respective centroids.
+
+---
+
+# Vector mean
+
+- Recall that `\(\mathbf{a}_i\)` is a vector of attributes, e.g income and age.
+--
+
+- In this case `\(\bar{\mathbf{a}}\)` is also a vector of attributes.
+--
+
+- Each element of `\(\bar{\mathbf{a}}\)` is the mean of a different attribute, e.g. mean income, mean age.
+
+---
+
+# Centroid method
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-39-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Centroid method
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-40-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Average Linkage v Centroid
+
+- Consider an example with one variable (although everything works with vectors too).&lt;!--D--&gt;
+--
+
+- Suppose we have the clusters `\(\mathcal{A}=\left\{0,2\right\}\)` and `\(\mathcal{B}=\left\{3,5\right\}\)`&lt;!--D--&gt;
+--
+
+- Find the distance `\(\mathcal{A}\)` and `\(\mathcal{B}\)` using&lt;!--D--&gt;
+--
+
+  + Average Linkage
+  + Centroid Method
+
+---
+
+# Average Linkage
+
+- Must find distances between all pairs of observations&lt;!--D--&gt;
+--
+
+  + `\(D(a_1,b_1)=3\)`
+  + `\(D(a_1,b_2)=5\)`
+  + `\(D(a_2,b_1)=1\)`
+  + `\(D(a_2,b_2)=3\)`&lt;!--D--&gt;
+--
+
+- Averaging these, the distance is 3.
+
+---
+
+# Centroid method
+
+- First find centroids&lt;!--D--&gt;
+--
+
+  + `\(\bar{a}=1\)`
+  + `\(\bar{b}=4\)`&lt;!--D--&gt;
+--
+
+- The distance is 3.&lt;!--D--&gt;
+--
+
+- Here both methods give the same answer but when vectors are used instead they do not give the same answer in general.
+
+
+---
+
+# Average Linkage v Centroid
+
+- In average linkage&lt;!--D--&gt;
+--
+
+  1. Compute the distances between pairs of observations
+  2. Average these distances&lt;!--D--&gt;
+--
+
+- In the centroid method&lt;!--D--&gt;
+--
+
+  1. Average the observations to obtain the centroid of each cluster.
+  2. Find the distance between centroids
+
+---
+
+# Ward's method
+
+- All methods so far, merge two clusters when the distance between them is small.&lt;!--D--&gt;
+--
+
+- Ward’s method merges two clusters to minimise within cluster variance.&lt;!--D--&gt;
+--
+
+- Two variations implemented in R.&lt;!--D--&gt;
+--
+
+  + `Ward.D2` is the same as the original Ward paper.
+  + `Ward.D` is actually based on a mistake but can still work quite well.
+
+
+---
+
+# Within Cluster Variance
+
+- The within-cluster variance for a cluster `\(\mathcal{A}\)` is defined as
+
+`$$\mbox{V}_{\mbox{w}}(\mathcal{A})=\frac{1}{|\mathcal{A}|-1}S(\mathcal{A})$$`
+
+where 
+`$$S(\mathcal{A})=\sum_{\mathbf{a}_i\in\mathcal{A}}\left[\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)\right]$$`
+
+---
+
+# Vector notation
+
+- The term `\(S(\mathcal{A})=\sum\limits_{\mathbf{a}_i\in\mathcal{A}}\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)\)` uses vector notation, but the idea is simple.
+--
+
+- Take the difference of each attribute from its mean (e.g. income, age, etc.)
+--
+
+- Then square them and add together over attributes **and** observations.
+--
+
+- The within cluster variance is a total variance across all attributes.
+
+---
+
+# Ward's algorithm
+
+- At each step we must merge two clusters to form a single cluster.
+--
+
+- Suppose we pick a cluster `\(\mathcal{A}\)` and `\(\mathcal{B}\)` to form a new cluster `\(\mathcal{C}\)`.
+--
+
+- Ward's algorithm chooses `\(\mathcal{A}\)` and `\(\mathcal{B}\)` so that `\(V_{W}(\mathcal{C})\)` is as small as possible.
+
+---
+
+class: middle, center, inverse
+
+# Non-hierarchical Clustering
+
+---
+
+# Non-hierarchical Clustering
+
+- In some analyses the exact number of clusters may be known.
+--
+
+- If so non-hierachical clustering may be used.
+--
+
+- Perhaps the most widely used non-hierarchical method is k-means clustering.
+
+---
+
+# k-means
+
+- In general `\(k\)`-means seeks to find `\(k\)` clusters.
+--
+
+- The following condition must be satisfied:
+--
+
+  + Each point in a must be closest to the mean of its **own** cluster mean.
+--
+
+  + A point cannot be closer to the mean of a different cluster.
+  
+
+---
+
+# Optimality
+
+- The objective of k-means clustering is to find centroids is a way that minimises within-cluster sum of squares.
+--
+
+- Let `\({\mathbf C}=\left\{\mathcal{C}_1,\ldots,\mathcal{C}_k\right\}\)` be a partitioning of all points into `\(k\)` clusters.
+--
+
+- The objective of k-means is to find
+`$$\underset{{\mathbf C}}{\mbox{argmin}}\sum\limits_{h=1}^k S(\mathcal{C}_h)$$`
+
+---
+
+#NP hard
+
+- It is an example of an NP-hard problem
+--
+
+- The bad news is that NP-hard problems cannot be easily solved by computers.
+--
+
+- The good news is that your credit card security also relies on an NP-hard problem.
+
+---
+
+# Heuristic
+
+- Fortunately there are algorithms that either provide either a reasonably good solution to the k-mean.
+--
+
+- In some cases they may provide the exact solution, although there are no guarantees.
+--
+
+- We will now cover **Lloyd's algorithm** which provides good intuition into the k-means problem.
+--
+
+- By default, R implements the more sophisticated (and complicated **Hartigan Wong** algorithm).
+
+---
+
+# Lloyd's algorithm
+
+1. Choose initial centroids (possibly at random).&lt;!--D--&gt;
+--
+
+2. Allocate each observation to cluster corresponding with nearest centroid&lt;!--D--&gt;
+--
+
+3. Re-compute centroids as the mean of all observations in the cluster&lt;!--D--&gt;
+--
+
+4. Repeat steps 2 and 3 until convergence
+
+---
+
+# Raw Data
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-41-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Initial Centroids
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-42-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Initial Allocation
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-43-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Re-compute Centroids
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-44-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Reallocate
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-45-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+# Reallocate
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-46-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Recompute Centroids
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-47-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Reallocate
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-48-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Reallocate
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-49-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Stable solution
+
+
+&lt;img src="Clustering_files/figure-html/unnamed-chunk-50-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Wholesaler Data
+
+- Recall the Wholesaler data from earlier in the lecture&lt;!--D--&gt;
+--
+
+- The variables are annual spend in 6 categories.&lt;!--D--&gt;
+--
+
+- Should the data be standardised?&lt;!--D--&gt;
+--
+
+- Try to carry out k means clustering using the R function `kmeans`&lt;!--D--&gt;
+--
+
+- Find a solution with 3 clusters.
+
+---
+
+# k-means in R
+
+To do a three cluster solution
+
+
+```r
+WholesaleCluster&lt;-kmeans(Wholesale,3)
+```
+
+If the data are in a data.frame you may need to select the numeric variables.
+
+---
+
+# R output
+
+- The result of the R function kmeans will be a list containing
+several entries. The most interesting are&lt;!--D--&gt;
+--
+
+  + A variable indicating cluster membership is given in `cluster`&lt;!--D--&gt;
+--
+
+  + The centroids for each cluster are given in `centers`&lt;!--D--&gt;
+--
+
+  + The number of observations in each cluster is given by `size`&lt;!--D--&gt;
+--
+
+  + The cluster centroids can be useful for profiling the clusters.
+
+---
+
+# Cluster Centroids
+
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Fresh &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Milk &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Grocery &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Frozen &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Detergents_Paper &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Delicassen &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8000.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18511.420 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27573.900 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996.680 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12407.360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2252.020 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 35941.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6044.450 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6288.617 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6713.967 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1039.667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3049.467 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8253.47 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3824.603 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5280.455 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2572.661 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1773.058 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1137.497 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+---
+
+# Robustness Check
+
+Since values are sensitive to starting values, we can run the algorithm with many different starting values using the `nstart` option
+
+```r
+WholesaleCluster&lt;-kmeans(Wholesale,3,nstart = 25)
+```
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Fresh &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Milk &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Grocery &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Frozen &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Detergents_Paper &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Delicassen &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 35941.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6044.450 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6288.617 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6713.967 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1039.667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3049.467 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8000.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18511.420 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27573.900 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996.680 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12407.360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2252.020 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8253.47 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3824.603 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5280.455 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2572.661 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1773.058 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1137.497 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+
+---
+
+# Label switching
+
+- Two slides back the second cluster had the highest spend on fresh food.
+--
+
+- One slide back the first cluster that had the highest spend on fresh food.
+--
+
+- The centroids were identical, they were just flipped around.  This is called **Label switching**.  
+--
+
+- It does not matter which cluster is first, second or third.  The means are important.
+
+---
+
+# Number of clusters
+
+- The motivation of k means clustering is that the number of clusters is already known.
+--
+
+- In principal different choices of `\(k\)` can be used and compared to one another.
+--
+
+- However, unlike hierarchical clustering, these different solutions can contradict one another.
+
+---
+
+# The meaning of non hierarchical
+
+- Consider the two cluster solution (Solution A) and three cluster solution (Solution B) for **hierarchical** clustering.&lt;!--D--&gt;
+--
+
+  + If two variables are in the same cluster in Solution B then they will be in the same cluster in Solution A&lt;!--D--&gt;
+--
+
+- The same is not true for **non-hierarchical** clustering including k-means clustering.
+
+---
+
+# Hierarchical Clustering
+
+Together we will use Ward's method to do hierarchical clustering on the Wholesale data and get the cluster membership from the two and three cluster solutions.
+
+Then you can try the same for k-means
+
+---
+
+# Solution
+
+
+```r
+Wholesale%&gt;%
+  dist%&gt;%
+  hclust(method='ward.D2')-&gt;hiercl
+cl2&lt;-cutree(hiercl,2)
+cl3&lt;-cutree(hiercl,3)
+table(cl2,cl3)
+```
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 261 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 134 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Same exercise for k-means
+
+
+```r
+km2&lt;-kmeans(Wholesale,2)
+kmcl2&lt;-km2$cluster
+km3&lt;-kmeans(Wholesale,2)
+kmcl3&lt;-km2$cluster
+table(kmcl2,kmcl3)
+```
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 330 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Non-hierarchical
+
+- Consider the observations in Cluster 3 when `\(k=3\)`.  When we go from `\(k=3\)` to `\(k=2\)`&lt;!--D--&gt;
+--
+
+  + There are 6 of these observations that go to the new cluster 1.&lt;!--D--&gt;
+--
+
+  + The remaining 44 observations go to the new cluster 2.&lt;!--D--&gt;
+--
+
+- Notice that there is some label switching as well.
+
+---
+class: inverse, middle, center
+
+# Comparing Cluster solutions
+---
+
+# Comparing Cluster solutions
+- A challenging aspect of cluster analysis is that it is difficult to evaluate a cluster solution.&lt;!--D--&gt;
+--
+
+  + In forecasting compare forecasts to outcomes.&lt;!--D--&gt;
+--
+
+  + In regression look at goodness of fit.&lt;!--D--&gt;
+--
+
+- There is also very little theory to guide us.&lt;!--D--&gt;
+--
+
+  + In regression we know least squares is BLUE under certain assumptions.&lt;!--D--&gt;
+--
+
+- How do we choose a clustering algorithm?
+
+---
+
+
+# Choosing a method
+
+- There is no *ideal* method to do hierarchical clustering.
+--
+
+- A good strategy is to try a few different methods.
+--
+
+- If there is a clear structure in the data then most methods will give similar results.
+  - It is not unusual to find one method yielding very different results.
+--
+
+- If all methods give vastly different results then perhaps there are no clear clusters in the data.
+
+---
+
+# Robustness
+
+- We can check if a clustering solution is robust to different algorithms.&lt;!--D--&gt;
+--
+
+- For example if the centroid method, average linkage, Ward method and k-means all give similar clusters then we can be confident that the clusters are truly a feature of the data.&lt;!--D--&gt;
+--
+
+- One way to evaluate this is to look at the Rand Index.
+
+---
+
+# Rand Index
+
+- Suppose we have two cluster solutions, Solution A and Solution B.&lt;!--D--&gt;
+--
+
+- Pick two observations at random `\({\mathbf x}\)` and `\({\mathbf y}\)`.
+--
+
+  1. `\({\mathbf x}\)` and `\({\mathbf y}\)` are in the same cluster in Solution A and the same cluster in Solution B&lt;!--D--&gt;
+--
+
+  2. `\({\mathbf x}\)` and `\({\mathbf y}\)` are in different clusters in Solution A and different clusters in Solution B&lt;!--D--&gt;
+--
+
+  3. `\({\mathbf x}\)` and `\({\mathbf y}\)` are in the same cluster in Solution A and the different cluster in Solution B&lt;!--D--&gt;
+--
+
+  4. `\({\mathbf x}\)` and `\({\mathbf y}\)` are in different clusters in Solution A and same clusters in Solution B
+
+---
+
+# Rand Index
+
+- Scenario 1 and scenario 2 both suggest that the cluster solutions are in **agreement**&lt;!--D--&gt;
+--
+
+- Scenario 3 and scenario 4 both suggest that the cluster solutions are in **disagreement**&lt;!--D--&gt;
+--
+
+- The **Rand Index** gives the probability of picking two observations at random that are in agreement.&lt;!--D--&gt;
+--
+
+- The **Rand Index** lies between 0 and 1 and higher numbers indicate agreement.
+
+---
+
+# Adjusted Rand Index
+
+- Even if observations are clustered at random, there will still be some agreement due to chance.&lt;!--D--&gt;
+--
+
+- The adjusted Rand index is designed to be 0 if the level of agreement is equivalent to the case where clustering is done at random.&lt;!--D--&gt;
+--
+
+- It is still only equal to 1 if the two clustering solutions are in perfect agreement.&lt;!--D--&gt;
+--
+
+- The adjusted Rand Index can be computed using the `adjustedRandIndex` function in the package `mclust`
+
+---
+
+# Conclusion
+
+- There are many methods for clustering.
+--
+
+- For this reason a cluster analysis should be carried out carefully and transparently.
+--
+
+- Although we have focused on algorithms in the lecture, remember that the objective of cluster analysis is to explore the data.
+--
+
+- As such remember to profile the clusters and to provide insight into what these clusters may represent.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
