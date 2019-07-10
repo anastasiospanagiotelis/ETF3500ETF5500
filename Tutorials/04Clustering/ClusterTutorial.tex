@@ -1,0 +1,66 @@
+\documentclass{article}
+\title{Tutorial: Cluster Analysis}
+\author{High Dimensional Data Analysis}
+\date{Week 9}
+\begin{document}
+\maketitle
+\section*{Concepts}
+\begin{enumerate}
+  \item Why might a researcher use cluster analysis?
+  \item Distinguish between hierarchical and non-hierarchical cluster techniques. In what situations would you use each of these techniques?
+\end{enumerate}
+\section*{Application: Hierarchical Clustering}
+
+This section uses the mtcars dataset which is available with R.
+\begin{enumerate}
+	\item Cluster the data using Ward's D2 method (with squared distances) and Euclidean distance.
+	\item Produce a dendrogram for the above analysis
+	\item Discuss whether the following choices for the number of clusters are suitable	or not
+	\begin{enumerate}
+		\item One-cluster
+		\item Two-cluster
+		\item Three-cluster
+		\item Four-cluster
+	\end{enumerate}
+
+	\item  For the 2-cluster solution, store the cluster membership in a new variable.
+	\item  Repeat part 4 using:
+	\begin{enumerate}
+		\item Average Linkage
+		\item Centroid Method
+		\item Complete Linkage Method
+	\end{enumerate}
+
+	\item Find the adjusted Rand Index between your answer to question 4 and
+	\begin{enumerate}
+		\item Your answer to 5 (a)
+		\item Your answer to 5 (b)
+		\item Your answer to 5 (c)
+	\end{enumerate}
+\end{enumerate}
+\section*{Application: Non-Hierarchical Clustering}
+This section uses the Wholesale dataset which is available on Moodle and was originally obtained from the UCI machine learning repository.  The purpose of this section is to implement the following procedure
+\begin{enumerate}
+	\item Separate the data into a training sample with 220 observations and a test sample  with  220 observations.   The  same  observation  cannot  appear  in both samples.
+	\item  Using the {\bf test} sample only
+	\begin{enumerate}
+		\item Run k-means clustering with two clusters
+		\item  Obtain the cluster membership of each {\bf test}
+		observation
+	\end{enumerate}
+	\item  Using the {\bf training} sample only
+	\begin{enumerate}
+		\item Run k-means clustering with two clusters
+		\item Obtain the center of each cluster
+		\item For  each {\bf test} observation  find  the nearest  center  obtained  at  step 3(b).
+		\item Allocate  each  test  observation  to  the  cluster  corresponding  to  the
+		nearest center.
+		\item This gives the cluster membership of each test observation.
+	\end{enumerate}
+	\item  Compare the result in 2(b) and 3(e) using a cross tab and adjusted Rand Index
+    \item  Repeat steps 2-4 with 3 clusters.
+\end{enumerate}
+{\bf Tips:} To split up the sample, first we need to select which observation go into the test sample and which ones go into the training sample. The function {\em sample} can be useful here.  Also, Steps 3(b)-3(e) looks quite difficult but can be done using the function {\em cl\_predict}
+which is available in the R package {\em clue}.
+
+\end{document}

@@ -1,0 +1,31 @@
+---
+title: 'HDDA Tutorial: Distance'
+author: "Department of Econometrics and Business Statistics, Monash University"
+date: "Tutorial 3"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Work in groups of two people:
+
+  1. Consider the *age* and *height* of both you and the other person (you are allowed to lie about these).  Compute the Euclidean distance between you and the other person for these two variables.
+	2. Repeat question 1 but use the Manhattan distance.
+
+Select from the following list the types of cuisines that you enjoy:
+
+	- Chinese food
+	- Indian food
+	- Italian food
+	- Japanese food
+	- Lebanese food
+	- Mexican food
+	- Thai food
+	- British food
+
+3. Compute a Jaccard similarity between you and the other person with regards to your taste in food.
+4. Compute a Jaccard distance between you and the other person with regards to your taste in food.
+5. How would you define a distance between you and the other person that takes into account height, age and food preference.
