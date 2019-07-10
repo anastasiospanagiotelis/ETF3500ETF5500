@@ -7,24 +7,50 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+sols<-FALSE
 ```
 
 ## Motivation
 
-  1. Describe the role that preliminary data analysis plays in the overall statistical analysis of a dataset. Give examples to illustrate your answer.
+  1. Describe the role that exploratory data analysis plays in the overall statistical analysis of a dataset. Give examples to illustrate your answer.
+
+`r if(sols) "*Preliminary data analysis is very important. It helps identify data problems (such as outliers or other anomalous observations). Moreover, it helps you get a “feel” for your data and also helps to identify potential relationships. For	example, boxplots can be used to help identify if spending is different according to gender. A scatterplot or histogram	and descriptive statistics can help identify outliers either visually or due to strange ranges and large differences between the mean and median*"`  
+  
   2. Think  of  a  problem  from  business  or  another  discipline  where the data are multivariate.  How may the data be explained by a smaller number of unobserved variables.
+
+`r if(sols) "*One example could be a survey recording customer satisfaction for a hotel.  Several survey questions could be asked for instance one may be about the cleanliness of the hotel, another may be about the friendliness of the staff, another about the facilities and another about the breakfast.  These four questions may however be able to be reduced to a single variable about the general quality of the hotel.*"`
 
 ## Measurement
 
 Think of an example of a non-metric variable and metric variable.  For each variable answer the following:
 
   1. Is the variable measured on a nominal, ordinal or ratio scale?
+  
+`r if(sols)  "*Mode of transport (bike, car or train) is an example of a non-metric variable (measured on a nominal scale) while stock return is an example of a metric variable (measured on a ratio scale).*"`
   2. What would be a good summary or plot to use to get an idea about this data?
+`r if(sols) "*The proportion individuals who use each mode of transport while the mean, mode and median all give some idea of the central tendency of stock returns*"`  
 
 ##Introduction to R
 
   1. Open R Studio on your workstation and load the pacakge ggplot2.  Once you have familiarised yourself with R, install R, R studio and the add-on package ggplot2 on to your own laptop.
   2. Load the dataset Beer.rds which can be downloaded from Moodle.
+
+```{r, echo = sols, eval=sols}
+  Beer<-readRDS('Beer.rds')
+```
+  
   3. Produce a histogram of the price  variable.  Use the function `qplot` for this.
+  
+```{r, echo = sols, eval=sols}
+  library(ggplot2)
+  qplot(Beer$price)
+```
   4. Do you identify any outliers in the data?
+  
+`r if(sols) "*There is a clear outlier with a price above $7*"`
   5. Produce a cross tab of beer rating against origin.  Use the function `table` for this.
+
+```{r, echo = sols, eval=sols}
+  library(ggplot2)
+  table(Beer$rating,Beer$origin)
+```
