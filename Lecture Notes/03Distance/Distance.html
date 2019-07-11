@@ -491,7 +491,7 @@ class:inverse, middle, center
   + Multidimensional Scaling (MDS)&lt;!--D--&gt;
 --
 
-- Now one final exercise
+- Now an exercise
 
 ---
 
@@ -502,6 +502,33 @@ class:inverse, middle, center
   + Find the first two tweets
   + Think of a way to compute a Jaccard distance between their tweets
 - Hint: Think of the words used in the tweet as a *set*
+
+---
+
+# Axioms of Distance
+
+- Care should be taken when using the word distance.
+- In formal mathematics a distance is a function with two inputs that has to satisfy four properties.
+- These four properties are called *axioms*.
+- The distance measures that we have discussed satisfy the axioms
+
+---
+
+# Axioms of Distance
+
+1. Non-negative: `\(d(x,y)\ge 0\)`
+  - There cannot be negative distance.
+2. Symmetry: `\(d(x,y)=d(y,x)\)`
+  - It cannot be a different distance from Melbourne to Brisbane that from Brisbane to Melbourne.
+
+---
+
+# Axioms of Distance
+
+3. Identity of indiscernables: if `\(d(x,y)=0\)` then `\(x=y\)` and vice versa
+  - The distance from Melbourne to some place is zero then that place is Melbourne.  Similarly the distance from Melbourne to itself is zero.
+4. Triangle inequality: `\(d(x,z)\leq d(x,y)+d(y,z)\)` 
+  It cannot be closer to go from Melbourne to Brisbane via Sydney than it is to go from Melbourne to Brisbane directly.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
