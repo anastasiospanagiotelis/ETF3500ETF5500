@@ -1,13 +1,23 @@
 ---
-title: 'HDDA Tutorial: Introduction and R'
+output: pdf_document
 author: "Department of Econometrics and Business Statistics, Monash University"
 date: "Tutorial 1"
-output: pdf_document
+---
+
+```{r, echo = FALSE}
+#rmarkdown::render('Intro.Rmd',output_file='Intro.pdf')
+#rmarkdown::render('Intro.Rmd',output_file='IntroSols.pdf')
+sols<-FALSE
+title<-ifelse(sols, 'HDDA Tutorial: Introduction and R: Solutions','HDDA Tutorial: Introduction and R')
+```
+
+---
+title: "`r title`"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-sols<-FALSE
+
 ```
 
 ## Motivation
@@ -45,9 +55,11 @@ Think of an example of a non-metric variable and metric variable.  For each vari
   library(ggplot2)
   qplot(Beer$price)
 ```
+  
   4. Do you identify any outliers in the data?
   
 `r if(sols) "*There is a clear outlier with a price above $7*"`
+  
   5. Produce a cross tab of beer rating against origin.  Use the function `table` for this.
 
 ```{r, echo = sols, eval=sols}
