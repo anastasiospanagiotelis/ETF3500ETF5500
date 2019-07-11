@@ -55,10 +55,10 @@ plot(hcl)
 
 3. Discuss whether the following choices for the number of clusters are suitable	or not
 
-		- One-cluster
-		- Two-cluster
-		- Three-cluster
-		- Four-cluster
+  - One-cluster
+  - Two-cluster
+  - Three-cluster
+  - Four-cluster
 
 `r if(sols) '*One cluster is a poor choice since it defeats the purpose of doing a cluster analysis.  The dendrogram shows that the two cluster solution prevails over a range of tolerance of about 10.5 to 17 while the 4 cluster solution prevails over a range of tolerance of about 5.5 to 9.  The three cluster solution only prevails over a short range of tolerance.  In this sense the two-cluster and four-cluster solutions are more stable than the three-cluster solution and should be preferred.*'`
 
@@ -86,4 +86,22 @@ hclust(d,method='complete')%>%
 	(a) Your answer to 5 (a)
 	(b) Your answer to 5 (b)
 	(c) Your answer to 5 (c)
+
+```{r, eval=sols,echo=sols,message=FALSE}
+#Must load (dont forget to install first)
+library(mclust)
+adjustedRandIndex(memb_two_ward,memb_two_al)
+# Average linkage has a relatively high level of agreement with
+#Ward's method. 
+adjustedRandIndex(memb_two_ward,memb_two_cm)
+#The centroid method gives results that are even less in agreement
+#than would be the case of groups were selected at random.
+adjustedRandIndex(memb_two_ward,memb_two_cl)
+#Complete Linkage gives exactly the same solution as Ward's method
+
+
+# Overall the results are fairly robust with respect to the 
+#clustering algorithm used.
+
+```	
 
