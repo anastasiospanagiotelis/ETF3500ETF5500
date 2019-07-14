@@ -13,9 +13,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-    includes:
-      after_body: extra.html
-    
+
 ---
 
 class: inverse, center, middle
@@ -44,7 +42,7 @@ rm(list=ls())
 
 # Motivation
 
-- Last week we looked at the concept of *distance* between observations.<!--D-->
+- Previously we looked at the concept of *distance* between observations.<!--D-->
 --
 
 - We looked at our usual understanding of distance known as *Euclidean* distance.<!--D-->
@@ -66,9 +64,18 @@ rm(list=ls())
 --
 
 - This works nicely when there are 2 variables.<!--D-->
+
+---
+
+# Higher-dimensional plots
+
+- Suppose we have $p$ variables where $p$ is large.
 --
 
-- Can we see higher dimensional distances or non Euclidean distances in 2-dimensions?<!--D-->
+- Consider $p$-dimensional Euclidean distances.<!--D-->
+--
+
+- Can we represent these using just $2$-dimensions?<!--D-->
 --
 
 - Unfortunately the answer is no...<!--D-->
@@ -102,7 +109,7 @@ rm(list=ls())
 
 # Why does the illusion work?
 
-- Difference between the 3D distance of reality, and the 2D distance in the photo.<!--D-->
+- The photo is a 2D representation of a 3D reality.<!--D-->
 --
 
 - In reality the distance between Beyonce's hand and the Eiffel Tower is large.<!--D-->
@@ -140,8 +147,8 @@ another?<!--D-->
 
 # Beer Example
 
-```{r beer, echo=FALSE,fig.width=8,fig.height=8}
-load('Beer.RData') #Make sure you change this to reflect your directory structure
+```{r beer, echo=FALSE,fig.width=8,fig.height=7}
+Beer<-readRDS('Beer.rds') 
 
 #Unstandardised Numeric Data
 
@@ -151,7 +158,7 @@ filter(Beer,rating=='Fair')%>% #Only high price
   dist->d
 
 filter(Beer,rating=='Fair')%>% #Only high price
-  use_series(beer)%>%
+  pull(beer)%>%
   abbreviate(6)->
   attributes(d)$Labels
 
@@ -159,7 +166,7 @@ mdsout<-cmdscale(d)
 colnames(mdsout)<-c('PC1','PC2')
 
 mdsout%>%
-  as.data.frame%>%
+  as.data.frame()%>%
   rownames_to_column('BeerName')%>%
   ggplot(aes(x=PC1,y=PC2,label=BeerName))+geom_text(size=10)+coord_cartesian(xlim=c(-3.5,3.5))
 
@@ -240,7 +247,7 @@ filter(Beer,rating=='Fair')%>% #Only fair beers
   dist->delta #Distance
 
 filter(Beer,rating=='Fair')%>% #Only fair beers
-  use_series(beer)%>% #Get beer names
+  pull(beer)%>% #Get beer names
   abbreviate(6)-> #Abbreviate
   attributes(delta)$Labels #Assign to d
 ```
@@ -291,9 +298,10 @@ $$
 
 # Getting the plot
 
-```{r getplot, fig.height=4,echo=TRUE}
+```{r getplot, fig.height=4,echo=TRUE,warning=FALSE}
+
 mdsout%>%
-  as_data_frame%>% 
+  as.data.frame%>% 
   ggplot(aes(x=V1,y=V2))+geom_point()
 ```
 
@@ -301,9 +309,9 @@ mdsout%>%
 
 # Getting the plot with names
 
-```{r getplotn, fig.height=4, echo=TRUE}
+```{r getplotn, fig.height=4, echo=TRUE,warning=FALSE}
 mdsout%>%
-  as_data_frame(rownames='BeerName')%>%
+  as_tibble(rownames='BeerName')%>%
   ggplot(aes(x=V1,y=V2,label=BeerName))+geom_text()
 ```
 
@@ -317,86 +325,37 @@ mdsout%>%
 
 $$\mbox{Strain}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}(\delta^2_{ij}-d^2_{ij})$$
 
-- This is a similar procedure (and can even be equivalent) to PCA.
+- Note that the $\delta_{ij}$ are high dimensional distances that come from the true data.
+--
+
+- The $d_{ij}$ are high dimensional distances that come from the solution.
 
 ---
 
-# MDS and PCA
+# When can this be solved?
 
-- There are some similarities with PCA<!--D-->
+- The above problem has a unique and tractable solution when Euclidean distance is used.
 --
 
-  + We represent information in a small number of dimensions<!--D-->
+- This solution depends on an Eigenvalue decomposition.
 --
 
-  + This representation involves some sort of rotation in the high dimensional space.<!--D-->
---
-
-- In the case where the $\delta$ are Euclidean distances MDS will be equivalent to PCA.<!--D-->
---
-
-- For this reason, the coordinates that come out of classical MDS are
-often called **principal coordinates**.
----
-
-# MDS and PCA
-
-- This also means that when we look at principal components we know two things<!--D-->
---
-
-  + The principal components maximise the explained variance<!--D-->
---
-
-  + The principal components accurately represent the distances between our observations!
+- Imagine this solution as *rotating* the points until we get a 2D view that represents the true distances as accurately as possible.
 
 ---
 
-# How good is this representation?
+# Summary
 
-
-- To evaluate the quality of a MDS representation there are two goodness of fit measures.<!--D-->
+- When Euclidean distance is used the solution provided by classical MDS:
 --
 
-- As a rule of thumb, values greater than 0.8 are desirable.<!--D-->
+  - Minimises the strain.
 --
 
-- These can be obtained using the option `eig=TRUE` in the `cmdscale` function<!--D-->
+  - Results in Eigenvalues that are all positive
 --
 
-```{r,mdseig}
-mdsout<-cmdscale(delta,eig=TRUE)
-print(mdsout$GOF)
-```
-
----
-
-# Is the solution any good?
-
-- These values depend on the eigenvalues
-$$\mbox{GF}_1=\frac{\sum\limits_{i=1}^2 |\lambda_i|}{\sum\limits^n_{i=1}|\lambda_i|}\,
-\mbox{GF}_2=\frac{\sum\limits_{i=1}^2 max(0,\lambda_i)}{\sum\limits^n_{i=1}max(0,\lambda_i)}$$
-- For Euclidean distances $\delta_{ij}$ eigenvalues are always positive and $\mbox{GF}_1=\mbox{GF}_2$.
-
----
-
-# Non-Euclidean distances
-
-- In practice non-Euclidean distances can also be used in classical multidimensional scaling.<!--D-->
---
-
-- However, using non-Euclidean distances can lead to negative eigenvalues.  In this case:<!--D-->
---
-
-  + Classical MDS may not minimise Strain.<!--D-->
---
-
-  + Two fit measures will differ.<!--D-->
---
-
-- MDS is not equivalent to PCA when $\delta$ is non-Euclidean.<!--D-->
---
-
-- Overall, we can use classical MDS for non-Euclidean distance but must be more careful.
+- Can we use classical MDS when distances are non-Euclidean?
 
 ---
 
@@ -405,16 +364,13 @@ $$\mbox{GF}_1=\frac{\sum\limits_{i=1}^2 |\lambda_i|}{\sum\limits^n_{i=1}|\lambda
 - Suppose that we have the road distances between different cities in Australia.<!--D-->
 --
 
-- We want to create a 2-dimensional map with the locations of the cities using only these road distances.  However<!--D-->
+- The road distances are non-Euclidean since roads can be quite wiggly.<!--D-->
 --
 
-  + The earth is 3D<!--D-->
+- We want to create a 2-dimensional map with the locations of the cities using only these road distances.  
 --
 
-  + The roads are not straight lines, in particular some costal roads may be very wiggly.  Road distances are non-Euclidean.<!--D-->
---
-
-- However MDS gives an approximation that is quite close to a real map.
+- Classical MDS can give an approximation that is quite close to a real map.
 
 ---
 
@@ -453,7 +409,7 @@ kable(as.matrix(doz))%>% kable_styling(bootstrap_options = c("striped","hover","
 
 
 ```{r ozmap,eval=TRUE,echo=FALSE,message=FALSE, warning=FALSE}
-oz<-get_map(location='Australia',zoom=4,maptype = "watercolor",color = "color")
+#oz<-get_map(location='Australia',zoom=4),maptype = "watercolor",color = "color")
 coords<-data_frame(city=c("Sydney",
                   "Melbourne",
                   "Brisbane",
@@ -479,8 +435,8 @@ coords<-data_frame(city=c("Sydney",
                  -23.6980,
                  -12.463440)
            )
-g<-ggmap(oz)+geom_text(data=coords,aes(x=lng, y=lat,label=city),size=8,nudge_y = 1.5)+geom_point(data=coords,aes(x=lng, y=lat),size=6)
-g
+#g<-ggmap(oz)+geom_text(data=coords,aes(x=lng, y=lat,label=city),size=8,nudge_y = 1.5)+geom_point(data=coords,aes(x=lng, y=lat),size=6)
+#g
 ```
 
 ---
@@ -527,27 +483,99 @@ ggplot(ozmdsout,aes(x=lng,y=lat,label=city))+geom_text(size=8)+coord_cartesian(x
 # Back with Map
 
 ```{r, mdssolmap,echo=FALSE,eval=TRUE}
-ggmap(oz)+geom_text(data=ozmdsout,aes(x=lng, y=lat,label=city),size=8,nudge_y = 1.5)+geom_point(data=ozmdsout,aes(x=lng, y=lat),size=6)
+#ggmap(oz)+geom_text(data=ozmdsout,aes(x=lng, y=lat,label=city),size=8,nudge_y = 1.5)+geom_point(data=ozmdsout,aes(x=lng, y=lat),size=6)
 ```
 
 ---
 
 #Rotating
 
-- If we rotate the points then the distances between the points do not change.<!--D-->
+- Classical MDS rotates the points in high-dimensional space to get a 2D solution.
 --
 
-- Once we have an MDS solution any 2D rotated solution will be equally good.<!--D-->
+- We can further rotate the points with 2 dimensions.<!--D-->
 --
 
-- Sometimes these rotations help us to interpret the axes.<!--D-->
+  - The 2D rotation does not change any of the distances.<!--D-->
 --
 
-- In the previous example I rotated so the the x-axis represented East West direction and the y-axis represented North South.
+  - It can help us to interpret the axes.<!--D-->
+--
+
+- In the previous example the x-axis represents East-West direction and the y-axis represents North-South.
+
+---
+class: inverse, center, middle
+
+# Evaluating MDS
 
 ---
 
-# Evaluating this result
+# How good is this representation?
+
+- In theory, as long as the original distances are Euclidean, strain is minimised.
+--
+
+- What if the optimal solution is still bad?
+--
+
+- Use two goodness of fit measures.<!--D-->
+--
+
+- Think of these in a similar fashion to R square in regression modelling.
+
+---
+
+# Goodness of Fit Measures?
+
+- These values depend on the eigenvalues
+$$\mbox{GF}_1=\frac{\sum\limits_{i=1}^2 |\lambda_i|}{\sum\limits^n_{i=1}|\lambda_i|}\,
+\mbox{GF}_2=\frac{\sum\limits_{i=1}^2 max(0,\lambda_i)}{\sum\limits^n_{i=1}max(0,\lambda_i)}$$
+- For Euclidean distances $\delta_{ij}$ eigenvalues are always positive and $\mbox{GF}_1=\mbox{GF}_2$.
+
+---
+
+# Beer Example 
+
+- In R obtain GoF using the option `eig=TRUE` in the `cmdscale` function<!--D-->
+--
+
+- For the Beer data.
+```{r,mdseig,echo=TRUE}
+mdsout<-cmdscale(delta,eig=TRUE)
+print(mdsout$GOF)
+```
+
+---
+
+# GoF Measure
+
+- You may notice that the GoF measures are the same.
+--
+
+- This is always the case when Euclidean distance is used.
+--
+
+- This arises since all eigenvalues are positive when the distance matrix is based on Euclidean distance.
+
+---
+
+# Non-Euclidean distances
+
+- In theory non-Euclidean distances can lead to negative eigenvalues.  In this case:<!--D-->
+--
+
+  + Classical MDS may not minimise Strain.<!--D-->
+--
+
+  + Two fit measures will differ.<!--D-->
+--
+
+- Overall, we can use classical MDS for non-Euclidean distance but must be more careful.
+
+---
+
+# Australia data
 
 
 ```{r, roadeig,echo=TRUE}
@@ -578,7 +606,7 @@ print(dozout$GOF)
 
 # Another example: Cheese
 
-On moodle you will find the paper ‘Multidimensional Scaling of Sorting Data Applied to Cheese Perception’, Food Quality and Preference,6, pp.91-98.  The purpose of this study was to visualise the difference between types of cheese.
+The following example comes from ‘Multidimensional Scaling of Sorting Data Applied to Cheese Perception’, Food Quality and Preference,6, pp.91-98.  The purpose of this study was to visualise the difference between types of cheese.
 
 
 ---
@@ -618,6 +646,8 @@ cheeses<!--D-->
 --
 
   + Camembert and Roquefort
+--
+
 - The dissimilarity scores can be averaged over all
 customers and used in an MDS<!--D-->
 --
@@ -682,25 +712,9 @@ separate<!--D-->
 
 
 ---
+class: inverse, center, middle
 
 # Beyond Classical MDS
-
-- If you continue to read the paper you will notice that there are references to some new terms.<!--D-->
---
-
-  + SYSTAT (a software program)<!--D-->
---
-
-  + Non-metric MDS<!--D-->
---
-
-  + Kruskal's algorithm<!--D-->
---
-
-- So far we have only talked about one type of MDS, namely classical MDS.<!--D-->
---
-
-- There are many alternatives.
 
 ---
 
@@ -714,15 +728,161 @@ separate<!--D-->
 
 
 $$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}\frac{(\delta_{ij}-d_{ij})^2}{\delta_{ij}}$$
-
-- This penalises errors of observations that are close to one another more.<!--D-->
 --
 
-- Implemented in the `sammon` function in the R package `MASS`.
+- The difference between $\delta_{ij}$ and $d_{ij}$ acts like an error.
+--
+
+- The $\delta_{ij}$ on the denominator acts as a weight
 
 ---
 
-# Non-metric MDS
+#Weighting
+
+- For large $\delta$ observations are far away in the original space.
+--
+
+  - For these pairs errors are more easily tolerated.
+--
+
+- For small $\delta$ observations are close in the original space.
+--
+
+  - For these pairs errors are not tolerated.
+--
+
+- The most accuracy is achieved for nearby points
+--
+
+- The local structure is preserved.
+
+---
+
+# Example
+
+---
+
+# Sammon mapping
+
+- The Sammon mapping is solved by numerical optimisation.
+--
+
+- It is different from the classical solution
+--
+
+  - It is not based on an eigenvalue decomposition
+--
+
+  - It is not based on rotation
+--
+
+  - It is a non-linear mapping.
+
+---
+
+# Kruskal algorithm
+
+- Kruskal's algorithm minimises a slightly different criterion.
+--
+
+- This is still often called *stress*, which is admittedly confusing.
+--
+
+- Kruskal's algorithm is implemented in R using the `isoMDS` function from the `MASS` package.
+
+---
+
+# Monotone tranformations
+
+- Kruskal's algorithm is invariant to monotone transformations of the distances.
+--
+
+- By *monotone transformation* we mean any function of the distance that is either constantly increasing or decreasing.
+--
+
+  - Exponential function is monotone
+--
+
+  - Sine function is not monotone
+--
+
+- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change.
+
+---
+
+# Example
+
+```{r, echo=TRUE,message=FALSE}
+library(MASS)
+isoMDS(d)->kBeer
+
+```
+
+---
+
+# Make plot
+
+```{r, echo=TRUE,eval=FALSE,message=FALSE}
+kBeer$points%>%
+  as.data.frame()%>%
+  rownames_to_column('BeerName')%>%
+  ggplot(aes(x=V1,y=V2,label=BeerName))+
+  geom_text(size=10)
+```
+
+---
+
+# Make plot
+
+```{r, echo=FALSE,,eval=TRUE,message=FALSE}
+kBeer$points%>%
+  as.data.frame()%>%
+  rownames_to_column('BeerName')%>%
+  ggplot(aes(x=V1,y=V2,label=BeerName))+
+  geom_point(size=10)
+
+```
+
+---
+
+# Squared distances
+
+```{r, echo=TRUE,message=FALSE}
+isoMDS(d^2)->kBeer2
+
+```
+
+---
+
+# Solution
+
+```{r, echo=FALSE,,eval=TRUE,message=FALSE}
+kBeer2$points%>%
+  as.data.frame()%>%
+  rownames_to_column('BeerName')%>%
+  ggplot(aes(x=V1,y=V2,label=BeerName))+
+  geom_point(size=10)
+
+```
+
+---
+
+# Comparison
+
+- Squaring the distances provides the same solution with two caveats:
+--
+
+  - The stress is slightly different.  Numerical optimisation can vary a little depending on starting values. 
+--
+
+  - The points in one plot are slightly rotated compared to the other.
+--
+
+- Why is the invariance to monotone tranformations important?
+
+---
+
+# Non metric MDS
 
 - In some cases, the distance themselves are not metric but ordinal.<!--D-->
 --
@@ -733,6 +893,8 @@ $$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}\frac{(\delta_{ij}-d_{ij
 $$\delta_{\mbox{Bri.},\mbox{Cam.}}<
 \delta_{\mbox{Roq.},\mbox{Cam.}}<
 \delta_{\mbox{Roq.},\mbox{Bri.}}$$
+--
+
 - Brie and Roquefort are *more different* compared to Brie and Camembert.<!--D-->
 --
 
@@ -742,13 +904,7 @@ $$\delta_{\mbox{Bri.},\mbox{Cam.}}<
 
 # Non-metric MDS
 
-- In this case we solve a different optimisation problem.<!--D-->
---
-
-$$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}\frac{(\hat{\delta}_{ij}^2-d_{ij}^2)}{\hat{\delta}_{ij}}$$<!--D-->
---
-
-- Subject to constraints, e.g.<!--D-->
+- In this case we minimise Stress subject to constraints, e.g.<!--D-->
 --
 
 $$\hat{\delta}_{\mbox{Bri.},\mbox{Cam.}}<
@@ -759,37 +915,44 @@ $$\hat{\delta}_{\mbox{Bri.},\mbox{Cam.}}<
 
 # Non-metric MDS
 
-- Our solution requires us to find $\hat{\delta}$'s and $d$'s<!--D-->
+- Taking the ranks is an example of a monotone transformation.
+--
+
+- Therefore the solution of isoMDS only requires the ranks of the distances and not the distances themselves.
 --
 
 - This is a very useful algorithm for marketing since survey participants cannot easily and reliable assign numbers to the difference between products.<!--D-->
---
-
-- The `isoMDS` function in the R package `MASS` is one implementation of non-metric MDS.
 
 ---
 
-# Summary
+# Modern MDS
 
-- Go from a general distance matrix to a 2D representation that preserves distances as best as possible<!--D-->
+- Methods for finding a low dimensional representation of high-dimensional data continue to be used today
 --
 
-- Focus on classical MDS with Euclidean distances<!--D-->
+- These mostly go by the name of **manifold learning** methods
 --
 
-  + Minimises strain<!--D-->
+- They are not only used for visualisation
 --
 
-  + Is equivalent to PCA<!--D-->
+- The low-dimensional co-ordinates can also be used as features in classification and regression.
+
+---
+
+# Examples
+
+- Local Linear Embedding (LLE)
+- IsoMap
+
+---
+
+# Properties
+
+- For most of the modern methods two characteristics are common.
 --
 
-  + Can work well non-Euclidean distances<!--D-->
+  - The idea that local structure should be preserved.  The first step of many algorithms is to find nearest neighbours of each point.
 --
 
-- Be aware of other approaches<!--D-->
---
-
-  + Sammon mapping<!--D-->
---
-
-  + Non-metric MDS
+  - In many algorithms an eigenvalue decomposition forms part of the solution as is the case in classic MDS.

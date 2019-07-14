@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Multidimensional Scaling</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Anastasios Panagiotelis" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script src="libs/kePrint/kePrint.js"></script>
@@ -31,7 +31,7 @@ class: inverse, center, middle
 
 # Motivation
 
-- Last week we looked at the concept of *distance* between observations.&lt;!--D--&gt;
+- Previously we looked at the concept of *distance* between observations.&lt;!--D--&gt;
 --
 
 - We looked at our usual understanding of distance known as *Euclidean* distance.&lt;!--D--&gt;
@@ -53,9 +53,18 @@ class: inverse, center, middle
 --
 
 - This works nicely when there are 2 variables.&lt;!--D--&gt;
+
+---
+
+# Higher-dimensional plots
+
+- Suppose we have `\(p\)` variables where `\(p\)` is large.
 --
 
-- Can we see higher dimensional distances or non Euclidean distances in 2-dimensions?&lt;!--D--&gt;
+- Consider `\(p\)`-dimensional Euclidean distances.&lt;!--D--&gt;
+--
+
+- Can we represent these using just `\(2\)`-dimensions?&lt;!--D--&gt;
 --
 
 - Unfortunately the answer is no...&lt;!--D--&gt;
@@ -89,7 +98,7 @@ class: inverse, center, middle
 
 # Why does the illusion work?
 
-- Difference between the 3D distance of reality, and the 2D distance in the photo.&lt;!--D--&gt;
+- The photo is a 2D representation of a 3D reality.&lt;!--D--&gt;
 --
 
 - In reality the distance between Beyonce's hand and the Eiffel Tower is large.&lt;!--D--&gt;
@@ -156,25 +165,25 @@ light beers).&lt;!--D--&gt;
 
 # Beer Data
 
-&lt;div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:500px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; rating &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; beer &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; origin &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; avail &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; price &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; cost &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; calories &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; sodium &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; alcohol &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; light &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; beer &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; rating &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; origin &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; avail &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; price &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; cost &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; calories &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; sodium &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; alcohol &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; light &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Olympia Gold Light &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.75 &lt;/td&gt;
@@ -185,8 +194,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; LIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Pabst Extra Light &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.29 &lt;/td&gt;
@@ -197,8 +206,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; LIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Schlitz Light &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.79 &lt;/td&gt;
@@ -209,8 +218,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; LIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Blatz &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.79 &lt;/td&gt;
@@ -221,8 +230,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Hamms &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.59 &lt;/td&gt;
@@ -233,8 +242,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Heilmans Old Style &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.59 &lt;/td&gt;
@@ -245,8 +254,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Rolling Rock &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.15 &lt;/td&gt;
@@ -257,8 +266,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Scotch Buy (Safeway) &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.59 &lt;/td&gt;
@@ -269,8 +278,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; St Pauli Girl &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Germany &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4.59 &lt;/td&gt;
@@ -281,8 +290,8 @@ light beers).&lt;!--D--&gt;
    &lt;td style="text-align:left;"&gt; NONLIGHT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Tuborg &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; USA &lt;/td&gt;
    &lt;td style="text-align:left;"&gt; Regional &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.59 &lt;/td&gt;
@@ -337,7 +346,7 @@ filter(Beer,rating=='Fair')%&gt;% #Only fair beers
   dist-&gt;delta #Distance
 
 filter(Beer,rating=='Fair')%&gt;% #Only fair beers
-  use_series(beer)%&gt;% #Get beer names
+  pull(beer)%&gt;% #Get beer names
   abbreviate(6)-&gt; #Abbreviate
   attributes(delta)$Labels #Assign to d
 ```
@@ -353,7 +362,7 @@ We can do what is known as **classical** MDS in R using the `cmdscale` function
 mdsout&lt;-cmdscale(delta)
 ```
 
-&lt;div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:200px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; OlymGL &lt;/td&gt;
@@ -442,7 +451,7 @@ $$
 
 ```r
 mdsout%&gt;%
-  as_data_frame%&gt;% 
+  as.data.frame%&gt;% 
   ggplot(aes(x=V1,y=V2))+geom_point()
 ```
 
@@ -455,7 +464,7 @@ mdsout%&gt;%
 
 ```r
 mdsout%&gt;%
-  as_data_frame(rownames='BeerName')%&gt;%
+  as_tibble(rownames='BeerName')%&gt;%
   ggplot(aes(x=V1,y=V2,label=BeerName))+geom_text()
 ```
 
@@ -471,86 +480,37 @@ mdsout%&gt;%
 
 `$$\mbox{Strain}=\sum\limits_{i=1}^{n-1}\sum\limits_{j&gt;i}(\delta^2_{ij}-d^2_{ij})$$`
 
-- This is a similar procedure (and can even be equivalent) to PCA.
+- Note that the `\(\delta_{ij}\)` are high dimensional distances that come from the true data.
+--
+
+- The `\(d_{ij}\)` are high dimensional distances that come from the solution.
 
 ---
 
-# MDS and PCA
+# When can this be solved?
 
-- There are some similarities with PCA&lt;!--D--&gt;
+- The above problem has a unique and tractable solution when Euclidean distance is used.
 --
 
-  + We represent information in a small number of dimensions&lt;!--D--&gt;
+- This solution depends on an Eigenvalue decomposition.
 --
 
-  + This representation involves some sort of rotation in the high dimensional space.&lt;!--D--&gt;
---
-
-- In the case where the `\(\delta\)` are Euclidean distances MDS will be equivalent to PCA.&lt;!--D--&gt;
---
-
-- For this reason, the coordinates that come out of classical MDS are
-often called **principal coordinates**.
----
-
-# MDS and PCA
-
-- This also means that when we look at principal components we know two things&lt;!--D--&gt;
---
-
-  + The principal components maximise the explained variance&lt;!--D--&gt;
---
-
-  + The principal components accurately represent the distances between our observations!
+- Imagine this solution as *rotating* the points until we get a 2D view that represents the true distances as accurately as possible.
 
 ---
 
-# How good is this representation?
+# Summary
 
-
-- To evaluate the quality of a MDS representation there are two goodness of fit measures.&lt;!--D--&gt;
+- When Euclidean distance is used the solution provided by classical MDS:
 --
 
-- As a rule of thumb, values greater than 0.8 are desirable.&lt;!--D--&gt;
+  - Minimises the strain.
 --
 
-- These can be obtained using the option `eig=TRUE` in the `cmdscale` function&lt;!--D--&gt;
+  - Results in Eigenvalues that are all positive
 --
 
-
-```
-## [1] 0.8543224 0.8543224
-```
-
----
-
-# Is the solution any good?
-
-- These values depend on the eigenvalues
-`$$\mbox{GF}_1=\frac{\sum\limits_{i=1}^2 |\lambda_i|}{\sum\limits^n_{i=1}|\lambda_i|}\,
-\mbox{GF}_2=\frac{\sum\limits_{i=1}^2 max(0,\lambda_i)}{\sum\limits^n_{i=1}max(0,\lambda_i)}$$`
-- For Euclidean distances `\(\delta_{ij}\)` eigenvalues are always positive and `\(\mbox{GF}_1=\mbox{GF}_2\)`.
-
----
-
-# Non-Euclidean distances
-
-- In practice non-Euclidean distances can also be used in classical multidimensional scaling.&lt;!--D--&gt;
---
-
-- However, using non-Euclidean distances can lead to negative eigenvalues.  In this case:&lt;!--D--&gt;
---
-
-  + Classical MDS may not minimise Strain.&lt;!--D--&gt;
---
-
-  + Two fit measures will differ.&lt;!--D--&gt;
---
-
-- MDS is not equivalent to PCA when `\(\delta\)` is non-Euclidean.&lt;!--D--&gt;
---
-
-- Overall, we can use classical MDS for non-Euclidean distance but must be more careful.
+- Can we use classical MDS when distances are non-Euclidean?
 
 ---
 
@@ -559,34 +519,31 @@ often called **principal coordinates**.
 - Suppose that we have the road distances between different cities in Australia.&lt;!--D--&gt;
 --
 
-- We want to create a 2-dimensional map with the locations of the cities using only these road distances.  However&lt;!--D--&gt;
+- The road distances are non-Euclidean since roads can be quite wiggly.&lt;!--D--&gt;
 --
 
-  + The earth is 3D&lt;!--D--&gt;
+- We want to create a 2-dimensional map with the locations of the cities using only these road distances.  
 --
 
-  + The roads are not straight lines, in particular some costal roads may be very wiggly.  Road distances are non-Euclidean.&lt;!--D--&gt;
---
-
-- However MDS gives an approximation that is quite close to a real map.
+- Classical MDS can give an approximation that is quite close to a real map.
 
 ---
 
 # Road Distances
 
 
-&lt;div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:500px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; "&gt;&lt;table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Cairns &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Brisbane &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Sydney &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Melbourne &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Adelaide &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Perth &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Darwin &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Alice Springs &lt;/th&gt;
+   &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Cairns &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Brisbane &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Sydney &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Melbourne &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Adelaide &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Perth &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Darwin &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; Alice Springs &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
@@ -686,7 +643,7 @@ often called **principal coordinates**.
 # Australia
 
 
-&lt;img src="MDS_files/figure-html/ozmap-1.png" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
@@ -703,26 +660,103 @@ often called **principal coordinates**.
 
 # Back with Map
 
-&lt;img src="MDS_files/figure-html/mdssolmap-1.png" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
 #Rotating
 
-- If we rotate the points then the distances between the points do not change.&lt;!--D--&gt;
+- Classical MDS rotates the points in high-dimensional space to get a 2D solution.
 --
 
-- Once we have an MDS solution any 2D rotated solution will be equally good.&lt;!--D--&gt;
+- We can further rotate the points with 2 dimensions.&lt;!--D--&gt;
 --
 
-- Sometimes these rotations help us to interpret the axes.&lt;!--D--&gt;
+  - The 2D rotation does not change any of the distances.&lt;!--D--&gt;
 --
 
-- In the previous example I rotated so the the x-axis represented East West direction and the y-axis represented North South.
+  - It can help us to interpret the axes.&lt;!--D--&gt;
+--
+
+- In the previous example the x-axis represents East-West direction and the y-axis represents North-South.
+
+---
+class: inverse, center, middle
+
+# Evaluating MDS
 
 ---
 
-# Evaluating this result
+# How good is this representation?
+
+- In theory, as long as the original distances are Euclidean, strain is minimised.
+--
+
+- What if the optimal solution is still bad?
+--
+
+- Use two goodness of fit measures.&lt;!--D--&gt;
+--
+
+- Think of these in a similar fashion to R square in regression modelling.
+
+---
+
+# Goodness of Fit Measures?
+
+- These values depend on the eigenvalues
+`$$\mbox{GF}_1=\frac{\sum\limits_{i=1}^2 |\lambda_i|}{\sum\limits^n_{i=1}|\lambda_i|}\,
+\mbox{GF}_2=\frac{\sum\limits_{i=1}^2 max(0,\lambda_i)}{\sum\limits^n_{i=1}max(0,\lambda_i)}$$`
+- For Euclidean distances `\(\delta_{ij}\)` eigenvalues are always positive and `\(\mbox{GF}_1=\mbox{GF}_2\)`.
+
+---
+
+# Beer Example 
+
+- In R obtain GoF using the option `eig=TRUE` in the `cmdscale` function&lt;!--D--&gt;
+--
+
+- For the Beer data.
+
+```r
+mdsout&lt;-cmdscale(delta,eig=TRUE)
+print(mdsout$GOF)
+```
+
+```
+## [1] 0.8543224 0.8543224
+```
+
+---
+
+# GoF Measure
+
+- You may notice that the GoF measures are the same.
+--
+
+- This is always the case when Euclidean distance is used.
+--
+
+- This arises since all eigenvalues are positive when the distance matrix is based on Euclidean distance.
+
+---
+
+# Non-Euclidean distances
+
+- In theory non-Euclidean distances can lead to negative eigenvalues.  In this case:&lt;!--D--&gt;
+--
+
+  + Classical MDS may not minimise Strain.&lt;!--D--&gt;
+--
+
+  + Two fit measures will differ.&lt;!--D--&gt;
+--
+
+- Overall, we can use classical MDS for non-Euclidean distance but must be more careful.
+
+---
+
+# Australia data
 
 
 
@@ -766,7 +800,7 @@ print(dozout$GOF)
 
 # Another example: Cheese
 
-On moodle you will find the paper ‘Multidimensional Scaling of Sorting Data Applied to Cheese Perception’, Food Quality and Preference,6, pp.91-98.  The purpose of this study was to visualise the difference between types of cheese.
+The following example comes from ‘Multidimensional Scaling of Sorting Data Applied to Cheese Perception’, Food Quality and Preference,6, pp.91-98.  The purpose of this study was to visualise the difference between types of cheese.
 
 
 ---
@@ -806,6 +840,8 @@ cheeses&lt;!--D--&gt;
 --
 
   + Camembert and Roquefort
+--
+
 - The dissimilarity scores can be averaged over all
 customers and used in an MDS&lt;!--D--&gt;
 --
@@ -870,25 +906,9 @@ separate&lt;!--D--&gt;
 
 
 ---
+class: inverse, center, middle
 
 # Beyond Classical MDS
-
-- If you continue to read the paper you will notice that there are references to some new terms.&lt;!--D--&gt;
---
-
-  + SYSTAT (a software program)&lt;!--D--&gt;
---
-
-  + Non-metric MDS&lt;!--D--&gt;
---
-
-  + Kruskal's algorithm&lt;!--D--&gt;
---
-
-- So far we have only talked about one type of MDS, namely classical MDS.&lt;!--D--&gt;
---
-
-- There are many alternatives.
 
 ---
 
@@ -902,15 +922,163 @@ separate&lt;!--D--&gt;
 
 
 `$$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j&gt;i}\frac{(\delta_{ij}-d_{ij})^2}{\delta_{ij}}$$`
-
-- This penalises errors of observations that are close to one another more.&lt;!--D--&gt;
 --
 
-- Implemented in the `sammon` function in the R package `MASS`.
+- The difference between `\(\delta_{ij}\)` and `\(d_{ij}\)` acts like an error.
+--
+
+- The `\(\delta_{ij}\)` on the denominator acts as a weight
 
 ---
 
-# Non-metric MDS
+#Weighting
+
+- For large `\(\delta\)` observations are far away in the original space.
+--
+
+  - For these pairs errors are more easily tolerated.
+--
+
+- For small `\(\delta\)` observations are close in the original space.
+--
+
+  - For these pairs errors are not tolerated.
+--
+
+- The most accuracy is achieved for nearby points
+--
+
+- The local structure is preserved.
+
+---
+
+# Example
+
+---
+
+# Sammon mapping
+
+- The Sammon mapping is solved by numerical optimisation.
+--
+
+- It is different from the classical solution
+--
+
+  - It is not based on an eigenvalue decomposition
+--
+
+  - It is not based on rotation
+--
+
+  - It is a non-linear mapping.
+
+---
+
+# Kruskal algorithm
+
+- Kruskal's algorithm minimises a slightly different criterion.
+--
+
+- This is still often called *stress*, which is admittedly confusing.
+--
+
+- Kruskal's algorithm is implemented in R using the `isoMDS` function from the `MASS` package.
+
+---
+
+# Monotone tranformations
+
+- Kruskal's algorithm is invariant to monotone transformations of the distances.
+--
+
+- By *monotone transformation* we mean any function of the distance that is either constantly increasing or decreasing.
+--
+
+  - Exponential function is monotone
+--
+
+  - Sine function is not monotone
+--
+
+- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change.
+
+---
+
+# Example
+
+
+```r
+library(MASS)
+isoMDS(d)-&gt;kBeer
+```
+
+```
+## initial  value 9.127089 
+## iter   5 value 5.688460
+## final  value 5.611143 
+## converged
+```
+
+---
+
+# Make plot
+
+
+```r
+kBeer$points%&gt;%
+  as.data.frame()%&gt;%
+  rownames_to_column('BeerName')%&gt;%
+  ggplot(aes(x=V1,y=V2,label=BeerName))+
+  geom_text(size=10)
+```
+
+---
+
+# Make plot
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Squared distances
+
+
+```r
+isoMDS(d^2)-&gt;kBeer2
+```
+
+```
+## initial  value 11.274285 
+## iter   5 value 6.447929
+## iter  10 value 5.697285
+## final  value 5.603035 
+## converged
+```
+
+---
+
+# Solution
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Comparison
+
+- Squaring the distances provides the same solution with two caveats:
+--
+
+  - The stress is slightly different.  Numerical optimisation can vary a little depending on starting values. 
+--
+
+  - The points in one plot are slightly rotated compared to the other.
+--
+
+- Why is the invariance to monotone tranformations important?
+
+---
+
+# Non metric MDS
 
 - In some cases, the distance themselves are not metric but ordinal.&lt;!--D--&gt;
 --
@@ -921,6 +1089,8 @@ separate&lt;!--D--&gt;
 `$$\delta_{\mbox{Bri.},\mbox{Cam.}}&lt;
 \delta_{\mbox{Roq.},\mbox{Cam.}}&lt;
 \delta_{\mbox{Roq.},\mbox{Bri.}}$$`
+--
+
 - Brie and Roquefort are *more different* compared to Brie and Camembert.&lt;!--D--&gt;
 --
 
@@ -930,13 +1100,7 @@ separate&lt;!--D--&gt;
 
 # Non-metric MDS
 
-- In this case we solve a different optimisation problem.&lt;!--D--&gt;
---
-
-`$$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j&gt;i}\frac{(\hat{\delta}_{ij}^2-d_{ij}^2)}{\hat{\delta}_{ij}}$$`&lt;!--D--&gt;
---
-
-- Subject to constraints, e.g.&lt;!--D--&gt;
+- In this case we minimise Stress subject to constraints, e.g.&lt;!--D--&gt;
 --
 
 `$$\hat{\delta}_{\mbox{Bri.},\mbox{Cam.}}&lt;
@@ -947,41 +1111,49 @@ separate&lt;!--D--&gt;
 
 # Non-metric MDS
 
-- Our solution requires us to find `\(\hat{\delta}\)`'s and `\(d\)`'s&lt;!--D--&gt;
+- Taking the ranks is an example of a monotone transformation.
+--
+
+- Therefore the solution of isoMDS only requires the ranks of the distances and not the distances themselves.
 --
 
 - This is a very useful algorithm for marketing since survey participants cannot easily and reliable assign numbers to the difference between products.&lt;!--D--&gt;
---
-
-- The `isoMDS` function in the R package `MASS` is one implementation of non-metric MDS.
 
 ---
 
-# Summary
+# Modern MDS
 
-- Go from a general distance matrix to a 2D representation that preserves distances as best as possible&lt;!--D--&gt;
+- Methods for finding a low dimensional representation of high-dimensional data continue to be used today
 --
 
-- Focus on classical MDS with Euclidean distances&lt;!--D--&gt;
+- These mostly go by the name of **manifold learning** methods
 --
 
-  + Minimises strain&lt;!--D--&gt;
+- They are not only used for visualisation
 --
 
-  + Is equivalent to PCA&lt;!--D--&gt;
+- The low-dimensional co-ordinates can also be used as features in classification and regression.
+
+---
+
+# Examples
+
+- Local Linear Embedding (LLE)
+- IsoMap
+
+---
+
+# Properties
+
+- For most of the modern methods two characteristics are common.
 --
 
-  + Can work well non-Euclidean distances&lt;!--D--&gt;
+  - The idea that local structure should be preserved.  The first step of many algorithms is to find nearest neighbours of each point.
 --
 
-- Be aware of other approaches&lt;!--D--&gt;
---
-
-  + Sammon mapping&lt;!--D--&gt;
---
-
-  + Non-metric MDS
+  - In many algorithms an eigenvalue decomposition forms part of the solution as is the case in classic MDS.
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "slideNumberFormat": "%current%",
@@ -992,15 +1164,57 @@ separate&lt;!--D--&gt;
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
+
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -1014,23 +1228,15 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
-
-</script>
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-  }
-});
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);
