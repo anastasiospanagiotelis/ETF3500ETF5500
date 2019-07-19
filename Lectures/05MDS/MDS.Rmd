@@ -409,7 +409,7 @@ kable(as.matrix(doz))%>% kable_styling(bootstrap_options = c("striped","hover","
 
 
 ```{r ozmap,eval=TRUE,echo=FALSE,message=FALSE, warning=FALSE}
-#oz<-get_map(location='Australia',zoom=4),maptype = "watercolor",color = "color")
+#oz<-get_map(location='Australia',zoom=4,source="osm",maptype = "watercolor",color = "color")
 coords<-data_frame(city=c("Sydney",
                   "Melbourne",
                   "Brisbane",
@@ -944,6 +944,13 @@ $$\hat{\delta}_{\mbox{Bri.},\mbox{Cam.}}<
 
 - Local Linear Embedding (LLE)
 - IsoMap
+- Laplacian Eigenmap
+- t SNE
+- Kohonen Map
+- ...
+--
+
+- ... and others.
 
 ---
 
