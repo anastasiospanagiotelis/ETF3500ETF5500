@@ -451,7 +451,7 @@ $$
 
 ```r
 mdsout%&gt;%
-  as.data.frame%&gt;% 
+  as_tibble%&gt;% 
   ggplot(aes(x=V1,y=V2))+geom_point()
 ```
 
@@ -489,13 +489,13 @@ mdsout%&gt;%
 
 # When can this be solved?
 
-- The above problem has a unique and tractable solution when Euclidean distance is used.
+- The above problem has a tractable solution when Euclidean distance is used.
 --
 
 - This solution depends on an Eigenvalue decomposition.
 --
 
-- Imagine this solution as *rotating* the points until we get a 2D view that represents the true distances as accurately as possible.
+- This solution *rotates* the points until we get a 2D view that represents the true distances as accurately as possible.
 
 ---
 
@@ -507,7 +507,7 @@ mdsout%&gt;%
   - Minimises the strain.
 --
 
-  - Results in Eigenvalues that are all positive
+  - Results in eigenvalues that are all positive
 --
 
 - Can we use classical MDS when distances are non-Euclidean?
@@ -669,7 +669,7 @@ mdsout%&gt;%
 - Classical MDS rotates the points in high-dimensional space to get a 2D solution.
 --
 
-- We can further rotate the points with 2 dimensions.&lt;!--D--&gt;
+- We can further rotate the points within 2 dimensions.&lt;!--D--&gt;
 --
 
   - The 2D rotation does not change any of the distances.&lt;!--D--&gt;
@@ -720,11 +720,11 @@ class: inverse, center, middle
 
 ```r
 mdsout&lt;-cmdscale(delta,eig=TRUE)
-print(mdsout$GOF)
+str(mdsout$GOF)
 ```
 
 ```
-## [1] 0.8543224 0.8543224
+##  num [1:2] 0.854 0.854
 ```
 
 ---
@@ -762,20 +762,19 @@ print(mdsout$GOF)
 
 ```r
 cmdscale(doz,eig=TRUE)-&gt;dozout
-print(dozout$eig)
+str(dozout$eig)
 ```
 
 ```
-## [1]  1.970494e+07  1.248534e+07  2.622827e+06  5.963438e+04 -3.259629e-09
-## [6] -3.117856e+05 -1.083294e+06 -2.179888e+06
+##  num [1:8] 1.97e+07 1.25e+07 2.62e+06 5.96e+04 -3.26e-09 ...
 ```
 
 ```r
-print(dozout$GOF)
+str(dozout$GOF)
 ```
 
 ```
-## [1] 0.8372483 0.9230786
+##  num [1:2] 0.837 0.923
 ```
 
 ---
@@ -904,6 +903,13 @@ separate&lt;!--D--&gt;
 
   + The distance between Roquefort and Blue Vein is 0.25.
 
+---
+
+# MDS
+
+- The study on cheese did not use classical MDS but something called *Kruskals algorithm*.
+- There are many alternatives to classical MDS.
+- We now briefly cover some of the ideas behind them.
 
 ---
 class: inverse, center, middle
@@ -952,10 +958,6 @@ class: inverse, center, middle
 
 ---
 
-# Example
-
----
-
 # Sammon mapping
 
 - The Sammon mapping is solved by numerical optimisation.
@@ -971,6 +973,60 @@ class: inverse, center, middle
 --
 
   - It is a non-linear mapping.
+
+---
+
+# Example
+
+- Consider the case where points are in 2D space and the aim is to summarise them in 1D space (across a line).
+- This specific problem is called *serialisation*.
+- It provides a ranking of the observations.
+--
+
+- In marketing it can be used to elicit preferences.
+
+---
+
+# Original Data
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Rotate
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Keep 1 Dimension
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Rug plot
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Sammon Mapping
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Discussion
+
+- Classical MDS cannot account for non-linearity.  
+- The dark blue and yellow plots are represented as close to one another.
+- Sammon does account for non-linearity.
+- The blue and yellow points are represented as far apart.
+- Although they are not so far apart in the original space, these observations are downweighted relative to the local structure.
+
 
 ---
 
@@ -1026,9 +1082,8 @@ isoMDS(d)-&gt;kBeer
 
 ```r
 kBeer$points%&gt;%
-  as.data.frame()%&gt;%
-  rownames_to_column('BeerName')%&gt;%
-  ggplot(aes(x=V1,y=V2,label=BeerName))+
+  as_tibble()%&gt;% 
+  ggplot(aes(x=V1,y=V2))+
   geom_text(size=10)
 ```
 
@@ -1036,7 +1091,7 @@ kBeer$points%&gt;%
 
 # Make plot
 
-&lt;img src="MDS_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="MDS_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1059,7 +1114,7 @@ isoMDS(d^2)-&gt;kBeer2
 
 # Solution
 
-&lt;img src="MDS_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="MDS_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 

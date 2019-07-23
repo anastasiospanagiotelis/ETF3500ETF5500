@@ -1,0 +1,706 @@
+---
+title: "Principal Components Analysis"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 3"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      after_body: extra.html
+    
+---
+
+class: inverse, center, middle
+
+# Motivation
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+rm(list=ls())
+```
+
+---
+
+# Motivation
+
+- In **marketing** surveys we may ask a large number of questions about customer experience.<!--D-->
+--
+
+- In **finance** there may be several ways to assess the credit worthiness of firms.<!--D-->
+--
+
+- In **economics** the development of a country or state can be measured in different ways.
+
+---
+
+# A real example
+
+- Consider a dataset with the following variables for the 50 States of the USA<!--D-->
+--
+
+  + Income
+  + Illiteracy
+  + Life Expectancy
+  + Murder Rate
+  + High School Graduation Rate<!--D-->
+--
+
+- You can access this via moodle from the file *StateSE.RData*<!--D-->
+--
+
+- Let's do some exploratory data analysis
+
+---
+
+# Life Exp v High School Grad.
+
+```{r levhs}
+load('StateSE.RData') #Load Data (check path)
+ggplot(StateSE,aes(x=LifeExp,y=HSGrad,text=State))+
+  geom_point(size=4)+theme(text=element_text(size=20))->gp#Text made bigger
+ggplotly(gp,dynamicTicks = TRUE,tooltip = 'text')%>%
+  frameWidget(width="70%",height="40%")
+```
+
+---
+
+# Three dimensions
+
+```{r,  testgl, webgl=TRUE, cache=TRUE, echo=FALSE,fig.align='center',warning=FALSE,messages=FALSE,fig.height=8,fig.width=10,eval=FALSE}
+library(rgl)
+knit_hooks$set(webgl = hook_webgl)
+invisible(open3d())
+plot3d(x = StateSE$LifeExp, y = StateSE$HSGrad, z = StateSE$Murder, xlab='Life Expectancy', ylab='High School Graduation', zlab='Murder Rate', size=8)
+rglwidget()
+```
+
+---
+
+# All five variables
+
+- Can not do a scatter plot in five dimensions.<!--D-->
+--
+
+- Can we find a single variable to summarise the information in this data set?<!--D-->
+--
+
+- Going beyond that can we *rotate* the data to find a good 2-dimensional representation?<!--D-->
+--
+
+- Both of these ideas can be achieved using **Principal Components**
+
+---
+
+# Summarising many variables
+
+- Often we aim to  combine many variables into a single index?<!--D-->
+--
+
+  + In finance a credit score summarises all the information about the likelihood of bankruptcy for a company.<!--D-->
+--
+
+  + In marketing we require a single overall measure of customer experience.<!--D-->
+--
+
+  + In economics the Human Development Index is a single measure that takes income, education and health into account.
+
+---
+
+# Weighted linear combination
+
+- A convenient way to combine variables is through a *linear combination* (LC)<!--D-->
+--
+
+  + For example, your grade for this unit:
+$$ 
+w_1\mbox{Assign. Marks}+w_2\mbox{Exam Mark}
+$$
+  + Here $w_1$ and $w_2$ are called *weights*
+  + In this unit, the  weight for the Assignments is *50%* and for the Examination is *50%*<!--D-->
+--
+
+- What is a good way to choose weights?
+
+---
+
+# Maximise variance
+
+- The purpose of grading students is to differentiate the best perfoming students from the weakest performing students <!--D-->
+--
+
+- The index should have *large variance*.<!--D-->
+--
+
+- The LC with the highest variance is the **first Principal Component** of the data.<!--D-->
+--
+
+- The first principal component is a new variable that *explains* as much variance as possible in the original variables.
+
+---
+
+# Original Data
+
+```{r original}
+kable(StateSE)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+```
+
+---
+
+# First PC
+
+```{r, echo=FALSE,message=FALSE}
+load('StateSE.RData')
+StateSE%>%
+  select_if(.,is.numeric)%>%
+  scale()%>%
+  prcomp()->pca
+PCdf<-as.data.frame(pca$x)%>%mutate(.,State=StateSE$State)
+StateSEPC<-left_join(StateSE,PCdf)
+kable(StateSEPC%>%select(.,State,PC1),format = 'html')%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+```
+
+---
+
+# First PC on Map
+
+```{r, echo=FALSE, fig.align='center',fig.width=14,fig.height=10,message=FALSE}
+state_map<-map_data("state")
+ggplot(StateSEPC,aes(map_id=State))+
+  coord_map("albers",lat0=30,lat1=40)+
+  geom_map(aes(fill=PC1), map=state_map)+
+  geom_text(aes(x=state.center$x,y=state.center$y,label=StateAbb),size=9)+
+  expand_limits(x=state_map$long, y=state_map$lat)+
+  scale_fill_gradient2()+#n(colors=heat.colors(20))+
+  theme_dark()+
+  labs(x="",y="")
+```
+
+---
+
+# Second Principal Component
+
+- Sometimes a single index still oversimplifies the data.<!--D-->
+--
+
+- The second principal component is an LC that<!--D-->
+--
+
+  1. Is uncorrelated with the first PC.
+  2. Has the highest variance out of all LCs that satisfy condition 1.<!--D-->
+--
+
+-  Since there is no need for PC2 to *explain* any variance already explained by PC1, PC2 and PC1 are uncorrelated.<!--D-->
+--
+
+- We can plot the first two principal components on a scatter plot.
+
+---
+
+# Scatter-plot of PCs
+
+```{r, echo=FALSE, fig.align='center'}
+ggplot(StateSEPC,aes(x=PC1,y=PC2, label=StateAbb, text=State))+
+  geom_text(size=8)+theme(text= element_text(size=24))->gp
+ggplotly(gp,dynamicTicks = TRUE, tooltip = 'text')%>%
+  frameWidget(width="70%",height="40%")
+```
+
+---
+
+# The weights
+
+```{r weights }
+kable(pca$rotation[,1:2],format = 'html')
+```
+- A high (low) weight indicates a strong positive (negative)
+association between a variable and the corresponding PC.
+
+---
+
+# Biplot
+
+- The weight vectors can be plotted on the same scatterplot as
+the data.<!--D-->
+--
+
+- This is called a biplot.<!--D-->
+--
+
+- We can do several useful things with a biplot<!--D-->
+--
+
+  + See how the observations relate to one another
+  + See how the variables relate to one another
+  + See how the observations relate to the variables
+  
+---
+
+# Types of biplot
+
+- There are multiple ways to draw a biplot.<!--D-->
+--
+
+- We will look at two versions<!--D-->
+--
+
+  + Distance Biplot
+  + Correlation Biplot
+
+---
+
+# Distance Biplot
+
+```{r dbiplot, fig.width=14,fig.height=10}
+rownames(pca$x)<-use_series(StateSE,StateAbb)
+biplot(pca,cex=2,xlim=c(-0.4,0.3))
+```
+
+---
+
+# Distance Biplot
+
+- The distance between observations implies similarity between observations<!--D-->
+--
+
+   + Louisiana (LA) and South Carolina (SC) are close therefore are similar.
+   + Arkansas (AR) and California (CA) are far apart and therefore different.<!--D-->
+--
+
+- If the variables are ignored this is identical to a scatter plot of principal components.
+
+---
+
+# Correlation Biplot
+
+```{r cbiplot, fig.width=14,fig.height=10}
+rownames(pca$x)<-use_series(StateSE,StateAbb)
+biplot(pca,cex=2,xlim=c(-4.5,2.6),ylim=c(-2,4),scale=0)
+```
+
+---
+
+# Correlations
+
+```{r cormat}
+
+StateSE%>%
+  select_if(is.numeric)%>%
+  cor%>%
+  kable(digits = 3)%>%
+  kable_styling(font_size=14)
+
+```
+
+---
+
+# Correlation Biplot
+
+- The angles between variables tell us something about correlation (approximately)
+  + Income and HSGrad are highly positively correlated.  The angle between them is close to zero.
+  + LifeExp and Income are close to uncorrelated.  The angle between them is close 90 degrees.
+  + Murder and LifeExp are highly negatively correlated.  The angle between them is close 180 degrees.
+
+---
+
+# More comparison
+
+- The biplot also allows us to compare observations to variables.<!--D-->
+--
+
+- Think of the variables as axes.<!--D-->
+--
+
+- Draw the shortest line from each point to the axis.<!--D-->
+--
+
+- The position along that axis gives an approximation to the actual value of the variable for that observation.
+
+---
+
+# Usual scatter plot
+
+```{r levhs2}
+load('StateSE.RData') #Load Data (check path)
+ggplot(StateSE,aes(x=LifeExp,y=HSGrad,text=State))+
+  geom_point(size=4)+theme(text=element_text(size=20))->gp#Text made bigger
+ggplotly(gp,dynamicTicks = TRUE,tooltip = 'text')%>%
+  frameWidget(width="70%",height="40%")
+```
+
+---
+
+# Biplot
+
+```{r dbiplot2, fig.width=14,fig.height=10}
+rownames(pca$x)<-use_series(StateSE,StateAbb)
+biplot(pca,cex=2,xlim=c(-0.35,0.25),ylim=c(-0.25,0.25))
+```
+
+---
+
+# More PCs
+
+- We can find a third PC, which has the highest variance, while
+being uncorrelated with PC1 and PC2.<!--D-->
+--
+
+- We cannot visualise this with a biplot, but there are alternatives depending on the structure of the data.<!--D-->
+--
+
+- Now a time series example where we consider 3
+principal components.
+
+---
+
+# A Time Series Example
+
+- The Stock and Watson dataset contains data on 109
+macroeconomic variables in the following categories<!--D-->
+--
+
+  + Output
+  + Prices
+  + Labour
+  + Finance<!--D-->
+--
+
+- One cannot look at 109 time series plots to visualise general
+macroeconomic conditions.<!--D-->
+--
+
+- However, one can look at time series plots of the principal
+components of these variables.
+
+---
+
+# Plots of PCs
+
+```{r sw}
+load('SWMacro.RData')
+pcaSW<-prcomp(StockWatsonMacro,scale. = TRUE)
+pcaSW%>%
+  use_series(x)%>%
+  as.data.frame%>%
+  rownames_to_column->pcd 
+start <- as.Date("1960-01-01")
+end <- as.Date("2008-10-01")
+sd<-seq.Date(start,end,by='quarters')
+mutate(pcd,Time=sd)%>%
+  select(.,Time,PC1,PC2,PC3)%>%
+  gather(.,key=Comp,value=PC,PC1,PC2,PC3)%>%
+  ggplot(.,aes(x=Time,y=PC))+geom_line(size=2)+facet_wrap(~Comp,nrow=3)
+```
+
+---
+
+# All PCs
+
+- There are as many principal components as there are variables.
+- Together all $p$ principal components explain all of the variation in all $p$ original variables.
+$$\sum_{j=1}^p \mbox{Var}(C_j)=\sum_{j=1}^p \mbox{Var}(Y_j)$$
+- Where $C_j$ is principal component $j$ and $Y_j$ is variable $j$
+---
+
+#So why PCs
+
+- However a small number of principal components can often explain a large proportion of the variance<!--D-->
+--
+
+  + In the first example, 2 PCs explain 84% of the total variation of 5 variables.<!--D-->
+--
+
+  + In our second example, 3 PCs explain 35% of the total variation of 109 variables.
+
+---
+   
+# Summary
+
+- Principal components analysis is useful for<!--D-->
+--
+
+  + Creating a single index<!--D-->
+--
+
+  + Seeing how variables are associated with observations on a single biplot.<!--D-->
+--
+
+  + Visualising high-dimensional time series.<!--D-->
+--
+
+- How do we do it?
+
+---
+class: inverse, middle, center
+
+# Implementation of PCA
+
+---
+
+# Restriction
+
+- Recall that the objective is to find an LC with a large variance.  How could we ‘cheat’ ?<!--D-->
+--
+
+  + For a single variable $\mbox{Var}(wY) = w^2 \mbox{Var}(Y)$ <!--D-->
+--
+
+  + The variance can be made large by choosing a huge value of $w$.<!--D-->
+--
+
+- For this reason the following restriction (normalization) is used
+$$w_1^2 + w_2^2 \ldots + w_p^2 = 1.$$
+
+---
+
+# Standardisation
+
+- A similar logic applies to the units that the variables are
+measured in.<!--D-->
+--
+
+- In the states dataset, income varies from $3000
+to $6000, life expectancy varies from 67 years to 73
+years.<!--D-->
+--
+
+  + Which variable will probably have the larger variance?<!--D-->
+--
+
+- Income likely to have a larger variance.
+
+---
+
+# Different units
+
+- If income is measured in \$ ’000s then it will vary from about 3
+to 6, If Life Expectancy in measured in days rather than years
+it will vary from about 24800 days to 26900 days<!--D-->
+--
+
+  + Which variable will have the larger variance now?<!--D-->
+--
+
+- The weights can be influenced by the units of measurement.
+
+---
+
+# Effect of standardisation
+
+```{r stdweights}
+Std<-pca$rotation[,1]
+StateSE%>%
+  select_if(is.numeric)%>%
+  prcomp%>%
+  use_series(rotation)%>%
+  magrittr::extract(,1)->Unstd
+
+StateSE%>%
+  select_if(.,is.numeric)%>%
+  mutate(Income=Income/1000,LifeExp=LifeExp*365.25)%>%
+  prcomp%>%
+  use_series(rotation)%>%
+  magrittr::extract(,1)->DifUnits
+
+kable(cbind(Std,Unstd,DifUnits),digits=4)
+```
+
+---
+
+# Standardise or not?
+
+- While the normalisation $w_1^2 + w_2^2+\ldots+ w_p^2 = 1$ is always
+implemented in any software that does PCA, the decision to
+standardise is up to you.<!--D-->
+--
+
+- If the variables are measured in the *same* units then
+  + *No* need to standardise.<!--D-->
+--
+
+- If the variables are measured in the *different* units then
+  + *Standardise* the data.
+
+---
+    
+# Principal Components in R
+
+- There are several functions for doing Principal Components
+Analysis in R. We will use `prcomp`<!--D-->
+--
+
+- We can scale in two ways<!--D-->
+--
+
+  + Scale the data using the function scale
+  + Include the option `scale.=TRUE` when calling the function `prcomp`<!--D-->
+--
+
+- Now we will do PCA on the states dataset using R    
+
+---
+
+# Principal Components in R
+
+```{r prcomp, echo=TRUE}
+StateSE%>%
+  select_if(is.numeric)%>% #Only use numeric variables
+  prcomp(scale. = TRUE)->pcaout #Do pca 
+summary(pcaout) #summary of information
+```  
+
+---
+
+# Principal Components in R
+
+- The output of the `prcomp` function is a prcomp object. <!--D-->
+--
+
+- It is a list that contains a lot of information.  Of most interest are<!--D-->
+--
+
+  + The principal components which are stored in `x`
+  + The weights which are stored in `rotation`
+
+
+---
+
+# Biplot
+
+- The biplot can be produced by:
+
+```{r bplotnolab,echo=TRUE,eval=FALSE}
+biplot(pca)
+```
+
+- To have the state abbreviations on the plot they need to be attached to the matrix `pca$x`
+
+```{r biplotlab,echo=TRUE,eval=FALSE}
+rownames(pca$x)<-use_series(StateSE,StateAbb)
+biplot(pca)
+```
+
+- Try it!
+
+---
+
+# Correlation biplot
+
+- By default `biplot` produces the distance biplot.
+- To produce the correlation biplot try
+```{r, eval=FALSE,echo=TRUE}
+biplot(pca,scale = 0)
+```
+
+---
+
+# Scree Plot
+
+- Another plot that is easy to create is the Scree plot.<!--D-->
+--
+
+- Along the horizontal axis is the Principal Component.<!--D-->
+--
+
+- Along the vertical axis is the variance corresponding to each
+Principal Component.<!--D-->
+--
+
+- The Scree plot indicates how much each PC explains the total
+variance of the data.<!--D-->
+--
+
+```{r,echo=TRUE,eval=FALSE}
+screeplot(pca,type="lines")
+```
+
+---
+
+# Scree Plot
+
+```{r,echo=FALSE,eval=TRUE}
+screeplot(pca,type="lines")
+```
+
+---
+
+# Selecting the number of PCs
+
+- The Scree plot can be used to select the number of Principal
+Components.<!--D-->
+--
+
+- Look for a part where the plot flattens out also called the
+elbow of the Scree Plot.<!--D-->
+--
+
+- Another criterion used for standardised data is Kaiser’s Rule.
+The rule is to select all PCs with a variance greater than 1.
+
+---
+
+# Number of PCs
+
+- The way PCs are selected depend on the nature of the analysis.<!--D-->
+--
+
+- For a visualisation via the biplot, two PCs must be selected.<!--D-->
+--
+
+- In this case check the proportion of variance explained by those PCs<!--D-->
+--
+
+- The higher this number the more accurate the biplot
+
+---
+
+# Towards Factor Analysis
+
+- For survey data it is often the case that multiple survey questions are measures of the same underlying factor.<!--D-->
+--
+
+- For example, at the end of semester you evaluate this unit.  <!--D-->
+--
+
+- Typically you will be asked many questions.<!--D-->
+--
+
+- This is no different from any other customer satisfaction survey
+
+---
+
+# Underlying factors
+
+- Although you are asked many questions perhaps there are two underlying factors that drive<!--D-->
+--
+
+  + The quality of the course materials
+  + The quality of the teaching staff<!--D-->
+--
+
+- Perhaps the quality of assessment is a third factor.<!--D-->
+--
+
+- For survey data, Scree plots and Kaiser's rule can be used to select the number of underlying factors.
