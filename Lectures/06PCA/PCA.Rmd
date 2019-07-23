@@ -2,7 +2,7 @@
 title: "Principal Components Analysis"
 subtitle: "High Dimensional Data Analysis"
 author: "Anastasios Panagiotelis"
-date: "Lecture 3"
+date: "Lecture 6"
 output:
   xaringan::moon_reader:
     chakra: libs/remark-latest.min.js
@@ -13,9 +13,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-    includes:
-      after_body: extra.html
-    
+
 ---
 
 class: inverse, center, middle
@@ -35,12 +33,14 @@ require(DT)
 require(rgl)
 require(knitr)
 require(kableExtra)
+require(broom)
+require(ggfortify)
 rm(list=ls())
 ```
 
 ---
 
-# Motivation
+# High Dimensional Data
 
 - In **marketing** surveys we may ask a large number of questions about customer experience.<!--D-->
 --
@@ -64,55 +64,13 @@ rm(list=ls())
   + High School Graduation Rate<!--D-->
 --
 
-- You can access this via moodle from the file *StateSE.RData*<!--D-->
---
-
-- Let's do some exploratory data analysis
-
----
-
-# Life Exp v High School Grad.
-
-```{r levhs}
-load('StateSE.RData') #Load Data (check path)
-ggplot(StateSE,aes(x=LifeExp,y=HSGrad,text=State))+
-  geom_point(size=4)+theme(text=element_text(size=20))->gp#Text made bigger
-ggplotly(gp,dynamicTicks = TRUE,tooltip = 'text')%>%
-  frameWidget(width="70%",height="40%")
-```
-
----
-
-# Three dimensions
-
-```{r,  testgl, webgl=TRUE, cache=TRUE, echo=FALSE,fig.align='center',warning=FALSE,messages=FALSE,fig.height=8,fig.width=10,eval=FALSE}
-library(rgl)
-knit_hooks$set(webgl = hook_webgl)
-invisible(open3d())
-plot3d(x = StateSE$LifeExp, y = StateSE$HSGrad, z = StateSE$Murder, xlab='Life Expectancy', ylab='High School Graduation', zlab='Murder Rate', size=8)
-rglwidget()
-```
-
----
-
-# All five variables
-
-- Can not do a scatter plot in five dimensions.<!--D-->
---
-
-- Can we find a single variable to summarise the information in this data set?<!--D-->
---
-
-- Going beyond that can we *rotate* the data to find a good 2-dimensional representation?<!--D-->
---
-
-- Both of these ideas can be achieved using **Principal Components**
+- You can access this via moodle from the file *StateSE.rds*<!--D-->
 
 ---
 
 # Summarising many variables
 
-- Often we aim to  combine many variables into a single index?<!--D-->
+- Often we aim to combine many variables into a single index?<!--D-->
 --
 
   + In finance a credit score summarises all the information about the likelihood of bankruptcy for a company.<!--D-->
@@ -160,6 +118,7 @@ $$
 # Original Data
 
 ```{r original}
+StateSE<-readRDS('StateSE.rds')
 kable(StateSE)%>%
   kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
   scroll_box(height="500px")
@@ -170,14 +129,13 @@ kable(StateSE)%>%
 # First PC
 
 ```{r, echo=FALSE,message=FALSE}
-load('StateSE.RData')
 StateSE%>%
   select_if(.,is.numeric)%>%
   scale()%>%
   prcomp()->pca
-PCdf<-as.data.frame(pca$x)%>%mutate(.,State=StateSE$State)
-StateSEPC<-left_join(StateSE,PCdf)
-kable(StateSEPC%>%select(.,State,PC1),format = 'html')%>%
+StateSEPC<-augment(pca,StateSE)
+
+kable(StateSEPC%>%select(.,State,.fittedPC1),format = 'html')%>%
   kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
   scroll_box(height="500px")
 ```
@@ -188,9 +146,9 @@ kable(StateSEPC%>%select(.,State,PC1),format = 'html')%>%
 
 ```{r, echo=FALSE, fig.align='center',fig.width=14,fig.height=10,message=FALSE}
 state_map<-map_data("state")
-ggplot(StateSEPC,aes(map_id=State))+
+ggplot(StateSEPC,aes(map_id=tolower(State)))+
   coord_map("albers",lat0=30,lat1=40)+
-  geom_map(aes(fill=PC1), map=state_map)+
+  geom_map(aes(fill=.fittedPC1), map=state_map)+
   geom_text(aes(x=state.center$x,y=state.center$y,label=StateAbb),size=9)+
   expand_limits(x=state_map$long, y=state_map$lat)+
   scale_fill_gradient2()+#n(colors=heat.colors(20))+
@@ -222,10 +180,10 @@ ggplot(StateSEPC,aes(map_id=State))+
 # Scatter-plot of PCs
 
 ```{r, echo=FALSE, fig.align='center'}
-ggplot(StateSEPC,aes(x=PC1,y=PC2, label=StateAbb, text=State))+
-  geom_text(size=8)+theme(text= element_text(size=24))->gp
+ggplot(StateSEPC,aes(x=.fittedPC1,y=.fittedPC2, label=StateAbb, text=State))+
+  geom_text(size=5)+theme(text= element_text(size=24))->gp
 ggplotly(gp,dynamicTicks = TRUE, tooltip = 'text')%>%
-  frameWidget(width="70%",height="40%")
+  frameWidget(width="100%",height="100%")
 ```
 
 ---
@@ -340,22 +298,10 @@ StateSE%>%
 
 ---
 
-# Usual scatter plot
-
-```{r levhs2}
-load('StateSE.RData') #Load Data (check path)
-ggplot(StateSE,aes(x=LifeExp,y=HSGrad,text=State))+
-  geom_point(size=4)+theme(text=element_text(size=20))->gp#Text made bigger
-ggplotly(gp,dynamicTicks = TRUE,tooltip = 'text')%>%
-  frameWidget(width="70%",height="40%")
-```
-
----
-
 # Biplot
 
 ```{r dbiplot2, fig.width=14,fig.height=10}
-rownames(pca$x)<-use_series(StateSE,StateAbb)
+rownames(pca$x)<-pull(StateSE,StateAbb)
 biplot(pca,cex=2,xlim=c(-0.35,0.25),ylim=c(-0.25,0.25))
 ```
 
@@ -598,7 +544,7 @@ biplot(pca)
 - To have the state abbreviations on the plot they need to be attached to the matrix `pca$x`
 
 ```{r biplotlab,echo=TRUE,eval=FALSE}
-rownames(pca$x)<-use_series(StateSE,StateAbb)
+rownames(pca$x)<-pull(StateSE,StateAbb)
 biplot(pca)
 ```
 
@@ -673,6 +619,30 @@ The rule is to select all PCs with a variance greater than 1.
 --
 
 - The higher this number the more accurate the biplot
+
+---
+
+# PCA and MDS
+
+- When the input distances to MDS are Euclidean MDS and PCA are equivalent.
+--
+
+- The usual caveat applies that these may only be exactly identical if the MDS solution is rotated.
+--
+
+- The same does not apply generally to PCA.  The first PC is defined to maximise variance.
+
+---
+
+# Interpreting PCs
+
+- Remember that Principal Components do nothing more than find uncorrelated linear combinations of the variables that explain variance.
+--
+
+- Sometimes the nature of the data or analysis from a biplot might imply some sort of interpretation for the PCs.
+--
+
+- These interpretations can be subjective so be cautious.
 
 ---
 

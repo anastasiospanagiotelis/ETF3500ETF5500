@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="author" content="Anastasios Panagiotelis" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <script src="libs/htmlwidgets/htmlwidgets.js"></script>
     <script src="libs/pymjs/pym.v1.js"></script>
     <script src="libs/widgetframe-binding/widgetframe.js"></script>
-    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="mtheme.css" type="text/css" />
     <link rel="stylesheet" href="mod.css" type="text/css" />
   </head>
@@ -19,7 +19,7 @@ class: center, middle, inverse, title-slide
 # Principal Components Analysis
 ## High Dimensional Data Analysis
 ### Anastasios Panagiotelis
-### Lecture 3
+### Lecture 6
 
 ---
 
@@ -32,7 +32,7 @@ class: inverse, center, middle
 
 ---
 
-# Motivation
+# High Dimensional Data
 
 - In **marketing** surveys we may ask a large number of questions about customer experience.&lt;!--D--&gt;
 --
@@ -56,44 +56,13 @@ class: inverse, center, middle
   + High School Graduation Rate&lt;!--D--&gt;
 --
 
-- You can access this via moodle from the file *StateSE.RData*&lt;!--D--&gt;
---
-
-- Let's do some exploratory data analysis
-
----
-
-# Life Exp v High School Grad.
-
-<div id="htmlwidget-6bab19fde614947c52c9" style="width:70%;height:40%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6bab19fde614947c52c9">{"x":{"url":"PCA_files/figure-html//widgets/widget_levhs.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-
----
-
-# Three dimensions
-
-
-
----
-
-# All five variables
-
-- Can not do a scatter plot in five dimensions.&lt;!--D--&gt;
---
-
-- Can we find a single variable to summarise the information in this data set?&lt;!--D--&gt;
---
-
-- Going beyond that can we *rotate* the data to find a good 2-dimensional representation?&lt;!--D--&gt;
---
-
-- Both of these ideas can be achieved using **Principal Components**
+- You can access this via moodle from the file *StateSE.rds*&lt;!--D--&gt;
 
 ---
 
 # Summarising many variables
 
-- Often we aim to  combine many variables into a single index?&lt;!--D--&gt;
+- Often we aim to combine many variables into a single index?&lt;!--D--&gt;
 --
 
   + In finance a credit score summarises all the information about the likelihood of bankruptcy for a company.&lt;!--D--&gt;
@@ -154,7 +123,7 @@ $$
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; alabama &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Alabama &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3624 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 69.05 &lt;/td&gt;
@@ -163,7 +132,7 @@ $$
    &lt;td style="text-align:left;"&gt; AL &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; alaska &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Alaska &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6315 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.5 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 69.31 &lt;/td&gt;
@@ -172,7 +141,7 @@ $$
    &lt;td style="text-align:left;"&gt; AK &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; arizona &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Arizona &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4530 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.55 &lt;/td&gt;
@@ -181,7 +150,7 @@ $$
    &lt;td style="text-align:left;"&gt; AZ &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; arkansas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Arkansas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3378 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.66 &lt;/td&gt;
@@ -190,7 +159,7 @@ $$
    &lt;td style="text-align:left;"&gt; AR &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; california &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; California &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5114 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.71 &lt;/td&gt;
@@ -199,7 +168,7 @@ $$
    &lt;td style="text-align:left;"&gt; CA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; colorado &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Colorado &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4884 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.06 &lt;/td&gt;
@@ -208,7 +177,7 @@ $$
    &lt;td style="text-align:left;"&gt; CO &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; connecticut &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Connecticut &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5348 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.48 &lt;/td&gt;
@@ -217,7 +186,7 @@ $$
    &lt;td style="text-align:left;"&gt; CT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; delaware &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Delaware &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4809 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.06 &lt;/td&gt;
@@ -226,7 +195,7 @@ $$
    &lt;td style="text-align:left;"&gt; DE &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; florida &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Florida &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4815 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.3 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.66 &lt;/td&gt;
@@ -235,7 +204,7 @@ $$
    &lt;td style="text-align:left;"&gt; FL &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; georgia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Georgia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4091 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 68.54 &lt;/td&gt;
@@ -244,7 +213,7 @@ $$
    &lt;td style="text-align:left;"&gt; GA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; hawaii &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Hawaii &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4963 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 73.60 &lt;/td&gt;
@@ -253,7 +222,7 @@ $$
    &lt;td style="text-align:left;"&gt; HI &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; idaho &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Idaho &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4119 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.87 &lt;/td&gt;
@@ -262,7 +231,7 @@ $$
    &lt;td style="text-align:left;"&gt; ID &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; illinois &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Illinois &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5107 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.14 &lt;/td&gt;
@@ -271,7 +240,7 @@ $$
    &lt;td style="text-align:left;"&gt; IL &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; indiana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Indiana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4458 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.88 &lt;/td&gt;
@@ -280,7 +249,7 @@ $$
    &lt;td style="text-align:left;"&gt; IN &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; iowa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Iowa &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4628 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.56 &lt;/td&gt;
@@ -289,7 +258,7 @@ $$
    &lt;td style="text-align:left;"&gt; IA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; kansas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Kansas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4669 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.58 &lt;/td&gt;
@@ -298,7 +267,7 @@ $$
    &lt;td style="text-align:left;"&gt; KS &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; kentucky &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Kentucky &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3712 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.10 &lt;/td&gt;
@@ -307,7 +276,7 @@ $$
    &lt;td style="text-align:left;"&gt; KY &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; louisiana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Louisiana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3545 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 68.76 &lt;/td&gt;
@@ -316,7 +285,7 @@ $$
    &lt;td style="text-align:left;"&gt; LA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; maine &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Maine &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3694 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.39 &lt;/td&gt;
@@ -325,7 +294,7 @@ $$
    &lt;td style="text-align:left;"&gt; ME &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; maryland &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Maryland &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5299 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.22 &lt;/td&gt;
@@ -334,7 +303,7 @@ $$
    &lt;td style="text-align:left;"&gt; MD &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; massachusetts &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Massachusetts &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4755 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.83 &lt;/td&gt;
@@ -343,7 +312,7 @@ $$
    &lt;td style="text-align:left;"&gt; MA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; michigan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Michigan &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4751 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.63 &lt;/td&gt;
@@ -352,7 +321,7 @@ $$
    &lt;td style="text-align:left;"&gt; MI &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; minnesota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Minnesota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4675 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.96 &lt;/td&gt;
@@ -361,7 +330,7 @@ $$
    &lt;td style="text-align:left;"&gt; MN &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; mississippi &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mississippi &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3098 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.4 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 68.09 &lt;/td&gt;
@@ -370,7 +339,7 @@ $$
    &lt;td style="text-align:left;"&gt; MS &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; missouri &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Missouri &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4254 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.69 &lt;/td&gt;
@@ -379,7 +348,7 @@ $$
    &lt;td style="text-align:left;"&gt; MO &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; montana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Montana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4347 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.56 &lt;/td&gt;
@@ -388,7 +357,7 @@ $$
    &lt;td style="text-align:left;"&gt; MT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; nebraska &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Nebraska &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4508 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.60 &lt;/td&gt;
@@ -397,7 +366,7 @@ $$
    &lt;td style="text-align:left;"&gt; NE &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; nevada &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Nevada &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5149 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 69.03 &lt;/td&gt;
@@ -406,7 +375,7 @@ $$
    &lt;td style="text-align:left;"&gt; NV &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new hampshire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Hampshire &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4281 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.23 &lt;/td&gt;
@@ -415,7 +384,7 @@ $$
    &lt;td style="text-align:left;"&gt; NH &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new jersey &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Jersey &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5237 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.93 &lt;/td&gt;
@@ -424,7 +393,7 @@ $$
    &lt;td style="text-align:left;"&gt; NJ &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new mexico &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Mexico &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3601 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.32 &lt;/td&gt;
@@ -433,7 +402,7 @@ $$
    &lt;td style="text-align:left;"&gt; NM &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new york &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New York &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4903 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.55 &lt;/td&gt;
@@ -442,7 +411,7 @@ $$
    &lt;td style="text-align:left;"&gt; NY &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; north carolina &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; North Carolina &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3875 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 69.21 &lt;/td&gt;
@@ -451,7 +420,7 @@ $$
    &lt;td style="text-align:left;"&gt; NC &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; north dakota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; North Dakota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5087 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.78 &lt;/td&gt;
@@ -460,7 +429,7 @@ $$
    &lt;td style="text-align:left;"&gt; ND &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; ohio &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ohio &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4561 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.8 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.82 &lt;/td&gt;
@@ -469,7 +438,7 @@ $$
    &lt;td style="text-align:left;"&gt; OH &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; oklahoma &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Oklahoma &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3983 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.42 &lt;/td&gt;
@@ -478,7 +447,7 @@ $$
    &lt;td style="text-align:left;"&gt; OK &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; oregon &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Oregon &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4660 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.13 &lt;/td&gt;
@@ -487,7 +456,7 @@ $$
    &lt;td style="text-align:left;"&gt; OR &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; pennsylvania &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pennsylvania &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4449 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.43 &lt;/td&gt;
@@ -496,7 +465,7 @@ $$
    &lt;td style="text-align:left;"&gt; PA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; rhode island &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rhode Island &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4558 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.3 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.90 &lt;/td&gt;
@@ -505,7 +474,7 @@ $$
    &lt;td style="text-align:left;"&gt; RI &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; south carolina &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; South Carolina &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3635 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.3 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 67.96 &lt;/td&gt;
@@ -514,7 +483,7 @@ $$
    &lt;td style="text-align:left;"&gt; SC &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; south dakota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; South Dakota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4167 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.08 &lt;/td&gt;
@@ -523,7 +492,7 @@ $$
    &lt;td style="text-align:left;"&gt; SD &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; tennessee &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Tennessee &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3821 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.11 &lt;/td&gt;
@@ -532,7 +501,7 @@ $$
    &lt;td style="text-align:left;"&gt; TN &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; texas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Texas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4188 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.90 &lt;/td&gt;
@@ -541,7 +510,7 @@ $$
    &lt;td style="text-align:left;"&gt; TX &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; utah &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Utah &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4022 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.90 &lt;/td&gt;
@@ -550,7 +519,7 @@ $$
    &lt;td style="text-align:left;"&gt; UT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; vermont &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Vermont &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3907 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.64 &lt;/td&gt;
@@ -559,7 +528,7 @@ $$
    &lt;td style="text-align:left;"&gt; VT &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; virginia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Virginia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4701 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.08 &lt;/td&gt;
@@ -568,7 +537,7 @@ $$
    &lt;td style="text-align:left;"&gt; VA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; washington &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Washington &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4864 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 71.72 &lt;/td&gt;
@@ -577,7 +546,7 @@ $$
    &lt;td style="text-align:left;"&gt; WA &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; west virginia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; West Virginia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3617 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 69.48 &lt;/td&gt;
@@ -586,7 +555,7 @@ $$
    &lt;td style="text-align:left;"&gt; WV &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; wisconsin &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Wisconsin &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4468 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 72.48 &lt;/td&gt;
@@ -595,7 +564,7 @@ $$
    &lt;td style="text-align:left;"&gt; WI &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; wyoming &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Wyoming &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4566 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 70.29 &lt;/td&gt;
@@ -614,208 +583,208 @@ $$
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"&gt; State &lt;/th&gt;
-   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; PC1 &lt;/th&gt;
+   &lt;th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"&gt; .fittedPC1 &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; alabama &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Alabama &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -3.4736429 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; alaska &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Alaska &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5523458 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; arizona &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Arizona &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.3218179 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; arkansas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Arkansas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -2.3518240 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; california &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; California &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9138319 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; colorado &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Colorado &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.7319349 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; connecticut &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Connecticut &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.8293070 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; delaware &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Delaware &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.3708443 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; florida &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Florida &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.4071974 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; georgia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Georgia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -3.2000232 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; hawaii &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Hawaii &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.3275139 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; idaho &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Idaho &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.2443096 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; illinois &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Illinois &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.0586612 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; indiana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Indiana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.4059830 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; iowa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Iowa &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.1960892 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; kansas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Kansas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.9256885 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; kentucky &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Kentucky &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -2.2652570 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; louisiana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Louisiana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -3.8826563 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; maine &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Maine &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.4547571 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; maryland &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Maryland &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.2844478 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; massachusetts &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Massachusetts &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.3868972 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; michigan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Michigan &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.1768465 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; minnesota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Minnesota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.2025281 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; mississippi &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Mississippi &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -4.0362219 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; missouri &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Missouri &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.3652702 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; montana &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Montana &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9359256 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; nebraska &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Nebraska &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.0060961 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; nevada &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Nevada &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.4719808 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new hampshire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Hampshire &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.1727342 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new jersey &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Jersey &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.7618589 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new mexico &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New Mexico &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1.6465196 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; new york &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; New York &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.4937635 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; north carolina &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; North Carolina &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -2.7036034 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; north dakota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; North Dakota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.9049237 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; ohio &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ohio &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.3444655 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; oklahoma &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Oklahoma &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0227251 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; oregon &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Oregon &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.8066483 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; pennsylvania &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pennsylvania &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.0242343 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; rhode island &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rhode Island &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5548203 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; south carolina &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; South Carolina &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -3.7722712 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; south dakota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; South Dakota &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.5131049 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; tennessee &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Tennessee &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -2.1379510 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; texas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Texas &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1.8743614 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; utah &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Utah &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.0995090 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; vermont &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Vermont &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.8805572 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; virginia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Virginia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.8810536 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; washington &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Washington &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.9687535 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; west virginia &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; West Virginia &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -1.7131805 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; wisconsin &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Wisconsin &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.5728437 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; wyoming &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Wyoming &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.9429316 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -850,8 +819,8 @@ $$
 
 # Scatter-plot of PCs
 
-<div id="htmlwidget-12af5c9d2610bb6cab12" style="width:70%;height:40%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-12af5c9d2610bb6cab12">{"x":{"url":"PCA_files/figure-html//widgets/widget_unnamed-chunk-3.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-16abf584e8beefd2c4cb" style="width:100%;height:100%;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-16abf584e8beefd2c4cb">{"x":{"url":"PCA_files/figure-html//widgets/widget_unnamed-chunk-3.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -1034,13 +1003,6 @@ the data.&lt;!--D--&gt;
 --
 
 - The position along that axis gives an approximation to the actual value of the variable for that observation.
-
----
-
-# Usual scatter plot
-
-<div id="htmlwidget-9cae7bc307188168dd53" style="width:70%;height:40%;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9cae7bc307188168dd53">{"x":{"url":"PCA_files/figure-html//widgets/widget_levhs2.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -1309,7 +1271,7 @@ biplot(pca)
 
 
 ```r
-rownames(pca$x)&lt;-use_series(StateSE,StateAbb)
+rownames(pca$x)&lt;-pull(StateSE,StateAbb)
 biplot(pca)
 ```
 
@@ -1384,6 +1346,30 @@ The rule is to select all PCs with a variance greater than 1.
 --
 
 - The higher this number the more accurate the biplot
+
+---
+
+# PCA and MDS
+
+- When the input distances to MDS are Euclidean MDS and PCA are equivalent.
+--
+
+- The usual caveat applies that these may only be exactly identical if the MDS solution is rotated.
+--
+
+- The same does not apply generally to PCA.  The first PC is defined to maximise variance.
+
+---
+
+# Interpreting PCs
+
+- Remember that Principal Components do nothing more than find uncorrelated linear combinations of the variables that explain variance.
+--
+
+- Sometimes the nature of the data or analysis from a biplot might imply some sort of interpretation for the PCs.
+--
+
+- These interpretations can be subjective so be cautious.
 
 ---
 
@@ -1463,25 +1449,6 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();</script>
-<script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
-          /^\$\$(.|\s)+\$\$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
-  }
-})();
-
-</script>
 
 <script>
 (function() {

@@ -17,5 +17,5 @@ DT
 rgl
 knitr
 kableExtra
-bindrcpp
-maps
+broom
+ggfortify
