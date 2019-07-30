@@ -149,6 +149,56 @@ str(name)
 
 ---
 
+# Variable Names
+
+- Variable names can include letters, digits, the full stop `.` and the underscore `_`
+- The variable name cannot begin with a number or underscore.
+- They can begin with a full stop but only if the second digit is a letter.
+- For more details type `?make.names` into your R console
+
+---
+
+# Valid and Invalid
+
+- Valid:
+  - `FirstName`
+  - `First.Name`
+  - `First_Name`
+  - `.FirstName`
+- Invalid:
+  - `1stName`
+  - `.1stName`
+  - `_First.Name`
+  - `First Name`
+  - `FirstName?`
+---
+
+#Foreign Languages
+
+- R has support for foreign languages, but the same rules apply
+- Valid:
+  - `Όνομα`
+  - `название`
+  - `名字`
+  - `이름`
+- Invalid:
+  - `1Όνομα`
+  - `.название`
+  - `名 字`
+
+---
+
+# Case Sensitivity
+
+- R is case sensitive.
+- This means that the following are all different:
+  - `Name` 
+  - `name`
+  - `NAME`
+  - `nAMe`
+
+---
+
 # Workspace
 
 - All variables are kept in the **workspace**.  You can see what is in your workspace by using the command
