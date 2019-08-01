@@ -1,0 +1,1048 @@
+---
+title: "Geometry of Matrices"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 9"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+class: inverse, center, middle
+
+# Why?
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo=FALSE , fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+require(animation)
+```
+
+---
+# Why vectors and matrices?
+
+- Nearly all the methods we cover involve *vectors* and *matrices*.<!--D-->
+--
+
+- You may have covered matrices before and found that it involves remembering many seemingly arbitrary rules.<!--D-->
+--
+
+- The aim of this lecture is to understand the *geometric* interpretation of vectors which is crucial in making the connection between data and visualisation.<!--D-->
+--
+
+- Matrices are important to gain a deep understanding about dimension reduction.
+
+---
+
+# Vectors
+
+- We will think of a 2-dimensional vector in one of three ways:<!--D-->
+--
+
+  + A point in 2-dimensional space<!--D-->
+--
+
+  + An arrow pointing to that point in 2-dimensional space<!--D-->
+--
+
+  + An array of 2 numbers<!--D-->
+--
+
+- All of these ideas work for n-dimensional vectors where n can be 3,4 or any number
+
+---
+
+# Vectors as points
+
+```{r points,  fig.align='center',echo=FALSE}
+v1<-c(1,2)
+v2<-c(3,1)
+plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+lines(c(-5,5),c(0,0),lty=2)
+lines(c(0,0),c(-5,5),lty=2)
+points(v1[1],v1[2],pch=19,cex=2)
+text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+```
+
+---
+
+#Vectors as points
+
+```{r pointsb,  fig.align='center',echo=FALSE}
+v1<-c(1,2)
+v2<-c(3,1)
+plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+lines(c(-5,5),c(0,0),lty=2)
+lines(c(0,0),c(-5,5),lty=2)
+points(v1[1],v1[2],pch=19,cex=2)
+text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+points(v2[1],v2[2],pch=19,cex=2)
+text(v2[1],v2[2],expression(v[2]),pos=4,cex=2)
+```
+
+---
+
+# Vectors as arrows
+
+```{r arrows,  fig.align='center',echo=FALSE}
+v1<-c(1,2)
+v2<-c(3,1)
+plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+lines(c(-5,5),c(0,0),lty=2)
+lines(c(0,0),c(-5,5),lty=2)
+arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+```
+---
+
+# Vectors as arrows
+
+```{r arrowsb,  fig.align='center',echo=FALSE}
+v1<-c(1,2)
+v2<-c(3,1)
+plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+lines(c(-5,5),c(0,0),lty=2)
+lines(c(0,0),c(-5,5),lty=2)
+arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+arrows(0,0, v2[1],v2[2],pch=19,lwd=2)
+text(v2[1],v2[2],expression(v[2]),pos=4,cex=2)
+```
+
+---
+
+# Vectors as numbers
+
+In general a vector is:
+
+$${\mathbf{v}}=\begin{bmatrix}x\\y\end{bmatrix}$$
+
+For our two examples.
+
+$${\mathbf{v}}_1=\begin{bmatrix}1\\2\end{bmatrix}\quad\mbox{and}\quad{\mathbf{v}}_2=\begin{bmatrix}3\\1\end{bmatrix}$$
+
+---
+
+# Data as a vector
+
+- Consider two examples:<!--D-->
+--
+
+  + The vector $\bf{v}$ corresponds to a cage where $x$ measures the number of chickens and $y$ measures the number of rabbits.<!--D-->
+--
+
+  + The vector $\bf{v}$ corresponds to a country where $x$ measures the trade deficit in 2016 and $y$ measures trade deficit in 2017.<!--D-->
+--
+
+- Notice that if we have many cages or countries and plot each of these vectors as points we get a scatterplot
+
+---
+
+# Vectors as points
+
+```{r,  fig.align='center',echo=FALSE}
+v1<-c(1,2)
+v2<-c(3,1)
+plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+lines(c(-5,5),c(0,0),lty=2)
+lines(c(0,0),c(-5,5),lty=2)
+points(v1[1],v1[2],pch=19,cex=2)
+text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+points(v2[1],v2[2],pch=19,cex=2)
+text(v2[1],v2[2],expression(v[2]),pos=4,cex=2)
+```
+
+---
+
+# Vector Operations
+
+- There are two fundamental *operations* that we can do with vectors<!--D-->
+--
+
+  + Vector *addition*<!--D-->
+--
+
+  + Scalar *multiplication*<!--D-->
+--
+
+- We will look at each of these: <!--D-->
+--
+
+  + Geometrically (with pictures) and <!--D-->
+--
+
+  + Algebraically (with numbers)
+
+---
+
+#Vector Addition
+
+```{r addition,fig.show='animate',aniopts='controls',interval=0.5,fig.cap='Click to see',ffmpeg.format='ogg'}
+v1<-c(1,2)
+v2<-c(3,1)
+s<-seq(0,1,by=0.2)
+for (j in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5,6),ylim=c(-5,5),xlab='',ylab='')
+  lines(c(-5,5),c(0,0),lty=2)
+  lines(c(0,0),c(-5,5),lty=2)
+  sv<-s[j]*v2
+  vsv<-v1+sv
+  arrows(sv[1],sv[2], vsv[1],vsv[2],pch=19,lwd=2,col='blue')
+  arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+  text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+  arrows(0,0, v2[1],v2[2],pch=19,lwd=2)
+  text(v2[1],v2[2],expression(v[2]),pos=4,cex=2)
+  
+  if(j==length(s)){
+    arrows(0,0, vsv[1],vsv[2],pch=19,lwd=2,col='red')
+    text(vsv[1],vsv[2],expression(v[1]+v[2]),pos=4,cex=2)
+  }
+}
+```
+---
+  
+# The other way 
+  
+```{r addition2,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5, label=FALSE,aniopts='controls',fig.cap='Click to see',ffmpeg.format='ogg'}
+v1<-c(1,2)
+v2<-c(3,1)
+s<-seq(0,1,by=0.2)
+for (j in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5,6),ylim=c(-5,5),xlab='',ylab='')
+  lines(c(-5,5),c(0,0),lty=2)
+  lines(c(0,0),c(-5,5),lty=2)
+  
+  sv<-s[j]*v1
+  vsv<-v2+sv
+  arrows(sv[1],sv[2], vsv[1],vsv[2],pch=19,lwd=2,col='blue')
+  
+  arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+  text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+  arrows(0,0, v2[1],v2[2],pch=19,lwd=2)
+  text(v2[1],v2[2],expression(v[2]),pos=4,cex=2)
+  
+  arrows(0,0, 4,3,pch=19,lwd=2,col='red')
+  text(4,3,expression(v[1]+v[2]),pos=4,cex=2)
+  
+}
+
+```
+
+---
+
+  
+# Vector Addition: Geometry
+  
+- The operation of adding two vectors is simply to slide one along the other.<!--D-->
+--
+
+- This is called *translation*<!--D-->
+--
+
+- The order of adding vectors does not matter $\mathbf{v}_1+\mathbf{v}_2=\mathbf{v}_2+\mathbf{v}_1$<!--D-->
+--
+
+- This property is called *commutativity*
+
+
+---
+  
+# With lots of points
+  
+```{r addpts, fig.align='center', echo=FALSE, fig.show='animate', interval=0.5, aniopts='controls', fig.cap='Click to see', ffmpeg.format='ogg'}
+grid2<-rbind(rnorm(50),rnorm(50))
+v1<-c(1,2)
+s<-seq(0,1,by=0.2)
+for (j in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5.1,5.1),ylim=c(-5.1,5.1),xlab='',ylab='')
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)
+  arrows(0,0, v1[1],v1[2],pch=19,lwd=2,col='red')
+  text(v1[1],v1[2],expression(v[1]),pos=4,cex=2,col='red')
+  sv<-s[j]*v1%*%matrix(rep(1,dim(grid2)[2]),1,dim(grid2)[2])
+  vsv<-grid2+sv
+  points(vsv[1,],vsv[2,],pch=19,lwd=2,col='blue')
+}
+```  
+
+
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+$$\begin{bmatrix}\color{red}{1}\\\color{black}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{red}{3}\\\color{black}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{1+3}\\\color{white}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{white}{4}\\\color{white}{3}\end{bmatrix}$$
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+$$\begin{bmatrix}\color{red}{1}\\\color{black}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{red}{3}\\\color{black}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{1+3}\\\color{white}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{4}\\\color{white}{3}\end{bmatrix}$$
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+$$\begin{bmatrix}\color{black}{1}\\\color{blue}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{black}{3}\\\color{blue}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{1+3}\\\color{blue}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{4}\\\color{white}{3}\end{bmatrix}$$
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+$$\begin{bmatrix}\color{black}{1}\\\color{blue}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{black}{3}\\\color{blue}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{1+3}\\\color{blue}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{4}\\\color{blue}{3}\end{bmatrix}$$
+  
+---
+  
+# Vector Addition and Data
+  
+- Vector addition can be meaningful for data.<!--D-->
+--
+
+- If I *add* a cage with 1 chicken and 3 rabbits to another cage with 2 chickens and 1 rabbits what do I get?<!--D-->
+--
+
+  + A cage with 3 chickens and 4 rabbits.
+---
+  
+# Vector Addition and Data
+  
+- Suppose Australia had a trade deficit of $US1bn in 2016 and $US3bn in 2017 and New Zealand had a trade deficit of $US2bn in 2016 and $US1bn in 2017.<!--D-->
+--
+
+- Australia and New Zealand merge to form a currency union and the trade deficit statistics need to be updated.<!--D-->
+--
+
+  + The new currency union had a trade deficit of $US3bn in 2016 and $US4bn in 2017.
+
+
+---
+  
+# Scalar multiplication
+  
+- If we add a number $c$ times we call that *multiplication*<!--D-->
+--
+
+- We do something similar with vectors.<!--D-->
+--
+
+- If we add a vector to itself $c$ times this is called *scalar multiplication*.<!--D-->
+--
+
+- We are multiplying a vector by a single number and NOT by another vector.<!--D-->
+--
+
+- This is very different from *matrix multiplication*.
+
+---
+  
+# Scalar multiply by 2
+  
+```{r smultgeom, fig.align='center', echo=FALSE, fig.show='animate', interval=0.5,aniopts='controls', fig.cap='Click to see', ffmpeg.format='ogg'}
+v1<-c(1,2)
+s<-seq(1,2,0.2)
+for (i in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+  lines(c(-5,5),c(0,0),lty=2)
+  lines(c(0,0),c(-5,5),lty=2)
+  arrows(0,0, s[i]*v1[1],s[i]*v1[2],pch=19,lwd=2,col='blue')
+  if(i==length(s)){text(2*v1[1],2*v1[2],expression(2*v[1]),pos=4,cex=2,col='blue')}
+  arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+  text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+  
+}
+```
+
+---
+  
+#Scalar multiply by 0.5
+  
+```{r smultgeom2,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='ogg'}
+v1<-c(1,2)
+s<-seq(1,0.5,-0.1)
+for (i in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5,5),ylim=c(-5,5),xlab='',ylab='')
+  lines(c(-5,5),c(0,0),lty=2)
+  lines(c(0,0),c(-5,5),lty=2)
+  arrows(0,0, v1[1],v1[2],pch=19,lwd=2)
+  text(v1[1],v1[2],expression(v[1]),pos=4,cex=2)
+  arrows(0,0, s[i]*v1[1],s[i]*v1[2],pch=19,lwd=2,col='blue')
+  if(i==length(s)){text(0.5*v1[1],0.5*v1[2],expression(0.5*v[1]),pos=4,cex=2,col='blue')}
+}
+```
+
+
+---
+
+#Scalar multiplication by 2
+
+```{r multpts,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5, fig.cap='Click to see',ffmpeg.format='ogg'}
+grid2<-rbind(rnorm(50),rnorm(50))
+s<-seq(1,2,by=0.2)
+for (j in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5.1,5.1),ylim=c(-5.1,5.1),xlab='',ylab='')
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)
+  vsv<-s[j]*grid2
+  points(vsv[1,],vsv[2,],pch=19,lwd=2,col='blue')
+}
+```
+
+---
+
+#Scalar multiplication by 0.5
+
+```{r multpts2,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,fig.cap='Click to see'}
+grid2<-rbind(rnorm(50),rnorm(50))
+s<-seq(1,0.5,by=-0.1)
+for (j in 1:length(s)){
+  plot(0,0,'n',xlim=c(-5.1,5.1),ylim=c(-5.1,5.1),xlab='',ylab='')
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)
+  vsv<-s[j]*grid2
+  points(vsv[1,],vsv[2,],pch=19,lwd=2,col='blue')
+}
+```
+
+---
+  
+# Scalar multiplication by 2
+  
+$$\begin{aligned}{\color{red}{2}}{\mathbf{v}}_1&={\color{red}{2}}\begin{bmatrix}1\\2\end{bmatrix}\\&=\begin{bmatrix}{\color{red}{2}}\times 1\\{\color{red}{2}}\times 2\end{bmatrix}\\&=\begin{bmatrix}2\\4\end{bmatrix}\end{aligned}$$
+  
+---
+  
+# Scalar multiplication by 0.5
+  
+$$\begin{aligned}{\color{red}{0.5}}{\mathbf{v}}_2&={\color{red}{0.5}}\begin{bmatrix}3\\1\end{bmatrix}\\&=\begin{bmatrix}{\color{red}{0.5}}\times 3\\{\color{red}{0.5}}\times 1\end{bmatrix}\\&=\begin{bmatrix}1.5\\0.5\end{bmatrix}\end{aligned}$$
+  
+---
+  
+# Scalar multiplication and data
+  
+- How might scalar multiplication be relevant to data?<!--D-->
+--
+
+- Suppose trade deficit is measured in Chinese Yuan instead of $US where 6 
+Yuan = $US1.<!--D-->
+--
+
+- Then we can get the trade defcit in Yuan by multiplying by the scalar 6.<!--D-->
+--
+
+- Suppose Australia had a trade deficit of $US1bn in 2016 
+and $US3bn in 2017.<!--D-->
+--
+
+  + This is equivalent to a trade deficit of 6bn Yuan in 2016 and 18bn Yuan in 2017.
+
+---
+  
+# Basis vector
+  
+-  Every vector can be created using<!--D-->
+--
+
+  + Scalar multiplication 
+  + Vector addition 
+  + Two *basis* vectors<!--D-->
+--
+
+- The basis vectors we use are:
+  
+$${\mathbf{b}}_1=\begin{bmatrix}1\\0\end{bmatrix}\quad\mbox{and}\quad{\mathbf{b}}_2=\begin{bmatrix}0\\1\end{bmatrix}$$
+  
+---
+  
+# How the basis works
+  
+- Suppose we want the vector $\begin{bmatrix}x\\y\end{bmatrix}$
+- This is given by
+
+$$x\mathbf{b}_1+y\mathbf{b}_2$$
+  or
+$$x\begin{bmatrix}1\\0\end{bmatrix}+y\begin{bmatrix}0\\1\end{bmatrix}$$
+  
+---
+  
+# Build a vector
+  
+```{r basis,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='ogg'}
+
+sx<-seq(1,2,by=0.2)
+for (j in 1:length(sx)){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-3.1,3.1),c(0,0),lty=2)
+  lines(c(0,0),c(-3.1,3.1),lty=2)
+  arrows(0,0,sx[j],0,pch=19,col = 'red',lwd=2)
+  if(j==length(sx)){text(sx[j],0,expression(2*b[1]),col='red',pos=4,cex=2)}
+  arrows(0,0,1,0,pch=19,col = 'blue',lwd=2)
+  text(1,0,expression(b[1]),col='blue',pos=4,cex=2)
+  arrows(0,0,0,1,pch=19,col = 'blue',lwd=2)
+  text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+}
+sy<-seq(1,3,by=0.4)
+for (j in 1:length(sy)){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-3.1,3.1),c(0,0),lty=2)
+  lines(c(0,0),c(-3.1,3.1),lty=2)
+  arrows(0,0,2,0,pch=19,col = 'red',lwd=2)
+  text(2,0,expression(2*b[1]),col='red',pos=4,cex=2)
+  arrows(0,0,0,sy[j],pch=19,col = 'red',lwd=2)
+  if(j==length(s)){text(0,sy[j],expression(3*b[2]),col='red',pos=4,cex=2)}
+  arrows(0,0,0,1,pch=19,col = 'blue',lwd=2)
+  text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+}
+sadd<-seq(0,2,by=0.4)
+for (j in 1:length(sy)){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-3.1,3.1),c(0,0),lty=2)
+  lines(c(0,0),c(-3.1,3.1),lty=2)
+  arrows(0,0,2,0,pch=19,col = 'red',lwd=2)
+  text(2,0,expression(2*b[1]),col='red',pos=4,cex=2)
+  arrows(0,0,0,3,pch=19,col = 'red',lwd=2)
+  text(0,3,expression(3*b[2]),col='red',pos=4,cex=2)
+  arrows(sadd[j],0,sadd[j],3,pch=19,col = 'black',lwd=2)
+}
+plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+lines(c(-3.1,3.1),c(0,0),lty=2)
+lines(c(0,0),c(-3.1,3.1),lty=2)
+arrows(0,0,2,0,pch=19,col = 'red',lwd=2)
+text(2,0,expression(2*b[1]),col='red',pos=4,cex=2)
+arrows(0,0,0,3,pch=19,col = 'red',lwd=2)
+text(0,3,expression(3*b[2]),col='red',pos=4,cex=2)
+arrows(0,0,2,3,pch=19,col = 'black',lwd=2)
+text(2,3,'(2,3)',col='black',pos=4,cex=2)
+```
+
+---
+class: inverse, center, middle
+
+# Matrices
+
+---
+  
+# Matrices
+  
+- You may have learnt about matrices before as an array of numbers.<!--D-->
+--
+
+- We will learn about matrices as objects that *transform* points in space.<!--D-->
+--
+
+- By multiplying a vector by a matrix, points in space are stetched, rotated and flipped around<!--D-->
+--
+
+- But what does this have to do with an array of numbers?
+  
+---
+  
+# Example of a matrix
+  
+- If you have previously seen a matrix you have probably seen something like this
+$$\mathbf{M}=\begin{bmatrix}5 &1\\2 &4\end{bmatrix}$$
+- Think of this as something that moves all the points in space to a new address.
+- It encodes where $\mathbf{b}_1$ and $\mathbf{b}_2$ get moved to.
+
+---
+  
+# Change of basis 
+  
+Multiplying by the matrix $\mathbf{M}=\begin{bmatrix}{\color{magenta} 5} &\color{green}{1}\\{\color{magenta} 2} &{\color{green}4}\end{bmatrix}$ will: 
+  
+Move the vector $\mathbf{b}_1=\begin{bmatrix}1\\0\end{bmatrix}$ to $\mathbf{b}^{*}_1=\begin{bmatrix}{\color{magenta} 5}\\{\color{magenta} 2}\end{bmatrix}$
+  
+Move the vector $\mathbf{b}_2=\begin{bmatrix}0\\1\end{bmatrix}$ to $\mathbf{b}^{*}_2=\begin{bmatrix}{\color{green}  1}\\{\color{green} 4}\end{bmatrix}$
+  
+Matrix multiplication is a very different type of multiplication than scalar multiplication.
+
+---
+  
+# Change of basis 
+  
+```{r basischange,  fig.align='center',echo=FALSE}
+plot(0,0,'n',xlim=c(-5.1,5.1),ylim=c(-5.1,5.1),xlab='',ylab='',asp=1)
+lines(c(-5.1,5.1),c(0,0),lty=2)
+lines(c(0,0),c(-5.1,5.1),lty=2)
+arrows(0,0,5,2,pch=19,col = 'red',lwd=2)
+text(5,2,expression(b[1]^'*'),col='red',pos=4,cex=2)
+arrows(0,0,1,4,pch=19,col = 'red',lwd=2)
+text(1,4,expression(b[2]^'*'),col='red',pos=4,cex=2)
+arrows(0,0,1,0,pch=19,col = 'blue',lwd=2)
+text(1,0,expression(b[1]),col='blue',pos=4,cex=2)
+arrows(0,0,0,1,pch=19,col = 'blue',lwd=2)
+text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+```
+
+---
+  
+#Old Basis
+  
+$$\begin{aligned}
+\mathbf{v}&=x\mathbf{b}_1+y\mathbf{b}_2\\
+&=x\begin{bmatrix}1\\0\end{bmatrix}+y\begin{bmatrix}0\\1\end{bmatrix}\\
+&=\begin{bmatrix}x\\y\end{bmatrix}
+\end{aligned}$$
+  
+---
+  
+# New Basis
+  
+$$\begin{aligned}
+\mathbf{v}^*&=x\mathbf{b}^{*}_1+y\mathbf{b}^{*}_2\\
+&=x\begin{bmatrix}5\\2\end{bmatrix}+y\begin{bmatrix}1\\4\end{bmatrix}\\
+&=\begin{bmatrix}5x+y\\2x+4y\end{bmatrix}
+\end{aligned}$$
+  
+---
+  
+# In general
+  
+Multiplying by the matrix $\mathbf{M}$ moves all vectors $\mathbf{v}$ to $\mathbf{v}^*$
+  
+We can write this as:
+  
+$$\mathbf{v}^*=\mathbf{Mv}=\begin{bmatrix}5 &1\\2 &4\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix}=\begin{bmatrix}5x+y\\2x+4y\end{bmatrix}$$
+  
+Another way to think of it is as multiplying the rows of ${\mathbf M}$ by the column $\mathbf {v}$
+
+---
+  
+# Diagonal Matrix
+  
+A diagonal matrix only has non-zeros running from the top left to the bottom right
+
+$$\mathbf{D}=\begin{bmatrix} 
+d_1 & 0 &\cdots & 0\\
+0  & d_2 & \ddots &\vdots\\
+\vdots & \ddots & \ddots &0\\
+0 &\cdots &0& d_n\\
+\end{bmatrix}$$
+  
+---
+
+# Example
+
+An example of a diagonal matrix is
+
+$$\begin{bmatrix}
+2 & 0\\
+0 &0.5\\
+\end{bmatrix}$$
+
+This will stretch space horizontally and squeeze space vertically.
+
+---
+
+# Scaling Space
+
+```{r matmults,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='ogg'}
+g=10
+grid2<-rbind(rnorm(80),rnorm(80))
+cols<-rep('black',80)
+cols[grid2[1,]*grid2[2,]>0]<-'green4'
+m11<-2
+m12<-0
+m21<-0
+m22<-0.5
+M<-matrix(c(m11,m21,m12,m22),2,2)
+s<-svd(M)
+thU<-asin(s$u[2,1])
+thV<-asin(s$v[2,1])
+td1<-s$d[1]
+td2<-s$d[2]
+incU<-seq(0,thU,length.out = g)
+incV<-seq(0,thV,length.out = g)
+inctd1<-seq(1,td1,length.out = g)
+inctd2<-seq(1,td2,length.out = g)
+bb<-10
+for (j in 1:g){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)  
+  Ui<-matrix(c(-cos(incU[j]),sin(incU[j]),sin(incU[j]),cos(incU[j])),2,2)
+  Vi<-matrix(c(-cos(incV[j]),sin(incV[j]),sin(incV[j]),cos(incV[j])),2,2)
+  Di<-matrix(c(inctd1[j],0,0,inctd2[j]),2,2)
+  Mi<-Ui%*%Di%*%t(Vi)
+  gridi<-Mi%*%grid2
+
+  points(gridi[1,],gridi[2,],pch=19,cex=1.5,col=cols)
+  arrows(0,0,m11,m21,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m11,-bb*m11),c(bb*m21,-bb*m21),lty=2,col='red')
+  text(m11,m21,expression(b[1]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,m12,m22,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m12,-bb*m12),c(bb*m22,-bb*m22),lty=2,col='red')
+  text(m12,m22,expression(b[2]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,1,0,pch=19,col = 'blue',lwd=3)
+  text(1,0,expression(b[1]),col='blue',pos=4,cex=2)
+  arrows(0,0,0,1,pch=19,col = 'blue',lwd=3)
+  text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+  
+  
+}
+
+
+
+```
+
+---
+
+  
+# Identity matrix
+  
+A special diagonal matrix is the identity matrix
+
+$$\mathbf{I}=\begin{bmatrix} 
+1 & 0 &\cdots & 0\\
+0  & 1 & \ddots &\vdots\\
+\vdots & \ddots & \ddots &0\\
+0 &\cdots &0& 1\\
+\end{bmatrix}$$
+  
+This matrix leaves all points in the same place
+
+---
+  
+# Rotation matrix
+  
+- Another important matrix is known as a *orthogonal rotation* matrix.<!--D-->
+--
+
+- It spins all the points around keeping them the same distance from the origin.<!--D-->
+--
+
+- The word *orthogonal* means that the new basis vectors are at right angles to one another.
+
+---
+  
+# Rotation Matrix
+
+- Recall when in PCA we spun around the 3d scatterplot.
+- The same idea works for bigger matrices
+- An example of a rotation matrix in two dimensions is:
+$$\mathbf{R}=\begin{bmatrix}0.8 & -0.6\\0.6 & 0.8\end{bmatrix}$$
+
+
+---
+
+#Rotation Matrix
+
+```{r matmultr,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='ogg'}
+g=10
+grid2<-rbind(rnorm(80),rnorm(80))
+cols<-rep('black',80)
+cols[grid2[1,]*grid2[2,]>0]<-'green4'
+m11<-0.8
+m12<--0.6
+m21<-0.6
+m22<-0.8
+M<-matrix(c(m11,m21,m12,m22),2,2)
+s<-svd(M)
+thU<-asin(s$u[2,1])
+thV<-asin(s$v[2,1])
+td1<-s$d[1]
+td2<-s$d[2]
+incU<-seq(0,thU,length.out = g)
+incV<-seq(0,thV,length.out = g)
+inctd1<-seq(1,td1,length.out = g)
+inctd2<-seq(1,td2,length.out = g)
+bb<-10
+
+for (j in 1:g){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)  
+  Ui<-matrix(c(-cos(incU[j]),sin(incU[j]),sin(incU[j]),cos(incU[j])),2,2)
+  Vi<-matrix(c(-cos(incV[j]),sin(incV[j]),sin(incV[j]),cos(incV[j])),2,2)
+  Di<-matrix(c(inctd1[j],0,0,inctd2[j]),2,2)
+  Mi<-Ui%*%Di%*%t(Vi)
+  gridi<-Mi%*%grid2
+  points(gridi[1,],gridi[2,],pch=19,cex=1.5,col=cols)
+  arrows(0,0,m11,m21,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m11,-bb*m11),c(bb*m21,-bb*m21),lty=2,col='red')
+  text(m11,m21,expression(b[1]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,m12,m22,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m12,-bb*m12),c(bb*m22,-bb*m22),lty=2,col='red')
+  text(m12,m22,expression(b[2]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,1,0,pch=19,col = 'blue',lwd=3)
+  text(1,0,expression(b[1]),col='blue',pos=4,cex=2)
+  arrows(0,0,0,1,pch=19,col = 'blue',lwd=3)
+  text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+}
+```
+
+---
+  
+# Rotation matrix
+  
+- A rotation matrix $\mathbf{R}$ has the property $\mathbf{R'R}=\mathbf{I}$<!--D-->
+--
+
+- Here $\mathbf{R'}$ is called the transpose.<!--D-->
+--
+
+- The transpose involves <!--D-->
+--
+
+  + Taking all rows of a matrix and converting them to columns
+  + Taking all columns of a matrix and converting them to rows<!--D-->
+--
+
+- You will see more examples in the tutorial.
+
+---
+  
+# Matrix Multiplication in General
+
+```{r matmult,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls',fig.cap='Click to see',ffmpeg.format='ogg'}
+g=10
+grid2<-rbind(rnorm(80),rnorm(80))
+cols<-rep('black',80)
+cols[grid2[1,]*grid2[2,]>0]<-'green4'
+m11<-1
+m12<-0.2
+m21<-0.2
+m22<-1
+M<-matrix(c(m11,m21,m12,m22),2,2)
+s<-svd(M)
+thU<-asin(s$u[2,1])
+thV<-asin(s$v[2,1])
+td1<-s$d[1]
+td2<-s$d[2]
+incU<-seq(0,thU,length.out = g)
+incV<-seq(0,thV,length.out = g)
+inctd1<-seq(1,td1,length.out = g)
+inctd2<-seq(1,td2,length.out = g)
+bb<-10
+
+for (j in 1:g){
+  plot(0,0,'n',xlim=c(-3.1,3.1),ylim=c(-3.1,3.1),xlab='',ylab='',asp=1)
+  lines(c(-5.1,5.1),c(0,0),lty=2)
+  lines(c(0,0),c(-5.1,5.1),lty=2)  
+  Ui<-matrix(c(-cos(incU[j]),sin(incU[j]),sin(incU[j]),cos(incU[j])),2,2)
+  Vi<-matrix(c(-cos(incV[j]),sin(incV[j]),sin(incV[j]),cos(incV[j])),2,2)
+  Di<-matrix(c(inctd1[j],0,0,inctd2[j]),2,2)
+  Mi<-Ui%*%Di%*%t(Vi)
+  gridi<-Mi%*%grid2
+  points(gridi[1,],gridi[2,],pch=19,cex=2,col=cols)
+  arrows(0,0,m11,m21,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m11,-bb*m11),c(bb*m21,-bb*m21),lty=2,col='red')
+  text(m11,m21,expression(b[1]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,m12,m22,pch=19,col = 'red',lwd=3)
+  lines(c(bb*m12,-bb*m12),c(bb*m22,-bb*m22),lty=2,col='red')
+  text(m12,m22,expression(b[2]^'*'),col='red',pos=4,cex=2)
+  arrows(0,0,1,0,pch=19,col = 'blue',lwd=3)
+  text(1,0,expression(b[1]),col='blue',pos=4,cex=2)
+  arrows(0,0,0,1,pch=19,col = 'blue',lwd=3)
+  text(0,1,expression(b[2]),col='blue',pos=4,cex=2)
+  
+}
+```
+
+---
+
+  
+# Matrix Multiplication and Data
+  
+An simple application of matrix multiplication is to create *new* variables.
+
+- Suppose we want a matrix to transform :
+  + The number of chickens and number of rabbits to...<!--D-->
+--
+
+  + The number of heads and the number of feet.
+
+---
+
+# Answer
+
+- First basis vector is the number of heads and feet of each chicken.
+- Second basis vector is the number of heads and feet of each rabbit.
+
+$$\begin{bmatrix}1&1\\2&4\end{bmatrix}$$
+  
+---
+
+# Another one
+  
+- Suppose we want a matrix to transform:
+  + The trade deficit in 2016 and trade deficit in 2017 to...<!--D-->
+--
+
+  + The average trade deficit from 2016 to 2017 and the change in the trade deficit between 2016 and 2017<!--D-->
+--
+
+
+What does this matrix look like?  Try yourselves.
+
+---
+
+# Answer
+
+- First basis vector average and change if trade deficit was $1 in 2016 
+and $0 in 2017.
+- Second basis vector average and change if trade deficit was $0 in 2016 
+and $1 in 2017.
+
+$$\begin{bmatrix}0.5&0.5\\-1&1\end{bmatrix}$$  
+
+---
+
+
+# Non-Square Matrices
+  
+- So far we have only considered $2\times 2$ matrices.
+- These move every point in 2D space to another point in 2D space
+- However we can have a matrix with 3 rows and 2 columns (or $3\times2$ matrix).
+
+$$\mathbf{M}=\begin{bmatrix}1 &2\\3 &4\\5 &6\\\end{bmatrix}$$
+  
+---
+  
+# Non-square Matrices
+  
+$$\begin{aligned}\mathbf{Mz}&=\begin{bmatrix}1 &2\\3 &4\\5 &6\\\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix}\\&=x\begin{bmatrix}1\\3\\5\end{bmatrix}+y\begin{bmatrix}2\\4\\6\end{bmatrix}\\&=\begin{bmatrix}x+2y\\3x+4y\\5x+6y\\\end{bmatrix}\end{aligned}$$
+  
+---
+  
+# Non-square matrices
+  
+- Matrix multiplication works in the same way<!--D-->
+--
+
+- However the *input* is a 2-dimensional vector but the *output* is a 3-dimensional vector<!--D-->
+--
+
+- Multiplying by a non-square matrix changes the dimension
+
+---
+  
+# Matrix composition
+  
+- What does it mean to multiply matrices by matrices?<!--D-->
+--
+
+- One way to understand matrix multiplication is as a *composition* of transformations:<!--D-->
+--
+
+  + Transform a $2$-dimensional vector $\mathbf{v}$ into a $4$-dimensional vector by multiplying by the $4\times 2$ matrix $\mathbf{G}$<!--D-->
+--
+
+  + Transorm the result into a $3$-dimensional vector by multyplying by a $3\times 4$ matrix $\mathbf{F}$
+  
+---
+  
+# Mathematically
+  
+- When reading below go from right to left:
+  
+$$\underset{{ (3\times 2)}}{\mathbf{H}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (2\times 1)}}{\mathbf{v}}
+\underset{=}{{ =}}
+\underset{{ (3\times 4)}}{\mathbf{F}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (4\times 2)}}{\mathbf{G}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (2\times 1)}}{\mathbf{v}}$$
+  
+- The matrix $\mathbf{H}=\mathbf{FG}$ is a composition of doing $\mathbf{G}$ and then $\mathbf{F}$ 
+  
+---
+  
+# Matrix multiplication
+  
+- What happens if you try to multiply $\mathbf{GFv}$?<!--D-->
+--
+
+$$\underset{{ (4\times 2)}}{\mathbf{G}}\underset{{ \not\leftarrow}}{\times}\underset{{ (3\times 4)}}{\mathbf{F}}\underset{{ \not\leftarrow}}{\times}\underset{{ (2\times 1)}}{\mathbf{v}}$$<!--D-->
+--
+
+- Going from right to left, $\mathbf{F}$ will try to transform a 4-dimensional vector to a 3-dimensional vector and cannot take the is a 2-dimensional vector $\mathbf{v}$  as its input!<!--D-->
+--
+
+- Also $\mathbf{G}$ transforms a 2-dimensional vector to a 4-dimensional vector so cannot take the 3-dimensional output of $\mathbf{F}$ as its input.
+
+---
+  
+# Matrix Multiplication
+  
+- Although it is possible to get $\mathbf{FG}$ it is impossible to get $\mathbf{GF}$.<!--D-->
+--
+
+- In general, for matrix multiplication $\mathbf{AB}\neq\mathbf{BA}$ even for square matrices.<!--D-->
+--
+
+- Matrix multiplication is *non-commutative*.
+
+---
+  
+# Beyond geometry
+  
+- A vector can be more than just a point in space.<!--D-->
+--
+
+- Also a matrix becomes something more than just something that moves points space.<!--D-->
+--
+
+- Matrices can store information too:<!--D-->
+--
+
+  + The data can be put in a matrix<!--D-->
+--
+
+  + The variances and covariances can be put into a matrix
+
+---
+  
+# Where to now?
+  
+- In tutorials you will reinforce these concepts<!--D-->
+--
+
+- There will be more of a focus on matrix algebra:<!--D-->
+--
+
+  + The rules of matrix multiplication (with exercises)<!--D-->
+--
+
+  + The concept of a transpose will also be covered more thoroughly<!--D-->
+--
+
+- In next week's lecture we link these ideas back to PCA, MDS and CA.

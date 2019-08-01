@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Geometry of Matrices</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Anastasios Panagiotelis" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Geometry of Matrices
+## High Dimensional Data Analysis
+### Anastasios Panagiotelis
+### Lecture 9
+
+---
+
+
+class: inverse, center, middle
+
+# Why?
+
+
+
+---
+# Why vectors and matrices?
+
+- Nearly all the methods we cover involve *vectors* and *matrices*.&lt;!--D--&gt;
+--
+
+- You may have covered matrices before and found that it involves remembering many seemingly arbitrary rules.&lt;!--D--&gt;
+--
+
+- The aim of this lecture is to understand the *geometric* interpretation of vectors which is crucial in making the connection between data and visualisation.&lt;!--D--&gt;
+--
+
+- Matrices are important to gain a deep understanding about dimension reduction.
+
+---
+
+# Vectors
+
+- We will think of a 2-dimensional vector in one of three ways:&lt;!--D--&gt;
+--
+
+  + A point in 2-dimensional space&lt;!--D--&gt;
+--
+
+  + An arrow pointing to that point in 2-dimensional space&lt;!--D--&gt;
+--
+
+  + An array of 2 numbers&lt;!--D--&gt;
+--
+
+- All of these ideas work for n-dimensional vectors where n can be 3,4 or any number
+
+---
+
+# Vectors as points
+
+&lt;img src="MatrixGeometry_files/figure-html/points-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Vectors as points
+
+&lt;img src="MatrixGeometry_files/figure-html/pointsb-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Vectors as arrows
+
+&lt;img src="MatrixGeometry_files/figure-html/arrows-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+# Vectors as arrows
+
+&lt;img src="MatrixGeometry_files/figure-html/arrowsb-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Vectors as numbers
+
+In general a vector is:
+
+`$${\mathbf{v}}=\begin{bmatrix}x\\y\end{bmatrix}$$`
+
+For our two examples.
+
+`$${\mathbf{v}}_1=\begin{bmatrix}1\\2\end{bmatrix}\quad\mbox{and}\quad{\mathbf{v}}_2=\begin{bmatrix}3\\1\end{bmatrix}$$`
+
+---
+
+# Data as a vector
+
+- Consider two examples:&lt;!--D--&gt;
+--
+
+  + The vector `\(\bf{v}\)` corresponds to a cage where `\(x\)` measures the number of chickens and `\(y\)` measures the number of rabbits.&lt;!--D--&gt;
+--
+
+  + The vector `\(\bf{v}\)` corresponds to a country where `\(x\)` measures the trade deficit in 2016 and `\(y\)` measures trade deficit in 2017.&lt;!--D--&gt;
+--
+
+- Notice that if we have many cages or countries and plot each of these vectors as points we get a scatterplot
+
+---
+
+# Vectors as points
+
+&lt;img src="MatrixGeometry_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Vector Operations
+
+- There are two fundamental *operations* that we can do with vectors&lt;!--D--&gt;
+--
+
+  + Vector *addition*&lt;!--D--&gt;
+--
+
+  + Scalar *multiplication*&lt;!--D--&gt;
+--
+
+- We will look at each of these: &lt;!--D--&gt;
+--
+
+  + Geometrically (with pictures) and &lt;!--D--&gt;
+--
+
+  + Algebraically (with numbers)
+
+---
+
+#Vector Addition
+
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/addition.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+---
+  
+# The other way 
+  
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/FALSE.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+
+  
+# Vector Addition: Geometry
+  
+- The operation of adding two vectors is simply to slide one along the other.&lt;!--D--&gt;
+--
+
+- This is called *translation*&lt;!--D--&gt;
+--
+
+- The order of adding vectors does not matter `\(\mathbf{v}_1+\mathbf{v}_2=\mathbf{v}_2+\mathbf{v}_1\)`&lt;!--D--&gt;
+--
+
+- This property is called *commutativity*
+
+
+---
+  
+# With lots of points
+  
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/addpts.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+`$$\begin{bmatrix}\color{red}{1}\\\color{black}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{red}{3}\\\color{black}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{1+3}\\\color{white}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{white}{4}\\\color{white}{3}\end{bmatrix}$$`
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+`$$\begin{bmatrix}\color{red}{1}\\\color{black}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{red}{3}\\\color{black}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{1+3}\\\color{white}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{red}{4}\\\color{white}{3}\end{bmatrix}$$`
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+`$$\begin{bmatrix}\color{black}{1}\\\color{blue}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{black}{3}\\\color{blue}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{1+3}\\\color{blue}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{4}\\\color{white}{3}\end{bmatrix}$$`
+  
+---
+  
+# Vector Additions: Numbers
+  
+Vector addition is as simple as adding up the corresponding numbers
+
+`$$\begin{bmatrix}\color{black}{1}\\\color{blue}{2}\end{bmatrix}+
+  \begin{bmatrix}\color{black}{3}\\\color{blue}{1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{1+3}\\\color{blue}{2+1}\end{bmatrix}=
+  \begin{bmatrix}\color{black}{4}\\\color{blue}{3}\end{bmatrix}$$`
+  
+---
+  
+# Vector Addition and Data
+  
+- Vector addition can be meaningful for data.&lt;!--D--&gt;
+--
+
+- If I *add* a cage with 1 chicken and 3 rabbits to another cage with 2 chickens and 1 rabbits what do I get?&lt;!--D--&gt;
+--
+
+  + A cage with 3 chickens and 4 rabbits.
+---
+  
+# Vector Addition and Data
+  
+- Suppose Australia had a trade deficit of $US1bn in 2016 and $US3bn in 2017 and New Zealand had a trade deficit of $US2bn in 2016 and $US1bn in 2017.&lt;!--D--&gt;
+--
+
+- Australia and New Zealand merge to form a currency union and the trade deficit statistics need to be updated.&lt;!--D--&gt;
+--
+
+  + The new currency union had a trade deficit of $US3bn in 2016 and $US4bn in 2017.
+
+
+---
+  
+# Scalar multiplication
+  
+- If we add a number `\(c\)` times we call that *multiplication*&lt;!--D--&gt;
+--
+
+- We do something similar with vectors.&lt;!--D--&gt;
+--
+
+- If we add a vector to itself `\(c\)` times this is called *scalar multiplication*.&lt;!--D--&gt;
+--
+
+- We are multiplying a vector by a single number and NOT by another vector.&lt;!--D--&gt;
+--
+
+- This is very different from *matrix multiplication*.
+
+---
+  
+# Scalar multiply by 2
+  
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/smultgeom.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+  
+#Scalar multiply by 0.5
+  
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/smultgeom2.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+
+---
+
+#Scalar multiplication by 2
+
+&lt;video controls loop&gt;&lt;source src="MatrixGeometry_files/figure-html/multpts.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+
+#Scalar multiplication by 0.5
+
+&lt;video controls loop&gt;&lt;source src="MatrixGeometry_files/figure-html/multpts2.webm" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+  
+# Scalar multiplication by 2
+  
+`$$\begin{aligned}{\color{red}{2}}{\mathbf{v}}_1&amp;={\color{red}{2}}\begin{bmatrix}1\\2\end{bmatrix}\\&amp;=\begin{bmatrix}{\color{red}{2}}\times 1\\{\color{red}{2}}\times 2\end{bmatrix}\\&amp;=\begin{bmatrix}2\\4\end{bmatrix}\end{aligned}$$`
+  
+---
+  
+# Scalar multiplication by 0.5
+  
+`$$\begin{aligned}{\color{red}{0.5}}{\mathbf{v}}_2&amp;={\color{red}{0.5}}\begin{bmatrix}3\\1\end{bmatrix}\\&amp;=\begin{bmatrix}{\color{red}{0.5}}\times 3\\{\color{red}{0.5}}\times 1\end{bmatrix}\\&amp;=\begin{bmatrix}1.5\\0.5\end{bmatrix}\end{aligned}$$`
+  
+---
+  
+# Scalar multiplication and data
+  
+- How might scalar multiplication be relevant to data?&lt;!--D--&gt;
+--
+
+- Suppose trade deficit is measured in Chinese Yuan instead of $US where 6 
+Yuan = $US1.&lt;!--D--&gt;
+--
+
+- Then we can get the trade defcit in Yuan by multiplying by the scalar 6.&lt;!--D--&gt;
+--
+
+- Suppose Australia had a trade deficit of $US1bn in 2016 
+and $US3bn in 2017.&lt;!--D--&gt;
+--
+
+  + This is equivalent to a trade deficit of 6bn Yuan in 2016 and 18bn Yuan in 2017.
+
+---
+  
+# Basis vector
+  
+-  Every vector can be created using&lt;!--D--&gt;
+--
+
+  + Scalar multiplication 
+  + Vector addition 
+  + Two *basis* vectors&lt;!--D--&gt;
+--
+
+- The basis vectors we use are:
+  
+`$${\mathbf{b}}_1=\begin{bmatrix}1\\0\end{bmatrix}\quad\mbox{and}\quad{\mathbf{b}}_2=\begin{bmatrix}0\\1\end{bmatrix}$$`
+  
+---
+  
+# How the basis works
+  
+- Suppose we want the vector `\(\begin{bmatrix}x\\y\end{bmatrix}\)`
+- This is given by
+
+`$$x\mathbf{b}_1+y\mathbf{b}_2$$`
+  or
+`$$x\begin{bmatrix}1\\0\end{bmatrix}+y\begin{bmatrix}0\\1\end{bmatrix}$$`
+  
+---
+  
+# Build a vector
+  
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/basis.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+class: inverse, center, middle
+
+# Matrices
+
+---
+  
+# Matrices
+  
+- You may have learnt about matrices before as an array of numbers.&lt;!--D--&gt;
+--
+
+- We will learn about matrices as objects that *transform* points in space.&lt;!--D--&gt;
+--
+
+- By multiplying a vector by a matrix, points in space are stetched, rotated and flipped around&lt;!--D--&gt;
+--
+
+- But what does this have to do with an array of numbers?
+  
+---
+  
+# Example of a matrix
+  
+- If you have previously seen a matrix you have probably seen something like this
+`$$\mathbf{M}=\begin{bmatrix}5 &amp;1\\2 &amp;4\end{bmatrix}$$`
+- Think of this as something that moves all the points in space to a new address.
+- It encodes where `\(\mathbf{b}_1\)` and `\(\mathbf{b}_2\)` get moved to.
+
+---
+  
+# Change of basis 
+  
+Multiplying by the matrix `\(\mathbf{M}=\begin{bmatrix}{\color{magenta} 5} &amp;\color{green}{1}\\{\color{magenta} 2} &amp;{\color{green}4}\end{bmatrix}\)` will: 
+  
+Move the vector `\(\mathbf{b}_1=\begin{bmatrix}1\\0\end{bmatrix}\)` to `\(\mathbf{b}^{*}_1=\begin{bmatrix}{\color{magenta} 5}\\{\color{magenta} 2}\end{bmatrix}\)`
+  
+Move the vector `\(\mathbf{b}_2=\begin{bmatrix}0\\1\end{bmatrix}\)` to `\(\mathbf{b}^{*}_2=\begin{bmatrix}{\color{green}  1}\\{\color{green} 4}\end{bmatrix}\)`
+  
+Matrix multiplication is a very different type of multiplication than scalar multiplication.
+
+---
+  
+# Change of basis 
+  
+&lt;img src="MatrixGeometry_files/figure-html/basischange-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+  
+#Old Basis
+  
+`$$\begin{aligned}
+\mathbf{v}&amp;=x\mathbf{b}_1+y\mathbf{b}_2\\
+&amp;=x\begin{bmatrix}1\\0\end{bmatrix}+y\begin{bmatrix}0\\1\end{bmatrix}\\
+&amp;=\begin{bmatrix}x\\y\end{bmatrix}
+\end{aligned}$$`
+  
+---
+  
+# New Basis
+  
+`$$\begin{aligned}
+\mathbf{v}^*&amp;=x\mathbf{b}^{*}_1+y\mathbf{b}^{*}_2\\
+&amp;=x\begin{bmatrix}5\\2\end{bmatrix}+y\begin{bmatrix}1\\4\end{bmatrix}\\
+&amp;=\begin{bmatrix}5x+y\\2x+4y\end{bmatrix}
+\end{aligned}$$`
+  
+---
+  
+# In general
+  
+Multiplying by the matrix `\(\mathbf{M}\)` moves all vectors `\(\mathbf{v}\)` to `\(\mathbf{v}^*\)`
+  
+We can write this as:
+  
+`$$\mathbf{v}^*=\mathbf{Mv}=\begin{bmatrix}5 &amp;1\\2 &amp;4\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix}=\begin{bmatrix}5x+y\\2x+4y\end{bmatrix}$$`
+  
+Another way to think of it is as multiplying the rows of `\({\mathbf M}\)` by the column `\(\mathbf {v}\)`
+
+---
+  
+# Diagonal Matrix
+  
+A diagonal matrix only has non-zeros running from the top left to the bottom right
+
+`$$\mathbf{D}=\begin{bmatrix} 
+d_1 &amp; 0 &amp;\cdots &amp; 0\\
+0  &amp; d_2 &amp; \ddots &amp;\vdots\\
+\vdots &amp; \ddots &amp; \ddots &amp;0\\
+0 &amp;\cdots &amp;0&amp; d_n\\
+\end{bmatrix}$$`
+  
+---
+
+# Example
+
+An example of a diagonal matrix is
+
+`$$\begin{bmatrix}
+2 &amp; 0\\
+0 &amp;0.5\\
+\end{bmatrix}$$`
+
+This will stretch space horizontally and squeeze space vertically.
+
+---
+
+# Scaling Space
+
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmults.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+
+  
+# Identity matrix
+  
+A special diagonal matrix is the identity matrix
+
+`$$\mathbf{I}=\begin{bmatrix} 
+1 &amp; 0 &amp;\cdots &amp; 0\\
+0  &amp; 1 &amp; \ddots &amp;\vdots\\
+\vdots &amp; \ddots &amp; \ddots &amp;0\\
+0 &amp;\cdots &amp;0&amp; 1\\
+\end{bmatrix}$$`
+  
+This matrix leaves all points in the same place
+
+---
+  
+# Rotation matrix
+  
+- Another important matrix is known as a *orthogonal rotation* matrix.&lt;!--D--&gt;
+--
+
+- It spins all the points around keeping them the same distance from the origin.&lt;!--D--&gt;
+--
+
+- The word *orthogonal* means that the new basis vectors are at right angles to one another.
+
+---
+  
+# Rotation Matrix
+
+- Recall when in PCA we spun around the 3d scatterplot.
+- The same idea works for bigger matrices
+- An example of a rotation matrix in two dimensions is:
+`$$\mathbf{R}=\begin{bmatrix}0.8 &amp; -0.6\\0.6 &amp; 0.8\end{bmatrix}$$`
+
+
+---
+
+#Rotation Matrix
+
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmultr.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+  
+# Rotation matrix
+  
+- A rotation matrix `\(\mathbf{R}\)` has the property `\(\mathbf{R'R}=\mathbf{I}\)`&lt;!--D--&gt;
+--
+
+- Here `\(\mathbf{R'}\)` is called the transpose.&lt;!--D--&gt;
+--
+
+- The transpose involves &lt;!--D--&gt;
+--
+
+  + Taking all rows of a matrix and converting them to columns
+  + Taking all columns of a matrix and converting them to rows&lt;!--D--&gt;
+--
+
+- You will see more examples in the tutorial.
+
+---
+  
+# Matrix Multiplication in General
+
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmult.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
+
+  
+# Matrix Multiplication and Data
+  
+An simple application of matrix multiplication is to create *new* variables.
+
+- Suppose we want a matrix to transform :
+  + The number of chickens and number of rabbits to...&lt;!--D--&gt;
+--
+
+  + The number of heads and the number of feet.
+
+---
+
+# Answer
+
+- First basis vector is the number of heads and feet of each chicken.
+- Second basis vector is the number of heads and feet of each rabbit.
+
+`$$\begin{bmatrix}1&amp;1\\2&amp;4\end{bmatrix}$$`
+  
+---
+
+# Another one
+  
+- Suppose we want a matrix to transform:
+  + The trade deficit in 2016 and trade deficit in 2017 to...&lt;!--D--&gt;
+--
+
+  + The average trade deficit from 2016 to 2017 and the change in the trade deficit between 2016 and 2017&lt;!--D--&gt;
+--
+
+
+What does this matrix look like?  Try yourselves.
+
+---
+
+# Answer
+
+- First basis vector average and change if trade deficit was $1 in 2016 
+and $0 in 2017.
+- Second basis vector average and change if trade deficit was $0 in 2016 
+and $1 in 2017.
+
+`$$\begin{bmatrix}0.5&amp;0.5\\-1&amp;1\end{bmatrix}$$`  
+
+---
+
+
+# Non-Square Matrices
+  
+- So far we have only considered `\(2\times 2\)` matrices.
+- These move every point in 2D space to another point in 2D space
+- However we can have a matrix with 3 rows and 2 columns (or `\(3\times2\)` matrix).
+
+`$$\mathbf{M}=\begin{bmatrix}1 &amp;2\\3 &amp;4\\5 &amp;6\\\end{bmatrix}$$`
+  
+---
+  
+# Non-square Matrices
+  
+`$$\begin{aligned}\mathbf{Mz}&amp;=\begin{bmatrix}1 &amp;2\\3 &amp;4\\5 &amp;6\\\end{bmatrix}\begin{bmatrix}x\\y\end{bmatrix}\\&amp;=x\begin{bmatrix}1\\3\\5\end{bmatrix}+y\begin{bmatrix}2\\4\\6\end{bmatrix}\\&amp;=\begin{bmatrix}x+2y\\3x+4y\\5x+6y\\\end{bmatrix}\end{aligned}$$`
+  
+---
+  
+# Non-square matrices
+  
+- Matrix multiplication works in the same way&lt;!--D--&gt;
+--
+
+- However the *input* is a 2-dimensional vector but the *output* is a 3-dimensional vector&lt;!--D--&gt;
+--
+
+- Multiplying by a non-square matrix changes the dimension
+
+---
+  
+# Matrix composition
+  
+- What does it mean to multiply matrices by matrices?&lt;!--D--&gt;
+--
+
+- One way to understand matrix multiplication is as a *composition* of transformations:&lt;!--D--&gt;
+--
+
+  + Transform a `\(2\)`-dimensional vector `\(\mathbf{v}\)` into a `\(4\)`-dimensional vector by multiplying by the `\(4\times 2\)` matrix `\(\mathbf{G}\)`&lt;!--D--&gt;
+--
+
+  + Transorm the result into a `\(3\)`-dimensional vector by multyplying by a `\(3\times 4\)` matrix `\(\mathbf{F}\)`
+  
+---
+  
+# Mathematically
+  
+- When reading below go from right to left:
+  
+`$$\underset{{ (3\times 2)}}{\mathbf{H}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (2\times 1)}}{\mathbf{v}}
+\underset{=}{{ =}}
+\underset{{ (3\times 4)}}{\mathbf{F}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (4\times 2)}}{\mathbf{G}}
+\underset{{ \leftarrow}}{\times}
+\underset{{ (2\times 1)}}{\mathbf{v}}$$`
+  
+- The matrix `\(\mathbf{H}=\mathbf{FG}\)` is a composition of doing `\(\mathbf{G}\)` and then `\(\mathbf{F}\)` 
+  
+---
+  
+# Matrix multiplication
+  
+- What happens if you try to multiply `\(\mathbf{GFv}\)`?&lt;!--D--&gt;
+--
+
+`$$\underset{{ (4\times 2)}}{\mathbf{G}}\underset{{ \not\leftarrow}}{\times}\underset{{ (3\times 4)}}{\mathbf{F}}\underset{{ \not\leftarrow}}{\times}\underset{{ (2\times 1)}}{\mathbf{v}}$$`&lt;!--D--&gt;
+--
+
+- Going from right to left, `\(\mathbf{F}\)` will try to transform a 4-dimensional vector to a 3-dimensional vector and cannot take the is a 2-dimensional vector `\(\mathbf{v}\)`  as its input!&lt;!--D--&gt;
+--
+
+- Also `\(\mathbf{G}\)` transforms a 2-dimensional vector to a 4-dimensional vector so cannot take the 3-dimensional output of `\(\mathbf{F}\)` as its input.
+
+---
+  
+# Matrix Multiplication
+  
+- Although it is possible to get `\(\mathbf{FG}\)` it is impossible to get `\(\mathbf{GF}\)`.&lt;!--D--&gt;
+--
+
+- In general, for matrix multiplication `\(\mathbf{AB}\neq\mathbf{BA}\)` even for square matrices.&lt;!--D--&gt;
+--
+
+- Matrix multiplication is *non-commutative*.
+
+---
+  
+# Beyond geometry
+  
+- A vector can be more than just a point in space.&lt;!--D--&gt;
+--
+
+- Also a matrix becomes something more than just something that moves points space.&lt;!--D--&gt;
+--
+
+- Matrices can store information too:&lt;!--D--&gt;
+--
+
+  + The data can be put in a matrix&lt;!--D--&gt;
+--
+
+  + The variances and covariances can be put into a matrix
+
+---
+  
+# Where to now?
+  
+- In tutorials you will reinforce these concepts&lt;!--D--&gt;
+--
+
+- There will be more of a focus on matrix algebra:&lt;!--D--&gt;
+--
+
+  + The rules of matrix multiplication (with exercises)&lt;!--D--&gt;
+--
+
+  + The concept of a transpose will also be covered more thoroughly&lt;!--D--&gt;
+--
+
+- In next week's lecture we link these ideas back to PCA, MDS and CA.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

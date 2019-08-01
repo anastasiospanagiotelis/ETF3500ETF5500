@@ -1,0 +1,473 @@
+---
+title: "Factor Models"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 8"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+class: inverse, center, middle
+
+# Motivation
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+require(broom)
+require(ggfortify)
+rm(list=ls())
+```
+
+---
+
+# Boston Housing
+
+- In an earlier tutorial we considered the Boston Housing data
+- Each observation is a town (suburb) in the Boston metropolitan area.
+- There are 14 variables measuring demographic information as well as other factors that may influence house price.
+
+---
+
+# PCA on Boston Housing 
+
+```{r, eval=F,echo=T,message=FALSE}
+#First load required packages
+library(tidyverse)
+Boston<-readRDS('Boston.rds')
+Boston%>%
+  column_to_rownames('Town')%>% 
+  prcomp(scale.=TRUE)->pcaout
+screeplot(pcaout,type = 'l')
+```
+
+---
+
+# Scree Plot
+
+```{r, eval=T,echo=F,message=FALSE}
+#First load required packages
+library(tidyverse)
+Boston<-readRDS('Boston.rds')
+Boston%>%
+  column_to_rownames('Town')%>% 
+  prcomp(scale.=TRUE)->pcaout
+screeplot(pcaout,type = 'l')
+```
+
+---
+
+#Biplot
+
+```{r, eval=T,echo=T,message=FALSE}
+biplot(pcaout)
+```
+
+---
+
+# Discussion
+
+- The data seem to suggest that each of the variables can be
+explained by just two or three factors.
+--
+
+- When we do PCA sometimes it is easy to interpret the PCs.
+--
+
+- Sometimes the PCs are hard to interpret.
+--
+
+- This is not surprising, PCA just finds a linear combination
+that maximises variances.
+--
+
+- To obtain factors with some interpretation we need a more
+detailed model.
+
+---
+
+# Factor Model
+
+- The factor model is defined as
+
+$$y_{ij}=\lambda_{j1}f_{1i}+\lambda_{j2}f_{2i}+\ldots+\xi_{ij}$$
+
+- Or in matrix form
+
+$$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{f}_i+\boldsymbol{\xi}_i$$
+
+- $y$ are observed data, $\Lambda$ / $\lambda$ are coefficients, $f$ are latent factors, $\xi$ are error terms.
+- The intercept is left out for simplicity.
+---
+
+# Notation
+
+- The subscript $i$ denotes the $i^{th}$ cross sectional unit (in the Boston data the town).
+- The subscript $j$ denotes the variable (e.g. teacher ratio, distance from downtown etc.)
+- The dimensions of $\mathbf{y}_i$ and $\boldsymbol{\xi}_i$ are $p\times 1$ (or $14\times 1$ in the Boston data).
+- If there are $r$ factors then $\mathbf{f_i}$ is $r\times 1$ and $\boldsymbol{\Lambda}$ is $p\times r$.
+- Verify that all matrix multiplication is conformable.
+---
+
+# Regression
+
+- This is similar to a regression model. However
+  - In a regression model there are $x$ on the right hand side that
+are *observed*.
+  - In a factor model these are replaced with $f$ that are *unobserved*.
+- How can we estimate this model?
+  
+---
+
+# Assumptions: Errors
+
+- Each idiosyncratic error has its own variance.
+  - These variances are called unique variance or uniquenesses
+- The idiosyncratic errors are uncorrelated with each other.
+  - This is a crucial assumption
+- Together these imply that $\mbox{Var-Cov}(\boldsymbol{\xi})=\boldsymbol{\Psi}$ is diagonal.
+
+---
+
+# Assumptions: Factors
+
+- The factor and idiosyncratic errors are uncorrelated.
+  - This is similar to regression
+- Each factor has a variance of 1.
+  - This is harmless since the factor is latent.
+- The factors are uncorrelated with each other
+  - We relax this assumption later on.
+- These imply that $\mbox{Var-Cov}(\mathbf{f})=\mathbf{I}$.
+
+---
+
+# Estimation
+
+- In general these assumptions imply that
+
+$$E(\mathbf{y}\mathbf{y}')=\boldsymbol{\Sigma}=\boldsymbol{\Lambda}\boldsymbol{\Lambda}'+\boldsymbol{\Psi}$$
+- The variance is decomposed into two parts
+- Part explained by common factors $\boldsymbol{\Lambda}\boldsymbol{\Lambda}'$ . 
+  - This is often called the *communality* or *common variance*.
+- Part unexplained by common factors $\boldsymbol{\Psi}$. 
+  - This is often called the *uniqueness* or *unique variance*.
+
+---
+
+# Estimation
+
+- It is straightforward to estimate $\boldsymbol{\Sigma}$ with its sample equivalent $\mathbf{S}$
+- We can then choose values $\hat{\boldsymbol{\Lambda}}$ and $\hat{\boldsymbol{\Psi}}$ so that $\hat{\boldsymbol{\Lambda}}\hat{\boldsymbol{\Lambda}}'+\hat{\boldsymbol{\Psi}}$ is close to $\mathbf{S}$.
+- There are many  ways to do this
+- *Maximum likelihood estimation* is one of the most popular.
+
+---
+
+# Estimation issues
+
+- Using *Maximum likelihood estimation* does require a distributional assumption about the data.
+- The most common assumption is that the data are normally distributed.
+- Even when this assumption does not hold the maximum likelihood estimate is still quite robust as long as the data do not differ too much from normality.
+
+---
+
+# Number of factors
+
+- There are a number of strategies for selecting factors
+  - Scree plot
+  - Kaiser rule
+  - Hypothesis tests
+
+---
+
+#Heywood cases
+
+- In some rare cases the maximum likelihood converges to an estimate where the unique variances are *negative*.
+- These are known as *Heywood cases*
+- Since a variance is cannot be negative this is usually caused by
+  - Selecting too many factors
+  - Too small a sample size.
+
+---
+
+class: inverse, middle, center
+
+# Factor Analysis in R
+
+---
+
+#Using R
+
+- Many packages in R do factor analysis, we use `factanal` from the `stats` package
+- First step use the following code
+
+```{r, eval=T,echo=T,message=FALSE}
+#First load required packages
+Boston<-readRDS('Boston.rds')
+Boston%>%
+  column_to_rownames('Town')%>% 
+  factanal(factors = 2,scores = 'none',
+           rotation = 'none')->facto
+```
+
+---
+
+#Output
+
+```{r, eval=T,echo=T,message=FALSE}
+facto$loadings
+```
+
+---
+#Output
+
+- An advantage of printing the loadings like this is that values close to zero are surpressed.
+- This will help with the interpretation of factors.
+- For 2 factors, it can be useful to also plot the factors.
+- This can be achieved using the `tidy` function in the `broom` package.
+
+---
+
+#Loadings
+
+```{r, eval=T,echo=T,message=FALSE}
+library(broom)
+fa_df<-tidy(facto) #Get into data frame
+```
+
+```{r, eval=T,echo=F,message=FALSE}
+kable(fa_df)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+
+```
+
+
+---
+# Plotting
+
+The plot is clearer if arrows are used
+
+```{r, eval=F,echo=T,message=FALSE}
+ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
+  geom_text()+theme_void()+
+  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
+  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+```
+
+---
+# Plotting
+
+```{r, eval=T,echo=F,message=FALSE}
+ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
+  geom_text()+theme_void()+
+  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
+  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+```
+
+---
+
+#Interpretation
+
+It is difficult to interpret these Factors
+- Factor 1 seems to take everything into account except the Charles river dummy.
+- Factor 2 takes everything into account except pupil-teacher ratio, crime and race.
+- It would be easier to interpret the factors if Factor 1 loaded onto a small set of variables and Factor 2 loaded onto a different small set of variables.
+- Can we do this?
+---
+
+#Rotations
+
+Recall the model is 
+
+$$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{f}_i+\boldsymbol{\xi}_i$$
+
+Assume there is an r × r rotation matrix $\mathbf{R}$. Since $\mathbf{R}'\mathbf{R} = \mathbf{I}$ the model above is equivalent to
+
+$$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{R}'\mathbf{R}\mathbf{f}_i+\boldsymbol{\xi}_i$$
+
+---
+
+# The rotation trick
+
+Grouping parts together we have
+
+$$\mathbf{y}_i=\left(\boldsymbol{\Lambda}\mathbf{R}'\right)\left(\mathbf{R}\mathbf{f}_i\right)+\boldsymbol{\xi}_i$$
+
+Now we have new loadings $\tilde{\boldsymbol{\Lambda}}=\boldsymbol{\Lambda}\mathbf{R}'$ and new factors $\tilde{\mathbf{f}_i}=\mathbf{R}\mathbf{f}_i$
+
+- All rotated versions of the loadings and factors explain the data
+equally well and satisfy all assumptions of the model.
+
+---
+
+# Varimax
+
+- Some rotated versions of the factors may be easier to interpret.
+- Generally if there are many zero loadings, then the factors are easy to interpret.
+- An algorithm known as varimax tries to find a rotation with as many loadings close to zero as possible.
+- It can be implemented using the `rotation='varimax'` option in `factanal`.
+
+---
+
+#Varimax in R
+
+```{r, eval=T,echo=T,message=FALSE}
+
+Boston%>%
+  column_to_rownames('Town')%>% 
+  factanal(factors = 2,scores = 'none',
+           rotation = 'varimax')->facto_vari
+```
+
+---
+
+#Loadings
+
+```{r, eval=T,echo=F,message=FALSE}
+fav_df<-tidy(facto_vari) #Get into data frame
+kable(fav_df)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+
+```
+
+---
+
+#Varimax
+
+```{r, eval=T,echo=F,message=FALSE}
+ggplot(fav_df,aes(x=fl1,y=fl2,label=variable))+
+  geom_text()+theme_void()+
+  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
+  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+```
+
+---
+
+# Oblique Rotation
+
+- An orthogonal rotation did not work so instead of considering a matrix where $\mathbf{R}\mathbf{R}=\mathbf{I}$, consider a
+matrix $\mathbf{G}\mathbf{G}^{-1}=\mathbf{I}$
+$$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{G}\mathbf{G}^{-1}\mathbf{f}_i+\boldsymbol{\xi}_i$$
+- Now we have new loadings $\tilde{\boldsymbol{\Lambda}}=\boldsymbol{\Lambda}\mathbf{G}$ and new factors $\tilde{\mathbf{f}_i}=\mathbf{G}^{-1}\mathbf{f}_i$
+- By setting `rotation='promax'` in `factanal`, an oblique 'rotation' can be carried out.
+
+---
+
+
+#Varimax in R
+
+```{r, eval=T,echo=T,message=FALSE}
+
+Boston%>%
+  column_to_rownames('Town')%>% 
+  factanal(factors = 2,scores = 'none',
+           rotation = 'promax')->facto_promax
+```
+
+---
+
+#Loadings
+
+```{r, eval=T,echo=F,message=FALSE}
+fap_df<-tidy(facto_promax) #Get into data frame
+kable(fap_df)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")
+
+```
+
+---
+
+#Promax
+
+```{r, eval=T,echo=F,message=FALSE}
+ggplot(fap_df,aes(x=fl1,y=fl2,label=variable))+
+  geom_text()+theme_void()+
+  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
+  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+```
+
+---
+
+#Possible Interpretation
+
+- Factor 1 is
+  - Positively correlated with age.
+  - Negatively correlated with distance.
+- Factor 1 is a **geographic** factor.  
+-Factor 2 is
+  - Positively correlated with crime, pupil-teacher ratio.
+  - Negatively correlated with the race variable.
+- Factor 2 is a **socioeconomic** factor.  
+
+---
+
+# More than 2 factors
+
+- If there are more than 2 factors look at the loadings matrix.
+- The pattern of zeros should give some clue to the
+interpretation of the factors.
+- Also look for large loadings (in absolute value)
+
+---
+
+# Oblique rotation
+
+- Oblique rotations will lead to factors that are correlated with one another.
+- This is not the case for orthogonal factors.
+- Other rotation options are available by downloading the
+package `GPArotation`
+- Orthogonal Rotations: Varimax, Quartimax, Equimax
+- Oblique Rotations: Promax, Oblimin, Quartimin, Simplimax
+
+---
+
+#Factor scores
+
+- The factor scores themselves can be estimated using a variety
+of methods. Two are available as options in the factanal
+function.
+  - Regression Scores
+  - Bartlett’s Scores
+- Bartlett’s scores are unbiased estimates
+- These can be implemented setting `scores='regression'` or `scores='Bartlett'` in `factanal`.
+
+---
+
+#Estimation alternatives
+
+Other estimation methods can also be used for the factor
+model.
+- One example is *Principal Axis Factoring*, which is available for
+R using the `psych` package.
+- Principal Axis Factoring does not require the normality assumption and can be adapted for item response data such as Likert scales.
+
+---
+
+# Extended topics
+
+- What we have discussed today is often called *exploratory factor analysis*.
+- In many social sciences the latent variables may themselves influence other observed variables.
+- Such models are called *structural equation models*.
+- They can also be estimated by maximum likelihood. 

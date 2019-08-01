@@ -1,0 +1,438 @@
+---
+title: "Foundation of Matrices"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 7"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+class: inverse, center, middle
+
+# Why?
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo=FALSE , fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+require(animation)
+```
+
+---
+# Why vectors and matrices?
+
+- To understand methods like MDS, PCA and Factor Modelling it helps to understand vectors and matrices.
+--
+
+- In this lecture we cover some basic rules of matrices
+--
+
+- Later on we will cover the geometric intuition behind matrices.
+
+---
+
+# Matrices
+- A matrix is an array of numbers. If a matrix has $r$ rows and $c$
+columns then we say it is a $r\times c$ matrix.
+--
+
+- A vector is just a special case of a matrix with either a single
+column $r\times 1$ or a single row $1\times c$.
+--
+
+- These are called a *column vector* and *row vector* respectively
+--
+
+- A matrix with a single column and a single row is called a
+scalar. 
+
+---
+
+# Adding Matrices
+
+- To add two matrices simply add the correspinding elements
+
+$$
+\begin{pmatrix}1 & 2 \\\3 & 3 \\\4 & 5 \end{pmatrix}+\begin{pmatrix}6 & 2 \\\4 & 2 \\\5 & 6 \end{pmatrix}=\begin{pmatrix}7 & 4 \\\7 & 5 \\\9 & 11 \end{pmatrix}
+$$
+- Only matrices with the same dimesions can be added together
+
+---
+
+#Scalar Multiplication
+
+- To multiply a matrix and a scalar, simply multiply each element of the matrix by the scalar
+
+$$
+3\times \begin{pmatrix}1 & 2 \\\3 & 3 \\\4 & 5 \end{pmatrix}=\begin{pmatrix}3 & 6 \\\9 & 9 \\\12 & 15 \end{pmatrix}
+$$
+
+---
+
+# Matrix Transpose
+
+- Another important matrix operation is the transpose.
+- Every row becomes a column
+- Every column becomes a row.
+
+$$
+\begin{pmatrix}1 & 2 \\\3 & 3 \\\4 & 5 \end{pmatrix}'=\begin{pmatrix}1 & 3 & 4 \\\2 & 3 & 5\end{pmatrix}
+$$
+
+---
+class: inverse, middle, center
+
+# Matrix multiplication
+
+---
+
+# Matrix multiplication
+
+- A more confusion operation is matrix multiplication.
+--
+
+- It does NOT involve simply multiplying corresponding elements.
+--
+
+- The intuition behind matrix multiplication will become clearer when we look at the geometry.
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &3 &4\end{pmatrix}\times\begin{pmatrix}6  \\\4 \\\5 \end{pmatrix}=
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}\color{red}{1} &3 &4\end{pmatrix}\times\begin{pmatrix}\color{red}{6}  \\\4 \\\5 \end{pmatrix}=\color{red}{1\times 6}+...
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}\color{red}{1} &3 &4\end{pmatrix}\times\begin{pmatrix}\color{red}{6}  \\\4 \\\5 \end{pmatrix}=\color{red}{6}+...
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &\color{red}{3} &4\end{pmatrix}\times\begin{pmatrix}6  \\\ \color{red}{4} \\\5 \end{pmatrix}=6+\color{red}{3\times 4}+...
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &\color{red}{3} &4\end{pmatrix}\times\begin{pmatrix}6  \\\ \color{red}{4} \\\5 \end{pmatrix}=6+\color{red}{12}+...
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &3 &\color{red}{4}\end{pmatrix}\times\begin{pmatrix}6  \\\ 4 \\\ \color{red}{5} \end{pmatrix}=6+12+\color{red}{4\times 5}
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &3 &\color{red}{4}\end{pmatrix}\times\begin{pmatrix}6  \\\ 4 \\\ \color{red}{5} \end{pmatrix}=6+12+\color{red}{20}
+$$
+
+---
+
+# Row times column
+
+- First learn to multiply a row by a column
+
+$$
+\begin{pmatrix}1 &3 &4\end{pmatrix}\times\begin{pmatrix}6  \\\4 \\\5 \end{pmatrix}=38
+$$
+
+---
+
+# Things to note
+
+- We multiplied a $1\times 3$ vector by a $3\times 1$ vector
+--
+
+- The result is a single number (scalar)
+--
+
+- Let $\mathbf{z}=\begin{pmatrix}z_1\\\ z_2\\\ \vdots\\\ z_n\end{pmatrix}$
+--
+
+- What is $\mathbf{z}'\mathbf{z}$?
+---
+
+# Sum of squares
+
+$$\begin{align}\mathbf{z}'\mathbf{z}&=\begin{pmatrix}z_1& z_2& \cdots& z_n\end{pmatrix}\begin{pmatrix}z_1\\\ z_2\\\ \vdots\\\ z_n\end{pmatrix}\\\ &=z_1^2+z_2^2+\ldots z_n^2\\\ &=\sum\limits_{i=1}^n z_i^2\end{align}$$
+---
+
+# Matrix Multiplication
+
+- To multiply two matrices
+--
+
+- Multiply every row from the *first* matrix by every column in the *second* matrix
+--
+
+- Now an example
+
+$$
+\begin{pmatrix}a & b & c \\\ d & e & f \end{pmatrix}\times\begin{pmatrix}g & h \\\i & j \\\k & l \end{pmatrix}
+$$
+
+---
+
+# Matrix Multiplication
+
+$$
+\begin{align}&\begin{pmatrix}\color{red}{a} & \color{red}{b} & \color{red}{c} \\\ d & e & f \end{pmatrix}\times\begin{pmatrix}\color{red}{g} & h \\\ \color{red}{i} & j \\\ \color{red}{k} & l \end{pmatrix}\\\ &=\begin{pmatrix}\color{red}{ag+bi+ck} & ...  \\\ ... & ...\end{pmatrix}\end{align}
+$$
+---
+
+# Matrix Multiplication
+
+$$
+\begin{align}&\begin{pmatrix}\color{red}{a} & \color{red}{b} & \color{red}{c} \\\ d & e & f \end{pmatrix}\times\begin{pmatrix}g & \color{red}{h} \\\ i & \color{red}{j} \\\ k & \color{red}{l} \end{pmatrix}\\\ &=\begin{pmatrix}ag+bi+ck & \color{red}{ah+bj+cl}  \\\ ...& ... \end{pmatrix}\end{align}
+$$
+
+---
+
+# Matrix Multiplication
+
+$$
+\begin{align}&\begin{pmatrix}a & b & c \\\ \color{red}{d} & \color{red}{e} & \color{red}{f} \end{pmatrix}\times\begin{pmatrix}\color{red}{g} & h \\\ \color{red}{i} & j \\\ \color{red}{k} & l \end{pmatrix}\\\ &=\begin{pmatrix}ag+bi+ck & ah+bj+cl  \\\ \color{red}{dg+ei+fk}& ... \end{pmatrix}\end{align}
+$$
+
+---
+
+# Matrix Multiplication
+
+$$
+\begin{align}&\begin{pmatrix}a & b & c \\\ \color{red}{d} & \color{red}{e} & \color{red}{f} \end{pmatrix}\times\begin{pmatrix}g & \color{red}{h} \\\ i & \color{red}{j} \\\ k & \color{red}{l} \end{pmatrix}\\\ &=\begin{pmatrix}ag+bi+ck & ah+bj+cl  \\\ dg+ei+fk& \color{red}{dh+ej+fl} \end{pmatrix}\end{align}
+$$
+
+---
+
+# Multiplication checklist
+
+When multiplying matrices check two things
+
+$$\underset{(\color{red}{a} × \color{blue}{b})}{\mathbf{X}}\underset{(\color{blue}{b} × \color{red}{c})}{\mathbf{Y}}=\underset{(\color{red}{a × c})}{\mathbf{Z}}$$
+
+1. First check dimensions on the ‘inside’ (blue). If equal the multiplication is conformable
+2. Then check the dimensions on the ‘outside’ (red). These give the dimensions of the result (they do not have to be equal).
+
+---
+
+# Be careful!
+
+- Not all matrices can be multplied!
+- Often two matrices can be added but NOT multiplied.
+  - Consider the very first example of addition in these slides.
+- Sometimes $\mathbf{X}\mathbf{Y}$ is possible but $\mathbf{Y}\mathbf{X}$.
+- Even when both $\mathbf{X}\mathbf{Y}$ and $\mathbf{Y}\mathbf{X}$ are both conformable they may still not be equal, i.e $\mathbf{X}\mathbf{Y}=\mathbf{Y}\mathbf{X}$.
+
+---
+class: inverse, middle centre
+# Some special matrices
+
+---
+
+# Regression
+
+In a regression model
+
+$$\begin{align}y_1&=\beta_1x_{11}+\beta_2x_{12}+\ldots+\beta_px_{1p}+\epsilon_1\\\ y_2&=\beta_1x_{21}+\beta_2x_{22}+\ldots+\beta_px_{2p}+\epsilon_2\\\ \vdots&=\vdots\quad+\vdots\quad\quad+\ldots+\quad\vdots\quad+\vdots\\\ y_n&=\beta_1x_{n1}+\beta_2x_{n2}+\ldots+\beta_px_{np}+\epsilon_n\end{align}$$
+---
+
+# Regression Model
+
+- All these equations can be written as
+
+$$\mathbf{y}=\mathbf{X}\boldsymbol{\beta}+\boldsymbol{\epsilon}$$
+
+- The vector $\mathbf{y}$ is  $n\times 1$
+  - $y_i$ is the $i^{th}$ observation of the dependent variable
+- The matrix $\mathbf{X}$ is  $n\times p$
+  - $x_{ij}$ is the $i^{th}$ observation of the $j^{th}$ dependent variable.  For an intercept set $x_{i1}=1$ for all $i$
+
+---
+
+# Regression Model
+
+- The vector $\boldsymbol{\beta}$ is  $p\times 1$
+  - $\beta_j$ is the $j^{th}$ observation of the dependent variable
+- The vector $\boldsymbol{\epsilon}$ is  $n\times 1$
+  - $\epsilon_i$ is the $i^{th}$ error term.
+--
+
+- Check for yourselves that all multiplication is conformable.
+
+---
+
+# Variance Covariance matrix
+
+- Another important matrix to understand is the variance covariance matrix.
+- To start we will revise variance for scalar valued y which is
+
+$$\sigma^2=E\left[(y-\mu)^2\right]$$
+
+- Or the sample equivalent
+
+$$s^2=\sum\limits_{i=1}^n\left[(y_i-\bar{y})^2\right]$$
+
+---
+
+# Variance Covariance matrix
+
+- What about when $\mathbf{y}=\begin{pmatrix}y_1\\\ y_2 \end{pmatrix}$ where $y_1$ and $y_2$ are *different* variables?
+- The equivalent formulas are
+
+$$\boldsymbol{\Sigma}=E\left[(\mathbf{y}-\boldsymbol{\mu})(\mathbf{y}-\boldsymbol{\mu})'\right]$$
+and
+
+$$\boldsymbol{S}=\sum\limits_{i=1}^n\left[(\mathbf{y}_i-\boldsymbol{\bar{y}})(\mathbf{y}-\boldsymbol{\bar{y}})'\right]$$
+
+---
+
+# Variance Covariance matrix
+
+- To unpack this, keep things simple by looking at the expected variance and assume $\boldsymbol{\mu}=\boldsymbol{0}$
+- What are the dimensions of $\mathbf{y}\mathbf{y}'$?
+--
+
+- Since $\mathbf{y}$ is a $2\times 1$ matrix $\mathbf{y}\mathbf{y}'$ will be a $2\times 1$ vector multiplied by a $1\times 2$ vector.
+--
+
+- This is a $2\times2$ matrix?
+--
+
+- What is in this $2\times2$?
+
+---
+
+# Variance Covariance matrix
+
+$$\begin{align}E\left[\mathbf{y}\mathbf{y}'\right]& = E \left[\begin{pmatrix}y_1\\\ y_2 \end{pmatrix}\begin{pmatrix}y_1& y_2 \end{pmatrix}\right]\\\ &=E\left[\begin{pmatrix}y^2_1 & y_1y_2\\\  y_2y_1 & y^2_2\end{pmatrix}\right]\\\ &=\begin{pmatrix}E[y^2_1] & E[y_1y_2]\\\  E[y_2y_1] & E[y^2_2]\end{pmatrix} \end{align}$$
+
+
+---
+
+# Variance Covariance matrix
+
+$$\boldsymbol{\Sigma}=\begin{pmatrix}\color{red}{E[y^2_1]} & \color{blue}{E[y_1y_2]}\\\  \color{blue}{E[y_2y_1]} & \color{red}{E[y^2_2]}\end{pmatrix}$$
+
+- The *<font color="red"> diagonal</font>* elements are variances.
+- The *<font color="blue"> off-diagonal</font>* elements are covariances.
+
+---
+
+# In general
+
+- For a $p$-dimensional vector, the variance covariance matrix is a $p\times p$ matrix.
+- The element in the row $i$ and column $j$ for $i\neq j$ is the covariance between $y_i$ and $y_j$.
+- The element in the row $i$ and column $i$ is a diagonal element and is the variance of $y_i$.
+
+---
+
+class: inverse, middle, center
+
+#Inverses
+
+---
+
+# Can we divide by matrices?
+
+- We can add and multiply matrices.  Can we divide them?
+- Strictly speaking we cannot.
+- However it is possible to multiply be a *matrix inverse*.
+- What is a *matrix inverse*?
+
+---
+
+# Inverses for scalars
+
+- In scalar algebra dividing $a$ by $b$ is the same as multiplying $a$ by $1/b$
+- The inverse has the property that multiplying a number by its inverse yields an answer of 1.
+- In scalar algebra this means $b\times 1/b=1$
+- What is the equivalent of 1 in matrix algebra.
+
+---
+
+# Identity Matrix
+
+The *Identity Matrix* is
+
+$$\begin{pmatrix}1&0&\cdots&0\\\ 0&1&\ddots&\vdots\\\ \vdots&\ddots&\ddots&0\\\ 0&\cdots&0&1\end{pmatrix}$$
+
+Multiplying any matrix by the identity matrix gives the *same* matrix.  I.e. $\mathbf{A}\mathbf{I}=\mathbf{I}\mathbf{A}=\mathbf{A}$.
+
+---
+
+# Matrix Inverse
+
+- The matrix inverse of $\mathbf{X}$ is denoted $\mathbf{X}^{-1}$ is defined so that $$\mathbf{X}^{-1}\mathbf{X}=\mathbf{XX}^{-1}=\mathbf{I}$$
+- This is only possible when $\mathbf{X}$ is a *square* matrix
+- A *square* matrix has the same number of rows as columns.
+
+---
+
+# Rotation
+
+- A very special matrix is a *rotation* matrix.
+- If $\mathbf{R}$ is a rotation matrix then it has the following property
+
+$$
+\mathbf{R}^{-1}=\mathbf{R}'
+$$
+- Another way of stating this is the $\mathbf{R}'\mathbf{R}=\mathbf{I}$
+- The reason we call this a rotation will be covered later on.
