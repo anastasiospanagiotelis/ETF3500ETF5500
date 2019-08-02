@@ -32,10 +32,10 @@ class: inverse, center, middle
 - Nearly all the methods we cover involve *vectors* and *matrices*.&lt;!--D--&gt;
 --
 
-- You may have covered matrices before and found that it involves remembering many seemingly arbitrary rules.&lt;!--D--&gt;
+- The earlier lecture on matrices may have felt like it involved remembering many seemingly arbitrary rules.&lt;!--D--&gt;
 --
 
-- The aim of this lecture is to understand the *geometric* interpretation of vectors which is crucial in making the connection between data and visualisation.&lt;!--D--&gt;
+- The aim of this lecture is to understand the *geometric* interpretation of vectors which is crucial in making the connection between data, data analysis and visualisation.&lt;!--D--&gt;
 --
 
 - Matrices are important to gain a deep understanding about dimension reduction.
@@ -57,6 +57,9 @@ class: inverse, center, middle
 --
 
 - All of these ideas work for n-dimensional vectors where n can be 3,4 or any number
+--
+
+- By convention all vectors in this lecture are column vectors.
 
 ---
 
@@ -279,7 +282,7 @@ Vector addition is as simple as adding up the corresponding numbers
 
 #Scalar multiplication by 0.5
 
-&lt;video controls loop&gt;&lt;source src="MatrixGeometry_files/figure-html/multpts2.webm" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+&lt;video controls loop&gt;&lt;source src="MatrixGeometry_files/figure-html/multpts2.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
 
 ---
   
@@ -355,10 +358,10 @@ class: inverse, center, middle
   
 # Matrices
   
-- You may have learnt about matrices before as an array of numbers.&lt;!--D--&gt;
+- You have learnt about matrices before as an array of numbers.&lt;!--D--&gt;
 --
 
-- We will learn about matrices as objects that *transform* points in space.&lt;!--D--&gt;
+- Today think about matrices as *transforming* points in space.&lt;!--D--&gt;
 --
 
 - By multiplying a vector by a matrix, points in space are stetched, rotated and flipped around&lt;!--D--&gt;
@@ -370,7 +373,7 @@ class: inverse, center, middle
   
 # Example of a matrix
   
-- If you have previously seen a matrix you have probably seen something like this
+- Consider the following matrix
 `$$\mathbf{M}=\begin{bmatrix}5 &amp;1\\2 &amp;4\end{bmatrix}$$`
 - Think of this as something that moves all the points in space to a new address.
 - It encodes where `\(\mathbf{b}_1\)` and `\(\mathbf{b}_2\)` get moved to.
@@ -425,100 +428,6 @@ We can write this as:
   
 Another way to think of it is as multiplying the rows of `\({\mathbf M}\)` by the column `\(\mathbf {v}\)`
 
----
-  
-# Diagonal Matrix
-  
-A diagonal matrix only has non-zeros running from the top left to the bottom right
-
-`$$\mathbf{D}=\begin{bmatrix} 
-d_1 &amp; 0 &amp;\cdots &amp; 0\\
-0  &amp; d_2 &amp; \ddots &amp;\vdots\\
-\vdots &amp; \ddots &amp; \ddots &amp;0\\
-0 &amp;\cdots &amp;0&amp; d_n\\
-\end{bmatrix}$$`
-  
----
-
-# Example
-
-An example of a diagonal matrix is
-
-`$$\begin{bmatrix}
-2 &amp; 0\\
-0 &amp;0.5\\
-\end{bmatrix}$$`
-
-This will stretch space horizontally and squeeze space vertically.
-
----
-
-# Scaling Space
-
-&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmults.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
-
----
-
-  
-# Identity matrix
-  
-A special diagonal matrix is the identity matrix
-
-`$$\mathbf{I}=\begin{bmatrix} 
-1 &amp; 0 &amp;\cdots &amp; 0\\
-0  &amp; 1 &amp; \ddots &amp;\vdots\\
-\vdots &amp; \ddots &amp; \ddots &amp;0\\
-0 &amp;\cdots &amp;0&amp; 1\\
-\end{bmatrix}$$`
-  
-This matrix leaves all points in the same place
-
----
-  
-# Rotation matrix
-  
-- Another important matrix is known as a *orthogonal rotation* matrix.&lt;!--D--&gt;
---
-
-- It spins all the points around keeping them the same distance from the origin.&lt;!--D--&gt;
---
-
-- The word *orthogonal* means that the new basis vectors are at right angles to one another.
-
----
-  
-# Rotation Matrix
-
-- Recall when in PCA we spun around the 3d scatterplot.
-- The same idea works for bigger matrices
-- An example of a rotation matrix in two dimensions is:
-`$$\mathbf{R}=\begin{bmatrix}0.8 &amp; -0.6\\0.6 &amp; 0.8\end{bmatrix}$$`
-
-
----
-
-#Rotation Matrix
-
-&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmultr.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
-
----
-  
-# Rotation matrix
-  
-- A rotation matrix `\(\mathbf{R}\)` has the property `\(\mathbf{R'R}=\mathbf{I}\)`&lt;!--D--&gt;
---
-
-- Here `\(\mathbf{R'}\)` is called the transpose.&lt;!--D--&gt;
---
-
-- The transpose involves &lt;!--D--&gt;
---
-
-  + Taking all rows of a matrix and converting them to columns
-  + Taking all columns of a matrix and converting them to rows&lt;!--D--&gt;
---
-
-- You will see more examples in the tutorial.
 
 ---
   
@@ -601,21 +510,51 @@ and $1 in 2017.
 --
 
 - Multiplying by a non-square matrix changes the dimension
+--
+
+- The points will still lie in a two-dimensional *subspace* of three-dimensional space.
+---
+
+# In factor analysis
+
+- For an example of this consider the factor model and in particular the component `\(\boldsymbol{\Lambda}\boldsymbol{f}_i\)`.
+--
+
+- This takes a low-dimensional set of factors and maps them to a high-dimensional vector of data.
+--
+
+- What about multiplying by a `\(2\times 3\)` matrix?
 
 ---
   
-# Matrix composition
   
-- What does it mean to multiply matrices by matrices?&lt;!--D--&gt;
+# Dimension reduction
+
+- Multiplying by a `\(2\times 3\)` matrix takes a `\(3\)`-dimensional vector and maps it to a point in `\(2\)`-dimensional space.
 --
 
-- One way to understand matrix multiplication is as a *composition* of transformations:&lt;!--D--&gt;
+- This is an example of *dimension reduction*
+--
+
+- For instance taking the first two principal component of data is the same as multiplying the data by a `\(2\times p\)` matrix
+
+---
+
+# Matrix composition
+  
+- What does it mean to multiply matrices?  
+--
+
+- What does `\(\mathbf{F}\mathbf{G}\)` when `\(\mathbf{G}\)` is a `\(4\times 2\)` matrix and `\(\mathbf{F}\)` a `\(3\times 4\)` matrix?
+--
+
+- It is as a *composition* of transformations:&lt;!--D--&gt;
 --
 
   + Transform a `\(2\)`-dimensional vector `\(\mathbf{v}\)` into a `\(4\)`-dimensional vector by multiplying by the `\(4\times 2\)` matrix `\(\mathbf{G}\)`&lt;!--D--&gt;
 --
 
-  + Transorm the result into a `\(3\)`-dimensional vector by multyplying by a `\(3\times 4\)` matrix `\(\mathbf{F}\)`
+  + Transorm the result into a `\(3\)`-dimensional vector by multiplying by a `\(3\times 4\)` matrix `\(\mathbf{F}\)`
   
 ---
   
@@ -663,40 +602,96 @@ and $1 in 2017.
 - Matrix multiplication is *non-commutative*.
 
 ---
+class: inverse, center, middle
+
+# Inner products and rotations
+
+---
+
+# Inner product
+
+- One final operation with vectors is called the *inner product*.
+--
+
+- The inner product of two vectors `\(\mathbf{x}\)` and `\(\mathbf{y}\)` is defined as `\(\mathbf{x}'\mathbf{y}\)`.
+--
+
+- The inner product of a vector with itself `\(\mathbf{x}'\mathbf{x}\)` is the length of the vector squared. 
   
-# Beyond geometry
+---
+# Orthogonality
+
+- An interesting case is when the inner product between two vectors is zero.
+  - `\(\mathbf{x}'\mathbf{y}=0\)`
+- In this case, the vectors `\(\mathbf{x}\)` and `\(\mathbf{y}\)` are at a 90 degree angle to one another.
+- This is also called *orthogonality*.
+
+---
+# Rotation matrix
   
-- A vector can be more than just a point in space.&lt;!--D--&gt;
+- Another important matrix is known as a *orthogonal rotation* matrix.&lt;!--D--&gt;
 --
 
-- Also a matrix becomes something more than just something that moves points space.&lt;!--D--&gt;
+- It spins all the points around keeping them the same distance from the origin and from each other.&lt;!--D--&gt;
 --
 
-- Matrices can store information too:&lt;!--D--&gt;
---
-
-  + The data can be put in a matrix&lt;!--D--&gt;
---
-
-  + The variances and covariances can be put into a matrix
+- The word *orthogonal* means that the new basis vectors are at right angles to one another.
 
 ---
   
-# Where to now?
+# Rotation Matrix
+
+- In matrix algebra rotation can be defined in any dimension.
+- It is easiest to understand in two dimensions.
+- An example of a rotation matrix in two dimensions is:
+`$$\mathbf{R}=\begin{bmatrix}0.8 &amp; -0.6\\0.6 &amp; 0.8\end{bmatrix}$$`
+
+
+---
+
+#Rotation Matrix
+
+&lt;video controls&gt;&lt;source src="MatrixGeometry_files/figure-html/matmultr.ogg" /&gt;&lt;p&gt;Click to see&lt;/p&gt;&lt;/video&gt;
+
+---
   
-- In tutorials you will reinforce these concepts&lt;!--D--&gt;
+# Rotation matrix
+  
+- The new basis vectors should have a length of 1 therefore `\(\mathbf{r}_i'\mathbf{r}_i=1\)` where `\(\mathbf{r}_i\)` are the columns of `\(\mathbf{R}\)`.
 --
 
-- There will be more of a focus on matrix algebra:&lt;!--D--&gt;
+- The new basis vectors should be at right angles `\(\mathbf{r}_i'\mathbf{r}_j=0\)`
 --
 
-  + The rules of matrix multiplication (with exercises)&lt;!--D--&gt;
---
+- A rotation matrix `\(\mathbf{R}\)` has the property `\(\mathbf{R'R}=\mathbf{I}\)`&lt;!--D--&gt;
 
-  + The concept of a transpose will also be covered more thoroughly&lt;!--D--&gt;
---
+---
 
-- In next week's lecture we link these ideas back to PCA, MDS and CA.
+# Rotations in PCA
+
+- In PCA the weights of the principal components have two properties
+  - `\(\mathbf{w}_i'\mathbf{w}_i=1\)`
+  - `\(\mathbf{w}_i'\mathbf{w}_j=0\)`
+- All `\(p\)` principal components can be obtained by multiplying by a rotation matrix by `\(p\)`-dimensional data.
+- Taking principal components *rotates* the data.
+
+---
+
+# Rotations in Factor Analysis
+
+- In factor analysis rotation was used to obtain more interpretable factors.
+- This was a `\(r\)`-dimensional rotation of the factors rather than the data.
+- Again this involved multiplying by a rotation matrix.
+
+---
+
+# Conclusion
+
+- Understand the geometry of matrix algebra assists in understanding PCA and Factor analysis in particular.
+- PCA forms new variables as linear combinations of old variables.
+  - This corresponds to matrix multiplication.
+- The role of *rotation* should now also be understood.
+- The next step is to understand the importance of matrix decompositions in the methods covered so far.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>

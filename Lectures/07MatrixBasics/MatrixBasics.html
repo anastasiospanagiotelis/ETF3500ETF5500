@@ -58,7 +58,7 @@ scalar.
 
 # Adding Matrices
 
-- To add two matrices simply add the correspinding elements
+- To add two matrices simply add the corresponding elements
 
 $$
 \begin{pmatrix}1 &amp; 2 \\\3 &amp; 3 \\\4 &amp; 5 \end{pmatrix}+\begin{pmatrix}6 &amp; 2 \\\4 &amp; 2 \\\5 &amp; 6 \end{pmatrix}=\begin{pmatrix}7 &amp; 4 \\\7 &amp; 5 \\\9 &amp; 11 \end{pmatrix}
@@ -281,7 +281,7 @@ class: inverse, middle centre
 
 In a regression model
 
-`$$\begin{align}y_1&amp;=\beta_1x_{11}+\beta_2x_{12}+\ldots+\beta_px_{1p}+\epsilon_1\\\ y_2&amp;=\beta_1x_{21}+\beta_2x_{22}+\ldots+\beta_px_{2p}+\epsilon_2\\\ \vdots&amp;=\vdots\quad+\vdots\quad\quad+\ldots+\quad\vdots\quad+\vdots\\\ y_n&amp;=\beta_1x_{n1}+\beta_2x_{n2}+\ldots+\beta_px_{np}+\epsilon_n\end{align}$$`
+`$$\begin{align}y_1&amp;=\beta_1x_{11}+\beta_2x_{12}+\ldots+\beta_kx_{1k}+\epsilon_1\\\ y_2&amp;=\beta_1x_{21}+\beta_2x_{22}+\ldots+\beta_kx_{2k}+\epsilon_2\\\ \vdots&amp;=\vdots\quad+\vdots\quad\quad+\ldots+\quad\vdots\quad+\vdots\\\ y_n&amp;=\beta_1x_{n1}+\beta_2x_{n2}+\ldots+\beta_kx_{nk}+\epsilon_n\end{align}$$`
 ---
 
 # Regression Model
@@ -292,14 +292,15 @@ In a regression model
 
 - The vector `\(\mathbf{y}\)` is  `\(n\times 1\)`
   - `\(y_i\)` is the `\(i^{th}\)` observation of the dependent variable
-- The matrix `\(\mathbf{X}\)` is  `\(n\times p\)`
-  - `\(x_{ij}\)` is the `\(i^{th}\)` observation of the `\(j^{th}\)` dependent variable.  For an intercept set `\(x_{i1}=1\)` for all `\(i\)`
+- The matrix `\(\mathbf{X}\)` is  `\(n\times k\)`
+  - `\(x_{ij}\)` is the `\(i^{th}\)` observation of the `\(j^{th}\)` dependent variable.  
+  - For an intercept set `\(x_{i1}=1\)` for all `\(i\)`
 
 ---
 
 # Regression Model
 
-- The vector `\(\boldsymbol{\beta}\)` is  `\(p\times 1\)`
+- The vector `\(\boldsymbol{\beta}\)` is  `\(k\times 1\)`
   - `\(\beta_j\)` is the `\(j^{th}\)` observation of the dependent variable
 - The vector `\(\boldsymbol{\epsilon}\)` is  `\(n\times 1\)`
   - `\(\epsilon_i\)` is the `\(i^{th}\)` error term.
@@ -318,7 +319,7 @@ In a regression model
 
 - Or the sample equivalent
 
-`$$s^2=\sum\limits_{i=1}^n\left[(y_i-\bar{y})^2\right]$$`
+`$$s^2=\frac{1}{n-1}\sum\limits_{i=1}^n\left[(y_i-\bar{y})^2\right]$$`
 
 ---
 
@@ -330,7 +331,7 @@ In a regression model
 `$$\boldsymbol{\Sigma}=E\left[(\mathbf{y}-\boldsymbol{\mu})(\mathbf{y}-\boldsymbol{\mu})'\right]$$`
 and
 
-`$$\boldsymbol{S}=\sum\limits_{i=1}^n\left[(\mathbf{y}_i-\boldsymbol{\bar{y}})(\mathbf{y}-\boldsymbol{\bar{y}})'\right]$$`
+`$$\boldsymbol{S}=\frac{1}{n-1}\sum\limits_{i=1}^n\left[(\mathbf{y}_i-\boldsymbol{\bar{y}})(\mathbf{y}-\boldsymbol{\bar{y}})'\right]$$`
 
 ---
 
@@ -426,6 +427,14 @@ $$
 $$
 - Another way of stating this is the `\(\mathbf{R}'\mathbf{R}=\mathbf{I}\)`
 - The reason we call this a rotation will be covered later on.
+
+---
+
+# Conclusions
+
+- In factor modelling matrices are used heavily.
+- Make sure you understand how multiplication works.
+- In particular understand when multiplication is possible and when it is not possible.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>

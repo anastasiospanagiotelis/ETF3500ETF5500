@@ -43,7 +43,11 @@ rm(list=ls())
 # Boston Housing
 
 - In an earlier tutorial we considered the Boston Housing data
+--
+
 - Each observation is a town (suburb) in the Boston metropolitan area.
+--
+
 - There are 14 variables measuring demographic information as well as other factors that may influence house price.
 
 ---
@@ -86,14 +90,13 @@ biplot(pcaout)
 
 # Discussion
 
-- The data seem to suggest that each of the variables can be
-explained by just two or three factors.
+- Nearly 60% of the variation of all variables in explained by just 2 PCs.
 --
 
-- When we do PCA sometimes it is easy to interpret the PCs.
+- Can these PCs be interpreted.
 --
 
-- Sometimes the PCs are hard to interpret.
+- Sometimes they can but in this example it is difficult.
 --
 
 - This is not surprising, PCA just finds a linear combination
@@ -122,9 +125,17 @@ $$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{f}_i+\boldsymbol{\xi}_i$$
 # Notation
 
 - The subscript $i$ denotes the $i^{th}$ cross sectional unit (in the Boston data the town).
+--
+
 - The subscript $j$ denotes the variable (e.g. teacher ratio, distance from downtown etc.)
+--
+
 - The dimensions of $\mathbf{y}_i$ and $\boldsymbol{\xi}_i$ are $p\times 1$ (or $14\times 1$ in the Boston data).
+--
+
 - If there are $r$ factors then $\mathbf{f_i}$ is $r\times 1$ and $\boldsymbol{\Lambda}$ is $p\times r$.
+--
+
 - Verify that all matrix multiplication is conformable.
 ---
 
@@ -166,6 +177,8 @@ are *observed*.
 
 $$E(\mathbf{y}\mathbf{y}')=\boldsymbol{\Sigma}=\boldsymbol{\Lambda}\boldsymbol{\Lambda}'+\boldsymbol{\Psi}$$
 - The variance is decomposed into two parts
+--
+
 - Part explained by common factors $\boldsymbol{\Lambda}\boldsymbol{\Lambda}'$ . 
   - This is often called the *communality* or *common variance*.
 - Part unexplained by common factors $\boldsymbol{\Psi}$. 
@@ -176,8 +189,14 @@ $$E(\mathbf{y}\mathbf{y}')=\boldsymbol{\Sigma}=\boldsymbol{\Lambda}\boldsymbol{\
 # Estimation
 
 - It is straightforward to estimate $\boldsymbol{\Sigma}$ with its sample equivalent $\mathbf{S}$
+--
+
 - We can then choose values $\hat{\boldsymbol{\Lambda}}$ and $\hat{\boldsymbol{\Psi}}$ so that $\hat{\boldsymbol{\Lambda}}\hat{\boldsymbol{\Lambda}}'+\hat{\boldsymbol{\Psi}}$ is close to $\mathbf{S}$.
+--
+
 - There are many  ways to do this
+--
+
 - *Maximum likelihood estimation* is one of the most popular.
 
 ---
@@ -185,7 +204,11 @@ $$E(\mathbf{y}\mathbf{y}')=\boldsymbol{\Sigma}=\boldsymbol{\Lambda}\boldsymbol{\
 # Estimation issues
 
 - Using *Maximum likelihood estimation* does require a distributional assumption about the data.
+--
+
 - The most common assumption is that the data are normally distributed.
+--
+
 - Even when this assumption does not hold the maximum likelihood estimate is still quite robust as long as the data do not differ too much from normality.
 
 ---
@@ -202,7 +225,11 @@ $$E(\mathbf{y}\mathbf{y}')=\boldsymbol{\Sigma}=\boldsymbol{\Lambda}\boldsymbol{\
 #Heywood cases
 
 - In some rare cases the maximum likelihood converges to an estimate where the unique variances are *negative*.
+--
+
 - These are known as *Heywood cases*
+--
+
 - Since a variance is cannot be negative this is usually caused by
   - Selecting too many factors
   - Too small a sample size.
@@ -241,9 +268,15 @@ facto$loadings
 #Output
 
 - An advantage of printing the loadings like this is that values close to zero are surpressed.
+--
+
 - This will help with the interpretation of factors.
+--
+
 - For 2 factors, it can be useful to also plot the factors.
-- This can be achieved using the `tidy` function in the `broom` package.
+--
+
+- To prepare the data use the `tidy` function in the `broom` package.
 
 ---
 
@@ -290,8 +323,14 @@ ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
 
 It is difficult to interpret these Factors
 - Factor 1 seems to take everything into account except the Charles river dummy.
+--
+
 - Factor 2 takes everything into account except pupil-teacher ratio, crime and race.
+--
+
 - It would be easier to interpret the factors if Factor 1 loaded onto a small set of variables and Factor 2 loaded onto a different small set of variables.
+--
+
 - Can we do this?
 ---
 
@@ -323,8 +362,14 @@ equally well and satisfy all assumptions of the model.
 # Varimax
 
 - Some rotated versions of the factors may be easier to interpret.
+--
+
 - Generally if there are many zero loadings, then the factors are easy to interpret.
+--
+
 - An algorithm known as varimax tries to find a rotation with as many loadings close to zero as possible.
+--
+
 - It can be implemented using the `rotation='varimax'` option in `factanal`.
 
 ---
@@ -416,7 +461,9 @@ ggplot(fap_df,aes(x=fl1,y=fl2,label=variable))+
   - Positively correlated with age.
   - Negatively correlated with distance.
 - Factor 1 is a **geographic** factor.  
--Factor 2 is
+--
+
+- Factor 2 is
   - Positively correlated with crime, pupil-teacher ratio.
   - Negatively correlated with the race variable.
 - Factor 2 is a **socioeconomic** factor.  
@@ -426,8 +473,12 @@ ggplot(fap_df,aes(x=fl1,y=fl2,label=variable))+
 # More than 2 factors
 
 - If there are more than 2 factors look at the loadings matrix.
+--
+
 - The pattern of zeros should give some clue to the
 interpretation of the factors.
+--
+
 - Also look for large loadings (in absolute value)
 
 ---
@@ -435,10 +486,18 @@ interpretation of the factors.
 # Oblique rotation
 
 - Oblique rotations will lead to factors that are correlated with one another.
+--
+
 - This is not the case for orthogonal factors.
+--
+
 - Other rotation options are available by downloading the
 package `GPArotation`
+--
+
 - Orthogonal Rotations: Varimax, Quartimax, Equimax
+--
+
 - Oblique Rotations: Promax, Oblimin, Quartimin, Simplimax
 
 ---
@@ -468,6 +527,12 @@ R using the `psych` package.
 # Extended topics
 
 - What we have discussed today is often called *exploratory factor analysis*.
+--
+
 - In many social sciences the latent variables may themselves influence other observed variables.
+--
+
 - Such models are called *structural equation models*.
+--
+
 - They can also be estimated by maximum likelihood. 
