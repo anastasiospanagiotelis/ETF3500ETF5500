@@ -1,0 +1,125 @@
+---
+author: "Department of Econometrics and Business Statistics, Monash University"
+date: "Tutorial 6"
+output: pdf_document
+---
+
+```{r, echo = FALSE}
+#rmarkdown::render('PCA.Rmd',output_file='PCA.pdf')
+#rmarkdown::render('PCA.Rmd',output_file='PCASols.pdf')
+sols<-FALSE
+title<-ifelse(sols, 'HDDA Tutorial: PCA
+: Solutions','HDDA Tutorial: PCA'
+)
+```
+
+---
+title: "`r title`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The data for todays tutorial are a subset of the well-known Boston Housing dataset created by Harrison and Rubinfeld and used in their 1978 paper, Hedonic prices and the demand for clean air, J. Environ. Economics & Management, vol.5, 81-102. The data were obtained from the UCI Machine Learning Repository. In this dataset each observation corresponds to a town (or suburb) in or around Boston. The towns are numbered rather than named and are stored in the variable `Town`. Excluding `Town` are 14 variables which are summarised below:
+
+- CRIM: per capita crime rate by town
+- ZN: proportion of residential land zoned for lots over 25,000 sq.ft.
+- INDUS: proportion of non-retail business acres per town
+- CHAS: Charles River dummy variable (= 1 if tract bounds river; 0 otherwise)
+- NOX: nitric oxides concentration (parts per 10 million)
+- RM: average number of rooms per dwelling
+- AGE: proportion of owner-occupied units built prior to 1940
+- DIS: weighted distances to five Boston employment centres
+- RAD: index of accessibility to radial highways
+- TAX: full-value property-tax rate per $10,000
+- PTRATIO: pupil-teacher ratio by town
+- B: 1000(Bk 0.63) 2 where Bk is the proportion of African Americans by town
+- LSTAT: % lower status of the population
+- MEDV: Median value of owner-occupied homes in $1000s
+
+Answer the following questions.
+
+1. Should the data be standardised prior to carrying out Principal Components?
+
+`r if(sols) '*The data are measured in different units so the data should be standardised before carrying out PCA.  This ensures that results are not sensitive to the units of measurement.*'`
+
+2. Carry out Principal Components Analysis on this data.
+
+```{r, eval=sols,echo=sols,message=FALSE}
+#First load required packages
+library(tidyverse)
+Boston<-readRDS('Boston.rds')
+Boston%>%
+  column_to_rownames('Town')%>% #see comment below 
+  prcomp(scale.=TRUE)->pcaout
+
+#This sets the column Town to be the row name.  There is a
+#debate around whether dataframes should have rownames but the 
+#existing prcomp function works better when observation IDs are
+#rownames rather than a separate column
+```
+
+3. What proportion of total variance is explained by the first four principal components together? 
+
+4. What proportion of total variance is explained by the second principal component (on its own)?
+
+5. How many PCAs would be selected using Kaisers Rule?
+
+```{r, eval=sols,echo=sols,message=FALSE}
+#Questions 4-5 can be answered using the summary function
+summary(pcaout)
+
+#Proportion of variance explained by the first four PCs together is 75.23%
+#Proportion of variance explained by the second PC alone is 12.18%
+#By Kaisers rule select 4 PCs (variance and standard deviation greater than 1.)
+
+```
+
+6. Produce and Interpret the Scree Plot. How many PCs should be used?
+
+```{r, eval=sols,echo=sols,message=FALSE,fig.align='center',fig.width=10}
+screeplot(pcaout,type = 'l')
+# The elbow appears at the second PC, therefore 2 PCs should be used.
+# Note that this is different to Kaiser's rule.
+
+```
+
+All remaining quesions should be answered using a biplot
+
+```{r, eval=sols,echo=sols,message=FALSE,fig.align='center',fig.width=10,fig.height=10}
+#Correlation biplot used to answer Q7, Q8 and Q9
+biplot(pcaout)
+#Distance biplot used to answer Q10, Q11
+biplot(pcaout,scale=0)
+#Either biplot can be used to answer Q12 and Q13
+```
+
+7. Name two variables that have a strong positive association with one another.
+
+`r if(sols) '*Any two arrows pointing in the same direction for example AGE and NOX.*'`
+
+8. Name two variables that have a strong negative association with one another.
+
+`r if(sols) '*Any two arrows pointing in the opposite direction for example AGE and DIS.*'`
+
+9. Name two variables that are only weakly associated with another.
+
+`r if(sols) '*Any two arrows at a 90 degree angle for example NOX and PTRATIO.*'`
+
+
+10. Name two towns that are similar to one another.
+
+`r if(sols) '*Any two points that are close, e.g 153 and 155.*'`
+
+11. Name two towns that are different to one another.
+
+`r if(sols) '*Any points that are far apart, e.g. 284 and 381.*'`
+
+12. Describe the characteristics of town 354.
+
+`r if(sols) '*Town 354 is characterised by an association with high values of DIS meaning it is far away from employment centres and high levels of ZN meaning that it is mostly a residential area. It also is characterised by a negative association with AGE and INDUS.  The value of MEDV is also likely to be high for town 354.  Overall Town 301 is probably a new outlying suburb and a result of urban sprawl.*'`
+
+13. Name a town that has a high level of crime and a high pupil-teacher ratio.
+
+`r if(sols) '*Town 381.  To see this, imagine the CRIM and PTRATIO arrow extending out.  Then draw a line from point 381 to those lines crossing at right angles. The point where this line crosses will be far away from the center of the plot. Remember that this is only an approximation.*'`

@@ -1,0 +1,116 @@
+---
+author: "Department of Econometrics and Business Statistics, Monash University"
+date: "Tutorial 7"
+output: pdf_document
+---
+
+```{r, echo = FALSE}
+#rmarkdown::render('MatrixBasics.Rmd',output_file='MatrixBasics.pdf')
+#rmarkdown::render('MatrixBasics.Rmd',output_file='MatrixBasicsSols.pdf')
+sols<-FALSE
+title<-ifelse(sols, 'HDDA Tutorial: MatrixBasics
+: Solutions','HDDA Tutorial: MatrixBasics'
+)
+```
+
+---
+title: "`r title`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Vectors
+
+Consider the vectors
+
+$$
+\mathbf{a}=\begin{pmatrix}2 \\\ 4 \end{pmatrix} \quad \mathbf{b}=\begin{pmatrix}1 \\\ 0 \end{pmatrix} \quad \mathbf{c}=\begin{pmatrix}-2 \\\ 1 \end{pmatrix} \quad
+$$
+Work out the following (without using R). All multiplication is matrix multiplication.
+
+1. $\mathbf{a}+\mathbf{b}$
+2. $\mathbf{a}'\mathbf{a}$
+3. $\mathbf{a}'\mathbf{b}$
+4. $\mathbf{a}'\mathbf{c}$
+5. $\mathbf{a}\mathbf{b}'$
+
+`r if(sols) '*Solutions provided in section using R*'`
+
+# Matrices
+
+Consider the matrices
+
+Work out the following (without using R). All multiplication is matrix multiplication.
+
+$$
+\mathbf{X}=\begin{pmatrix}1& 2 \\\ 1& 4 \\\ 0 & -1 \end{pmatrix} \quad \mathbf{Y}=\begin{pmatrix}2 & -1 \\\ 3 & 0 \\\ 3 & -1 \end{pmatrix}
+$$
+
+1. $\mathbf{X}+\mathbf{Y}$
+2. $\mathbf{X}\mathbf{Y}$
+3. $\mathbf{X}'\mathbf{Y}$
+
+`r if(sols) '*Solutions provided in section using R*'`
+
+# Vectors and Matrices in R
+
+Repeat all above questions using R.  Useful functions are `c` for setting a vector, `matrix` for setting a matrix and `t` for the transpose.  Also note that `*` does NOT do matrix multiplication.  Instead use `%*%`.
+
+```{r, eval=sols,echo=sols,message=FALSE}
+#Vectors
+
+a<-c(2,1)
+b<-c(1,0)
+c<-c(-2,1)
+
+a+b
+t(a)%*%a
+t(a)%*%b
+t(a)%*%c
+a%*%t(b)
+
+#Matrices
+
+#Make sure you set byrow=T
+X<-matrix(c(1,2,
+            1,4,
+            0,-1),3,2,byrow = T)
+X
+
+Y<-matrix(c(2,-1,
+            3,0,
+            3,-1),3,2,byrow = T)
+Y
+
+X+Y
+# X%*%Y This is non-conformable
+t(X)%*%Y
+```
+
+# Data matrix
+
+Consider the data matrix $\mathbf{Y}$
+
+$$
+\mathbf{Y} = \begin{pmatrix}y_{11} & y_{12} & \ldots & y_{1p} \\\ y_{21} & y_{22} & \ldots & y_{2p} \\\ \vdots & \vdots &\ldots &\vdots \\\ y_{n1} & y_{n2} & \ldots & y_{np} \end{pmatrix}
+$$
+
+where $y_{ij}$ is the value of variable $j$ for observation $i$ 
+
+1. How many rows are there in $\mathbf{Y}$?
+
+`r if(sols) '*There are n rows, i.e. each observation is a row*'`
+
+2. How many columns are there in $\mathbf{Y}$?
+
+`r if(sols) '*There are p rows, i.e. each variable is a column*'`
+
+3. What are the dimensions of $\mathbf{Y}$?
+
+`r if(sols) '*The matrix is an $n\\times p$ matrix*'`
+
+4. Find an expression for the first row and first column of $\mathbf{S}=\frac{1}{n-1}\mathbf{Y}'\mathbf{Y}$
+
+`r if(sols) '*The element on the first row and first column is found by multiplying $\\begin{pmatrix}y_{11} & y_{21} & \\ldots & y_{n1}\\end{pmatrix}$ by its transpose. This is the same as $y^2_{11}+y^2_{21}+\\ldots+y^2_{n1}$.  Putting everything together it is $\\frac{1}{n-1}\\sum\\limits_{i=1}^{n}y^2_{i1}$.  If the data have mean zero, then this is the sample variance of the first variable.*'`
