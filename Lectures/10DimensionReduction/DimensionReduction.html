@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Dimension Reduction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Anastasios Panagiotelis" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Dimension Reduction
+## High Dimensional Data Analysis
+### Anastasios Panagiotelis
+### Lecture 10
+
+---
+
+
+class: inverse, center, middle
+
+# A proof
+
+
+
+---
+
+# How to do PCA
+
+- Over the next few slides, we will derive how to get the first principal component.
+--
+
+- This eventually leads us to the *eigenvalue decomposition*.
+--
+
+- The eigenvalue decomposition and its more general form known as the *singular value decomposition* are crucial to all dimension reduction techniques.
+--
+
+- This will be challenging.
+
+---
+
+# First PC
+
+- Recall that the principal component is 
+  - The linear combination of the variables
+  - With maximum variance
+  - Subject to the squared weights summing to 1.
+
+---
+
+# Linear Combination
+
+- Let `\(c_i=w_1y_1+\ldots+w_py_p\)` 
+--
+
+- In matrix/vector form `\(c_i=\mathbf{w}'\mathbf{y}_i\)` 
+--
+
+- What are the dimensions of `\(c_i\)`, `\(\mathbf{w}\)` and `\(\mathbf{y}_i\)`?
+--
+
+- Both `\(\mathbf{w}\)` and `\(\mathbf{y}_i\)` are `\(p\times 1\)` vectors, while `\(c_i\)` is a scalar.
+
+---
+
+# Variance
+
+- The variance of the linear combination is given by
+
+`$$\mbox{Var}(c)=\frac{\sum\limits_{i=1}^n c^2_i}{n-1} =\frac{\sum\limits_{i=1}^n(\mathbf{w}'\mathbf{y}_i)^2}{n-1}$$`
+- Assumed that all `\(y\)`'s have a mean of zero.  
+- Everything still works without this assumption but is messier.
+
+---
+
+# A trick
+
+- Note that `\(w_1y_1+\ldots+w_py_p\)` has been written as  `\(\mathbf{w}'\mathbf{y}_i\)`, but...
+--
+
+- ... it can also be written as `\(\mathbf{y}'_i\mathbf{w}\)`.
+--
+
+- This in turn implies that `\(c^2_i=\mathbf{w}'\mathbf{y}_i\mathbf{y}_i'\mathbf{w}\)`.  Substituting into the variance formula gives.
+--
+
+`$$\mbox{Var}(c)=\frac{\sum\limits_{i=1}^n c^2_i}{n-1} = \frac{\sum\limits_{i=1}^n\mathbf{w}'\mathbf{y}_i\mathbf{y}_i'\mathbf{w}}{n-1}$$`
+
+---
+
+# Linearity
+
+Linearity implies that anything without an `\(i\)` subscript can be taken outside the summation sign.
+
+`$$\mbox{Var}(c)=\frac{\sum\limits_{i=1}^n c^2_i}{n-1} = \frac{\mathbf{w}'\left(\sum\limits_{i=1}^n\mathbf{y}_i\mathbf{y}_i'\right)\mathbf{w}}{n-1}$$`
+
+---
+
+#Scalar multiplication
+
+The order of scalar multiplication does not matter allowing the following
+
+`$$\begin{align}\mbox{Var}(c)&amp;= \mathbf{w}'\left(\frac{\sum\limits_{i=1}^n\mathbf{y}_i\mathbf{y}_i'}{n-1}\right)\mathbf{w}\\ &amp;= \mathbf{w}'\mathbf{S}\mathbf{w} \end{align}$$`
+
+Recall `\(\mathbf{S}\)` is the variance covariance matrix
+
+---
+
+# Objective
+
+We want to choose `\(\mathbf{w}\)` to maximise the variance while ensuring that `\(w_1^2+\ldots+w_p^2=\mathbf{w}'\mathbf{w}=1\)`.  We write this as
+
+$$
+\begin{align}\underset{\mathbf{w}}{\max}\quad&amp;\mathbf{w}'\mathbf{S}\mathbf{w}\\\ \mbox{s.t.}\quad &amp; \mathbf{w}'\mathbf{w}=1\end{align}
+$$
+
+---
+class: inverse, center, middle
+
+# Optimisation
+
+---
+# Constrained Optimisation
+
+Solving the constrained optimisation above is equivalent to solving the following unconstrained problem
+
+`$$\underset{\mathbf{w},\lambda}{\max}\quad\mathbf{w}'\mathbf{S}\mathbf{w}-\lambda(\mathbf{w}'\mathbf{w}-1)$$`
+
+---
+
+# Gradient 
+
+- Many optimisation problems involve using the *gradient* or slope of an objective function.
+--
+
+- Think of an analogy of climbing a hill.
+--
+
+- If the gradient is positive then you can go higher by walking forwards.
+--
+
+- If the gradient is negative then you can go higher by walking backwards.
+--
+
+- The top of the hill is where the gradient is zero.
+
+---
+
+# Gradient
+
+- To compute the gradient we need to use matrix calculus.
+--
+
+- What does it mean to differentiate with respect to `\(\mathbf{w}\)`?
+--
+
+- It means we differentiate with respect to `\(w_1\)`, `\(w_2\)`, etc
+--
+
+- All up `\(p\)` first derivatives are found.  These can be stored in a vector.
+
+---
+
+# First Order Conditions
+
+Differentiating w.r.t. `\(\mathbf{w}\)` gives
+
+`$$\frac{\partial\left(\mathbf{w}'\mathbf{S}\mathbf{w}-\lambda(\mathbf{w}'\mathbf{w}-1)\right)}{\partial \mathbf{w}}=2\mathbf{S}\mathbf{w}-2\lambda{\mathbf{w}}$$`
+
+Differentiating w.r.t. `\(\lambda\)` gives
+
+`$$\frac{\partial\left(\mathbf{w}'\mathbf{S}\mathbf{w}-\lambda(\mathbf{w}'\mathbf{w}-1)\right)}{\partial \lambda}=\mathbf{w}'\mathbf{w}-1$$`
+---
+
+# How did we do that?
+
+The key result is that for any square matrix `\(\mathbf{A}\)` it holds that
+
+`$$\frac{\partial \mathbf{w}'\mathbf{A}\mathbf{w}}{\partial\mathbf{w}}=2\mathbf{A}\mathbf{w}$$`
+This is the matrix version of the rule that the derivative of `\(\partial{aw^2}/\partial w = 2aw\)`.  From this result, the matrix result can be derived (but this is tedious).
+
+---
+
+# Eigenvalue Problem
+
+The gradient will be zero when `\(2\mathbf{S}\mathbf{w}-2\lambda{\mathbf{w}}=\mathbf{0}\)` or simplifying when
+
+$$ \mathbf{S}\mathbf{w}=\lambda{\mathbf{w}} $$
+
+This is a very famous problem known as the **eigenvalue** problem. Suppose `\(\tilde{\lambda}\)` and `\(\tilde{\mathbf{w}}\)` provide a solutions then
+--
+
+- The value of  `\(\tilde{\lambda}\)` is called an *eigenvalue*
+- The vector `\(\tilde{\mathbf{w}}\)` is called an *eigenvector*
+
+---
+
+# Eigenvalue Problem
+
+- For `\(2\times 2\)`, `\(3\times 3\)` and `\(4\times 4\)` matrices there are formulas for `\(\tilde{\lambda}\)`.
+--
+
+- These are hideous
+--
+
+- For `\(5\times 5\)` and beyond there is no formula
+--
+
+- A solution is found using numerical methods (i.e. a computer algorithm).
+
+---
+
+# Geometric View
+
+- Recall that multiplying by a matrix moves vectors around, changing their length and direction.
+--
+
+- However for any matrix there will be some vector whose direction does not change, but only the length.
+--
+
+- This vector is an eigenvector.
+--
+
+- The extent to which the length is changed is the eigenvalue.
+
+---
+
+# Multiple solutions
+
+- In general there are multiple solutions to the eigenvalue problem.
+--
+
+- Which one maximises the variance?
+--
+
+- Let `\(\tilde{\mathbf{w}}\)` be an eigenvector and its associated eigenvalue be `\(\tilde{\lambda}\)`.
+--
+
+- What is the variance of the linear combination `\(\tilde{\mathbf{w}}'\mathbf{y}\)`?
+
+---
+
+# Answer
+
+We have already shown that the variance will be `\(\tilde{\mathbf{w}}'\mathbf{S}\tilde{\mathbf{w}}\)`.  Since `\(\tilde{\mathbf{w}}\)` is an eigenvector it must hold that
+
+$$
+\mathbf{S}\tilde{\mathbf{w}}=\tilde{\lambda}\tilde{\mathbf{w}}
+$$
+--
+
+which implies
+
+$$
+\begin{align}\tilde{\mathbf{w}}'\mathbf{S}\tilde{\mathbf{w}}&amp;=\tilde{\mathbf{w}}'\tilde{\lambda}\tilde{\mathbf{w}}\\\ &amp;= \tilde{\lambda}\tilde{\mathbf{w}}'\tilde{\mathbf{w}}&amp;\end{align}
+$$
+
+---
+
+# Variance
+
+- Since `\(\tilde{\mathbf{w}}'\tilde{\mathbf{w}}=1\)` this implies that the variance of the linear combination is `\(\tilde{\lambda}\)`.
+--
+
+- The weights for the first principal component is given by the eigenvector that corresponds to the **largest eigenvalue**. 
+--
+
+- The weights of the remaining principal components are given by the other eigenvectors.
+
+
+---
+class: inverse, middle, center
+
+# Matrix Decompositions
+
+---
+
+# Spectral Theorem
+
+Since `\(\mathbf{S}\)` is a symmetric matrix it can decomposed as
+
+`$$\underset{(p\times p)}{\mathbf{S}}=\underset{(p\times p)}{\mathbf{W}}\underset{(p\times p)}{\boldsymbol{\Lambda}}\underset{(p\times p)}{\mathbf{W}}'$$`
+--
+
+- The columns of `\(\mathbf{W}\)` are eigenvectors of `\(\mathbf{S}\)`
+--
+
+- `\(\boldsymbol{\Lambda}\)` is a matrix with the eigenvalues along the main diagonal and zeros on the off diagonal.
+--
+
+- The eigenvalues and eigenvectors can be rearranged so by convention eigenvalues in `\(\boldsymbol{\Lambda}\)` are sorted from largest to smallest.
+
+---
+
+# Rotation
+
+- The full vector of principal components for observation `\(i\)` is given by `\(\mathbf{c}_i=\mathbf{W}'\mathbf{y}_i\)`
+--
+
+- The eigenvectors are also orthogonal (A proof of why this is true can be provided for anyone who is curious).
+--
+
+- Orthogonality implies that the matrix of eigenvectors `\(\mathbf{W}\)` is a *rotation* matrix.
+--
+
+- For this reason we consider PCA to be a rotation of the data.
+
+---
+
+# PCA as an approximation
+
+It can be shown that an equivalent way of writing the eigenvalue decomposition is
+
+`$$\begin{align}\underset{(p\times p)}{\mathbf{S}}&amp;=\underset{(p\times p)}{\mathbf{W}}\underset{(p\times p)}{\boldsymbol{\Lambda}}\underset{(p\times p)}{\mathbf{W}}'\\\ &amp;=\sum\limits_{j=1}^p\underset{(1\times 1)}{\lambda_j}\underset{(p\times 1)}{\mathbf{w}_j}\underset{(1\times p)}{\mathbf{w}_j'}\end{align}$$`
+
+---
+# PCA as an approximation
+
+If some eigenvalues are small they can be ignored.
+
+`$$\begin{align}\mathbf{S}&amp; =\sum\limits_{j=1}^p{\lambda_j}{\mathbf{w}_j}{\mathbf{w}_j'}\\\ &amp;\approx  \sum\limits_{j=1}^r{\lambda_j}{\mathbf{w}_j}{\mathbf{w}_j'}\end{align}$$`
+
+Only `\(r&lt;&lt;p\)` eigenvalues are used.
+
+---
+
+# Decomposition
+
+- Consider a `\(50\times 50\)` covariance matrix.
+--
+
+- There are 1275 variances and covariances to estimate
+--
+
+- Suppose the data can be summarised by just 5 factors/principal components.
+--
+
+- Then the matrix can be approximated with just 5 eigenvalues and eigenvectors (255 numbers).
+
+---
+
+# In General
+
+- For matrix `\(\mathbf{X}\)` that is possibly non-symmetric and possibly non-square a similar decomposition known as the singular value decomposition can be used.
+
+$$
+\underset{(n\times p)}{\mathbf{Y}}=\underset{(n\times n)}{\mathbf{U}}\underset{(n\times p)}{\mathbf{D}}\underset{(p\times p)}{\mathbf{V}'}
+$$
+
+The matrices `\(\mathbf{U}\)` and `\(\mathbf{V}\)` are rotations
+
+---
+
+# Structure of D
+
+- If `\(n&gt;p\)`
+`$$\begin{bmatrix}d_1 &amp;\cdots &amp;0\\\vdots &amp;\ddots &amp;\vdots\\0&amp;\cdots&amp;d_p\\0 &amp;\cdots &amp;0\\\vdots &amp;\vdots &amp;\vdots\\0&amp;\cdots&amp;0\end{bmatrix}$$`
+---
+
+# Structure of D
+
+- If `\(n&lt;p\)`
+`$$\begin{bmatrix}d_1 &amp;\cdots &amp;0 &amp;0 &amp;\cdots &amp;0\\\vdots &amp;\ddots &amp;\vdots&amp;\vdots &amp;\vdots &amp;\vdots\\0&amp;\cdots&amp;d_n&amp;0 &amp;\cdots &amp;0\end{bmatrix}$$`
+- In both cases all `\(d_i&gt;0\)`
+--
+
+- These are called *singular values*.
+
+---
+
+# Singular Values
+
+- The singular values are ordered from largest to smallest allowing for an approximation
+
+`$$\begin{align}\mathbf{Y}&amp; =\sum\limits_{j=1}^p{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\\\ &amp;\approx  \sum\limits_{j=1}^r{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\end{align}$$`
+
+for `\(r&lt;&lt;min(n,p)\)`
+
+---
+
+# Biplots and the SVD
+
+- When `\(\mathbf{Y}\)` is the data matrix there is a connection between the biplot and the SVD.
+--
+
+- For the distance biplot, the first two columns of `\({\mathbf U}{\mathbf D}\)` are plotted as points and the first two columns of `\({\mathbf V}\)` as arrows
+--
+
+- For the correlation biplot plot the first two columns of `\({\mathbf U}\)` are plotted as points the first two columns of `\({\mathbf V}{\mathbf D}\)` as arrows
+--
+
+- In general plot the first two columns of `\({\mathbf U}{\mathbf D}^\kappa\)` and the first two columns of `\({\mathbf V}{\mathbf D}^{(1-\kappa)}\)`&lt;!--D--&gt;
+--
+
+- In R, `\(\kappa\)` is set by the scale option of `biplot`
+
+---
+class: inverse, center, middle
+
+# A final example
+
+---
+
+# A picture
+
+&lt;img src="DimensionReduction_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Pixels
+
+- For the computer this picture is a matrix&lt;!--D--&gt;
+--
+
+- Each pixel on the screen has a number between 0 and 1.&lt;!--D--&gt;
+--
+
+  + Numbers closer to 0 display as lighter shades of grey&lt;!--D--&gt;
+--
+
+  + Numbers closer to 1 display as darker shades of grey&lt;!--D--&gt;
+--
+
+- What if we do the SVD on this matrix?
+
+---
+
+# SVD
+
+- All up there are `\(232\times 218=50576\)` pixels.&lt;!--D--&gt;
+--
+
+- Suppose we approximate this matrix with 20 singular values&lt;!--D--&gt;
+--
+
+- Then `\({\mathbf U_{(r)}}\)` is `\(232\times 20=4640\)`&lt;!--D--&gt;
+--
+
+- Then `\({\mathbf V_{(r)}}\)` is `\(218\times 20=4360\)`&lt;!--D--&gt;
+--
+
+- Including the 20 singular values themselves, we summarise 50576 numbers using only `\(4640+4360+20=9020\)` numbers.
+
+---
+
+# Approximation
+
+&lt;img src="DimensionReduction_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Discussion
+
+- Using only 20 singular values we do not lose much information.&lt;!--D--&gt;
+--
+
+- What if we reconstruct the picture using singular value 21 to singular value 218?&lt;!--D--&gt;
+--
+
+- This uses a lot more information.  Does it give a clearer approximation?
+
+---
+
+# Using remaining singular values
+
+&lt;img src="DimensionReduction_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Singular values
+
+&lt;img src="DimensionReduction_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Conclusion
+
+- The main idea is that the SVD summarises the *important* information in the matrix into a small number of singular values.&lt;!--D--&gt;
+--
+
+- Rotating so that we can isolate the dimensions associated with those singular values is the geometry behind dimension reduction.&lt;!--D--&gt;
+--
+
+- This applies to PCA, factor analysis and MDS as well as to compressing images.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
