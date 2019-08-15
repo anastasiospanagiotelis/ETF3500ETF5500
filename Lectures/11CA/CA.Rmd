@@ -1,0 +1,797 @@
+---
+title: "Correspondence Analysis"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis"
+date: "Lecture 11"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"mtheme.css","mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      after_body: extra.html
+    
+---
+
+class: inverse, center, middle
+
+# Motivation
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+require(magrittr)
+require(tidyverse)
+require(plotly)
+require(widgetframe)
+require(animation)
+require(scatterplot3d)
+require(DT)
+require(rgl)
+require(knitr)
+require(kableExtra)
+require(ggmap)
+require(htmlwidgets)
+require(htmltools)
+rm(list=ls())
+```
+
+---
+
+# Non-metric data
+
+- So far we have looked at dimension reduction methods such as PCA
+and MDS where:<!--D-->
+--
+
+  - The number of variables is large<!--D-->
+--
+
+  - The data are (mostly) metric data<!--D-->
+--
+
+- Today we cover tools for understanding the relationships
+between nominal/categorical data.<!--D-->
+--
+
+- We focus on the case where there are only two variables, but
+a potentially large number of categories for each variable.
+
+---
+
+# Outline
+
+- First we revise the cross tabulation, a useful summary for
+nominal data.<!--D-->
+--
+
+- We then cover ways to visualise the information in a cross tab.<!--D-->
+--
+
+- Ultimately we will discuss Correspondence Analysis which
+can be applied to large tables.<!--D-->
+--
+
+- We cover applications of Correspondence Analysis in the real
+world including with text data.
+
+---
+
+class: inverse, center, middle
+
+# A basic analysis
+---
+
+# Beer example
+
+- A cross tab can be created in R using the `table`
+function.  The input is either<!--D-->
+--
+
+  - A single matrix or data frame with 2 columns/variables<!--D-->
+--
+
+  - One vector for each variable<!--D-->
+--
+
+- The output is a *table* object.<!--D-->
+--
+
+- Let’s try it with the Beer data which can be found on Moodle.
+
+---
+
+# Beer example
+
+- We look at two categorical variables<!--D-->
+--
+
+  - Availabilty
+  - Light<!--D-->
+--
+
+- The number of categories for availability is 2 (National/Regional)<!--D-->
+--
+
+- The number of categories for light is 2 (Light/non-light).  
+
+---
+
+# Doing it in R
+
+```{r, echo=FALSE,message=FALSE}
+library(magrittr)
+library(dplyr)
+```
+
+```{r process,echo=TRUE}
+load('Beer.RData')
+Beer %>%
+  select(light,avail)%>% 
+  table%>% #Creates Tables
+  addmargins()-> #Includes totals
+  crosstab
+```
+
+---
+
+# The table
+
+```{r printtab,echo=TRUE}
+print(crosstab)
+```
+
+---
+
+# What do we see?
+
+- There are more beers available at a regional level.<!--D-->
+--
+
+- The nationally available beers are just as likely to be light or non-light.<!--D-->
+--
+
+- Regional beers are overwhelmingly non-light.<!--D-->
+--
+
+- But is there a way we can visualise this?
+
+---
+
+# How to visualise?
+
+- In this small example we can think of four sets of coordinates<!--D-->
+--
+
+  - Coordinates for national<!--D-->
+--
+
+  - Coordinates for regional<!--D-->
+--
+
+  - Coordinates for non-light<!--D-->
+--
+
+  - Coordinates for light<!--D-->
+--
+
+- Let's plot these
+
+---
+
+# Plot
+
+```{r 2dplot, echo=FALSE}
+  library(ggplot2)
+  library(tibble)
+  Beer %>%
+  select(light,avail)%>%
+  table->
+  crosstab
+  d1<-rbind(as.matrix(crosstab),t(as.matrix(crosstab)))
+  d2<-c('light','light','avail','avail')
+  d<-data.frame(x=d1[,1],y=d1[,2],variable=d2)%>%rownames_to_column(var="value")
+  ggplot(d,aes(x=x,y=y,col=variable,label=value))+geom_point(size=3)+geom_text(size=8,hjust=0,nudge_x = 0.5)+coord_cartesian(xlim=c(4,30))
+```
+
+---
+
+# Summary 
+
+- Even on this very basic plot we can see an association between light beers and national availability<!--D--> 
+--
+
+- However what do we do with<!--D--> 
+--
+
+  - Large cross tabulations <!--D-->
+--
+
+  - Non-square cross tabulations <!--D-->
+--
+
+- To solve these issues **Correspondence Analysis** can be used.  It is more complicated than simply plotting rows and columns in the cross tab 
+
+---
+
+class: inverse, center, middle
+
+# A Bigger Cross Tab
+
+---
+
+# Breakfast example 
+
+- The table on the next slide is reproduced from Bendixen, M., (2003).<!--D-->
+--
+
+  - Different *breakfast* foods (e.g. CER=cereal, MUE=muesli), with a total of 8 categories.<!--D--> 
+--
+
+  - Different *attributes* of those foods (‘Healthy’, ‘Economical’, ‘Tasteless’) with a total of 14 categories.<!--D-->
+--
+
+- Survey asked to match attributes to breakfasts.<!--D--> 
+--
+
+- A cross tab shows the frequency with which each food was matched to each attribute. 
+
+---
+
+# Breakfast example 
+
+```{r breakfast,echo=FALSE} 
+ library(knitr) 
+ load('breakfast.RData') 
+ breakfastct<-table(breakfast) 
+ knitr::kable(t(breakfastct))%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="500px")  
+``` 
+
+---
+
+# Visualising this 
+
+We can visualise this using Correspondence Analysis which requires the `ca` package. 
+
+ ```{r breakfastca,echo=TRUE,eval=FALSE} 
+ library(ca) 
+ caout<-ca(breakfastct) 
+ plot(caout) 
+ ``` 
+
+ You need to install the `ca` package first 
+
+---
+
+# Visualising this 
+
+```{r breakfastcap,echo=FALSE,fig.align='center',fig.height=9,fig.width=12} 
+ library(ca) 
+ caout<-ca(breakfastct) 
+ par(cex=2) 
+ plot(caout) 
+``` 
+
+---
+
+# What can we see? 
+
+- Towards the top of the plot are categories like *Expensive*, *Healthy* and *Nutritious*.  There are associated with *Muesli (MUE)* and *Fresh Fruit(FRF)*.<!--D--> 
+--
+
+- The left of the plot has the catgeory *Long Prepare*, with *Bacon and Eggs (BE)* closest to this point.<!--D--> 
+--
+
+- *Cereal (CER)* is associated with *Weekdays*.<!--D--> 
+--
+
+- What else? 
+
+---
+
+# Correspondence Analysis 
+
+- The plot is easy to interpret.  Categories that are close to one 
+ another on the plot have a strong association with one 
+ another.<!--D--> 
+--
+
+- This is the case when we compare<!--D-->  
+--
+
+  + Two categories in the rows of the table,<!--D--> 
+--
+
+  + Two categories in the column of the table,<!--D-->
+--
+
+  + A category in the row of the cross tab with  a category in the column of a cross tab<!--D--> 
+--
+
+- What about the remaining output? 
+
+---
+
+# Other output 
+
+ ```{r casumm,echo=TRUE,eval=TRUE} 
+ summary(caout,row=FALSE,column=FALSE) 
+ ``` 
+
+---
+
+# Connection to PCA/MDS 
+
+- There are similarities with material covered in PCA and MDS <!--D-->
+--
+
+  - We visualise with a biplot. <!--D--> 
+--
+
+  - Terms such as **eigenvalues** and **scree plot** reappear.<!--D--> 
+--
+
+- In PCA/MDS the aim was to maximise variance or minimise strain.<!--D-->
+--
+
+- In CA the aim is to maximise **inertia**. 
+
+---
+
+# Inertia 
+
+- Categorical data are not ordinal.<!--D-->   
+--
+
+  - We cannot measure dependence in categorical data by seeing whether 'large' values of one variable coincide with 'large' values of the other variable.<!--D--> 
+--
+
+  - We cannot use correlation.<!--D--> 
+--
+
+- Inertia is a measure of the dependence in categorical data, closely related to the chi square statistic from a test of independence between two categorical variables.<!--D--> 
+--
+
+- Let us quickly revise this. 
+
+---
+
+# Chi Square test 
+
+- Suppose we have two variables<!--D--> 
+--
+
+  + Variable 1 has two categories A and B<!--D--> 
+--
+
+  + Variable 2 has two categories X and Y <!--D-->
+--
+
+- Assume Variable 1 and 2 are independent<!--D-->  
+--
+
+- On the next slide we will have an incomplete cross tab 
+
+---
+
+# Cross Tab 
+
+ |V1 \ V2|   X  |     Y   | Total  | 
+ |------:|:-----|---------|:------:| 
+ |   A   |      |         |     50 | 
+ |   B   |      |         |     50 | 
+ |Total  |   20 |    80   |    100 | 
+
+ If variable 1 and variable 2 are independent then what numbers do you expect to be in the empty cells? 
+
+---
+
+# Cross Tab 
+
+
+ |V1 \ V2|   X  |     Y   | Total  | 
+ |------:|:-----|---------|:------:| 
+ |   A   |   10 |    40   |     50 | 
+ |   B   |   10 |    40   |     50 | 
+ |Total  |   20 |    80   |    100 | 
+
+ Under independence  
+
+ - $\mbox{Pr}(A,X)=\mbox{Pr}(A)\mbox{Pr}(X)$ 
+ - $\mbox{Pr}(B,X)=\mbox{Pr}(B)\mbox{Pr}(X)$ 
+ - $\mbox{Pr}(A,Y)=\mbox{Pr}(A)\mbox{Pr}(Y)$ 
+ - $\mbox{Pr}(B,Y)=\mbox{Pr}(B)\mbox{Pr}(Y)$ 
+
+---
+
+# Independence is boring 
+
+- Independence is not interesting.<!--D--> 
+--
+
+- We cannot draw any conclusions about association between categories across different variables.<!--D--> 
+--
+
+- If we were to do the crude plot from the beer example, all points would lie in the same direction.<!--D-->
+--
+
+- In correspondence analysis, for perfect independence all row and column categories fall on a single point. 
+
+---
+
+# Random variation
+
+- Even for independence, due to randomness we may actually get a table like this: 
+
+|V1 \ V2|   X  |     Y   | Total  | 
+|------:|:-----|---------|:------:| 
+|   A   |   12 |    38   |     50 | 
+|   B   |   8  |    42   |     50 | 
+|Total  |   20 |    80   |    100 | 
+
+- How do we know whether the variables are truly independent and not due to random variation? 
+
+---
+
+# The chi square test 
+
+ For the chi square test, in each cell we compute 
+
+ $$\frac{(O_{ij}-E_{ij})^2}{E_{ij}}$$ 
+
+where $O_{ij}$ is the observed count in each cell and $E_{ij}$ is the expected count in each cell. 
+
+---
+
+# Chi Square Statistic
+
+
+The chi square statistic is 
+
+ $$\chi^2=\sum\limits_{i=1}^{r}\sum\limits_{j=1}^{c}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}$$ 
+
+ where $r$ and $c$ are the number of rows and columns in the cross tab respectively. 
+
+---
+
+# The chi square test 
+
+- If the variables are truly independent then it is unlikely that one would observe large values of $\chi^2$ <!--D-->
+--
+
+- In this case we reject the null and conclude the variables are dependent.<!--D--> 
+--
+
+- However, we can also think of the $\chi^2$ stat as a measure of dependence where:<!--D--> 
+--
+
+  - Small values indicate low dependence 
+  - Large values indicate high dependence 
+
+---
+
+# Inertia 
+
+- Correspondence analysis is based on a similar idea.<!--D--> 
+--
+
+- However the counts in each cell $O_i$ and $E_i$ are replaced with probabilities $o_{ij}=\frac{O_{ij}}{n}$ and $e_{ij}=E_{ij}/n$.<!--D--> 
+--
+
+- Each count is dividided by $n$ which is the total of all cell counts (i.e. $r\times c$).<!--D--> 
+--
+
+- Instead of the $\chi^2$ we get inertia defined as 
+ $$\mbox{Inertia}=\frac{\chi^2}{n}$$ 
+
+---
+
+# Correspondence Analysis 
+
+- Correspondence analysis is about explaining as much inertia as possible with a small number of dimensions.<!--D--> 
+--
+
+- Instead of the original rows and columns in the cross tab, a small number of linear combinations of these rows and columns are formed.<!--D--> 
+--
+
+- A good approximation to the original cross tab could be be reconstructed from these linear combinations.
+
+---
+
+
+# Geometric Interpretation 
+
+- Each column category can be plotted in $r$-dimensions.<!--D--> 
+--
+
+- Each row category can be plotted in $c$-dimensions.<!--D-->
+--
+
+- Correspondence Analysis rotates both of these to provide the most interesting 'optimal' 2D visualisation<!--D--> 
+--
+
+- Here 'optimal' refers to maximising inertia. 
+
+---
+
+# Back to the output 
+
+ ```{r casumm2,echo=TRUE,eval=TRUE} 
+ summary(caout,row=FALSE,column=FALSE) 
+ ``` 
+
+---
+
+# How to intepret this 
+
+- Eigenvalues previously told us:<!--D--> 
+--
+
+  - The variance explained by each principal component in PCA.<!--D--> 
+--
+
+  - Give some indication of the Goodness of fit for MDS.<!--D--> 
+--
+
+- In CA the eigenvalues tell us the proportion of inertia explained by the solution.<!--D--> 
+--
+
+- A 2D solution is usually used for visualisation.<!--D-->   
+--
+
+- In the breakfast example the visualisation explains 73.6% of the inertia. 
+
+---
+class:inverse, middle, center
+
+# Matrix decompositions
+
+---
+
+# Matrix decompositions
+
+- Wherever dimension reduction is used there is usually a matrix decomposition hidden somewhere.
+--
+
+- In this case, the matrix that is decomposed is related to the cross tab.
+--
+
+- In particular consider the values
+
+$$m_{ij}=\frac{o_{ij}-e_{ij}}{\sqrt{e_{ij}}}$$
+
+---
+
+# What about CA?
+
+- Now consider a matrix ${\mathbf M}$ with $m_{ij}$ in the $i^{th}$ row and $j^{th}$ column.<!--D-->
+--
+
+- Let the SVD of this matrix be
+$${\mathbf M}={\mathbf U}{\mathbf D}{\mathbf V}'$$<!--D-->
+--
+
+- We will consider<!--D-->
+--
+
+  + Post-multiplying by ${\mathbf V}$
+  + Pre-multiplying by ${\mathbf U}'$
+
+---
+
+# Post-multiplying by ${\mathbf V}$
+
+- This gives ${\mathbf U}{\mathbf D}{\mathbf V}'{\mathbf V}={\mathbf U}{\mathbf D}$<!--D-->
+--
+
+- We get a *factor score* for each row category that is a linear combination of all column categories.<!--D-->
+--
+
+- These are a bit like principal components for the row categories.
+
+---
+
+# Pre-multiplying by ${\mathbf U}'$
+
+- This gives ${\mathbf U}'{\mathbf U}{\mathbf D}{\mathbf V}'={\mathbf D}{\mathbf V}'$<!--D-->
+--
+
+- We get a *factor score* for each column category that is a linear combination of all row categories.
+--
+
+- These are a bit like principal components for the column categories.
+
+---
+
+# On the same plot
+
+- All the information can be summarised in a single plot using the biplot<!--D-->
+--
+
+- For CA the symmetric normalisation is often used.<!--D-->
+--
+
+- This means we plot the first two columns of ${\mathbf U}{\mathbf D}^{1/2}$ and ${\mathbf V}{\mathbf D}^{1/2}$<!--D-->
+--
+
+- This way we do not prioritise a more accurate representation neither for rows nor for columns.
+
+---
+class: inverse, middle center
+# Application
+---
+
+# Example: Hotel Reviews 
+
+- For an interesting example related to marketing consider hotel reviews.<!--D--> 
+--
+
+- Many websites provide user reviews.<!--D--> 
+--
+
+- The words in each review can be scraped from the web<!--D--> 
+--
+
+- In the following example eight hotels in Melbourne were considered<!--D--> 
+--
+
+  - Four that were highly rated: Crown Towers, Adelphi, Larwill and QT<!--D--> 
+--
+
+  - Four that were not highly rated: Mercure, FlagstaffCity, Citiclub, Hotel Sophia 
+
+---
+
+# Example: Hotel Reviews 
+
+- For each hotel, 100 reviews were scraped.<!--D--> 
+--
+
+- So called *stop words* ('the', 'a', 'is') were removed as were the names of the hotels.<!--D--> 
+--
+
+- The 20 most frequent words used for each hotel.<!--D--> 
+--
+
+- Combining these lists for 8 hotels led to 63 words (some words appear on multiple top 20 lists) 
+---
+
+# Example: Hotel Reviews 
+
+- Jaccard similarity could be used to do MDS<!--D--> 
+--
+
+- However there are two interesting things that will not be captured by such an analysis<!--D--> 
+--
+
+  + The frequency with which words appear is important.<!--D--> 
+--
+
+  + The association between the hotels and words.
+  
+---
+
+# Example: Hotel Reviews 
+
+- On Moodle you will find a cross tab featuring the frequency with which each word appeared on each review 
+ ```{r ,echo=FALSE} 
+   load('hotels.RData') 
+   kable(hoteltable)%>%
+  kable_styling(bootstrap_options = c("striped","hover","condensed"))%>%
+  scroll_box(height="350px") 
+ ``` 
+---
+
+# Example: Hotel Reviews 
+
+The data can be loaded and correspondence analysis can be carried out using 
+
+ ```{r,echo=TRUE,eval=FALSE} 
+ load('hotels.RData') 
+ hoteltable%>%ca%>%plot 
+ ``` 
+
+---
+
+# Example: Hotel Reviews 
+
+ ```{r,echo=FALSE,eval=TRUE,fig.align='center',fig.width=10,fig.height=8} 
+ load('hotels.RData') 
+ par(cex=1.2) 
+ hoteltable%>%ca%>%plot 
+ ``` 
+
+---
+
+# Conclusions 
+
+- Towards the bottom left of the plot are words like *wonderful*, *amazing* and *fantastic*. <!--D-->
+--
+
+  + The more highly rated hotels *Crown Towers*, *QT* and *Adelphi* are closer towards the bottom left<!--D--> 
+--
+
+- Towards the top of the plot the words *noise* and *club* appear together with the *Citiclub* hotel<!--D--> 
+--
+
+  + This suggests that there may be complaints about noise from a night club. 
+
+---
+
+# Conclusions 
+
+- Towards the right of the plot the word *old* appears as does *Hotel Sophia* and *Flagstaff*<!--D--> 
+--
+
+  + These are lower rated hotels, the age of the hotels may be a problem.<!--D--> 
+--
+
+- Can you see anything else?
+---
+
+# Example: Hotel Reviews 
+
+ ```{r,echo=FALSE,eval=TRUE} 
+ hoteltable%>%ca%>%summary(row=FALSE,column=FALSE) 
+ ``` 
+
+---
+
+# Example: Hotel Reviews 
+
+```{r,testgl, webgl=TRUE, cache=TRUE,echo=FALSE,eval=TRUE,fig.align='center',warning=FALSE,messages=FALSE,fig.height=8,fig.width=12}
+library(rgl)
+knit_hooks$set(webgl = hook_webgl)
+invisible(open3d())
+load('hotels.RData')
+par(cex=1)
+hoteltable%>%ca%>%plot3d
+rglwidget()
+```
+
+---
+
+# Critique of the Analysis 
+
+- Together the first two dimensions only explain slightly more than half of the inertia (52.2%)<!--D--> 
+--
+
+  + This suggests a large proportion of dependence is not explained by the plot<!--D--> 
+--
+
+- Counting the frequency of words can be problematic.<!--D--> 
+--
+
+  + Consider *clean* v *not clean*.<!--D--> 
+--
+
+- Also some aspects of the analysis are quite crude.  Why use top 20 words? Why not 100?<!--D--> 
+--
+
+  + More words more difficult to visualise. 
+
+
+---
+
+# Summary 
+
+- Main things to know<!--D--> 
+--
+
+  + CA used for categorical data.<!--D--> 
+--
+
+  + Used to visualise two variable with many categories.<!--D--> 
+--
+
+  + Aim is to maximise proportion of explained inertia. <!--D-->
+--
+
+  + Know how can it be used in practice. 
