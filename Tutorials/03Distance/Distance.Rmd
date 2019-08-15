@@ -7,7 +7,7 @@ output: pdf_document
 ```{r, echo = FALSE}
 #rmarkdown::render('Distance.Rmd',output_file='Distance.pdf')
 #rmarkdown::render('Distance.Rmd',output_file='DistanceSols.pdf')
-sols<-FALSE
+sols<-TRUE
 title<-ifelse(sols, 'HDDA Tutorial: Distance
 : Solutions','HDDA Tutorial: Distance'
 )
@@ -57,3 +57,78 @@ Select from the following list the types of cuisines that you enjoy:
 6. How would you define a distance between you and the other person that takes into account height, age and food preference.
 
 `r if(sols) '*One idea may be to add the Manhattan (or Euclidean) Distance and Jaccard similarity together.  This will also satisfy the axioms of a distance (non-negativity, identity of indiscernables, symmetry, triangle inequality).  As an advanced exercise keen student can try to prove that if two distances respects the four axioms their sum will also respect the four axioms.*'`
+
+7. Load in the Beer Dataset.  Using numerical variables only, find the Euclidean distance between Pabst Extra Light and Augsberger.  Do NOT use the `dist` function and for now, do NOT standardise the data.
+
+```{r, echo=sols,eval=sols,message=F}
+library(tidyverse)
+Beer<-readRDS('Beer.rds')
+Beer%>%
+  mutate(beer=trimws(beer))%>% #The beers have many trailing spaces, trimws removes them
+  filter(beer == c('Pabst Extra Light'))%>%
+  select(cost,calories,alcohol)->PabstEL
+
+PabstEL
+
+Beer%>%
+  mutate(beer=trimws(beer))%>% 
+  filter(beer == c('Augsberger'))%>%
+  select(cost,calories,alcohol)->Augs
+Augs
+
+```
+
+`r if(sols) '*To calculate Euclidean distance we need to find the difference between the beers for each variable.  We then square these. Doing this manually.*'`
+
+```{r, echo=sols,eval=sols,message=T}
+dif<-PabstEL-Augs  
+dif
+dif2<-dif^2  
+dif2
+
+```
+
+`r if(sols) '*Notice that the difference in calories completely dominates the calculation.  To complete the answer we sum these squares and take the square root*'`
+
+```{r, echo=sols,eval=sols}
+sqrt(sum(dif2))
+```
+
+8. Repeat the previous question but this time standardise the data.
+
+```{r, echo=sols,eval=sols}
+Beer%>%
+  select(cost,calories,alcohol)%>%
+  summarise_all(mean)->means
+print(means)
+
+Beer%>%
+  select(cost,calories,alcohol)%>%
+  summarise_all(sd)->sds
+print(sds)
+
+```
+`r if(sols) '*The standard deviation is much larger for calories.  Standardise the variables by subtracting the mean and dividing by the standard deviation.*'`
+
+```{r, echo=sols,eval=sols}
+PabstEL_std<-(PabstEL-means)/sds
+
+Augs_std<-(Augs-means)/sds
+
+```
+
+`r if(sols) '*To calculate Euclidean distance we need to find the difference between the beers for each variable.  We then square these. Doing this manually.*'`
+
+```{r, echo=sols,eval=sols}
+dif<-PabstEL_std-Augs_std  
+print(dif)
+dif2<-dif^2  
+print(dif2)
+
+```
+
+`r if(sols) '*The difference in calories is still large but does not dominate the calculation as  previously. In fact the difference in alcohol is larger after standardisation.  To complete the answer we sum these squares and take the square root*'`
+
+```{r, echo=sols,eval=sols}
+sqrt(sum(dif2))
+```

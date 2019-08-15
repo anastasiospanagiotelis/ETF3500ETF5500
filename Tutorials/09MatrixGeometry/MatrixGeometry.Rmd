@@ -7,7 +7,7 @@ output: pdf_document
 ```{r, echo = FALSE}
 #rmarkdown::render('MatrixGeometry.Rmd',output_file='MatrixGeometry.pdf')
 #rmarkdown::render('MatrixGeometry.Rmd',output_file='MatrixGeometrySols.pdf')
-sols<-FALSE
+sols<-TRUE
 title<-ifelse(sols, 'HDDA Tutorial: Matrices and Factor Analysis
 : Solutions','HDDA Tutorial: Matrices and Factor Analysis'
 )

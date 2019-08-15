@@ -229,7 +229,7 @@ The clusters may represent hotels, supermarkets and cafes.
 - Our main focus will be on agglomerative hierarchical methods.<!--D-->
 --
 
-- Divisive agglomerative methods are very slow and we do not cover them at all.<!--D-->
+- Divisive hierarchical methods are very slow and we do not cover them at all.<!--D-->
 --
 
 - We consider one example of a non-hierarchical method known as the **k-means** algorithm.
@@ -1267,7 +1267,7 @@ $$\underset{{\mathbf C}}{\mbox{argmin}}\sum\limits_{h=1}^k S(\mathcal{C}_h)$$
 - We will now cover **Lloyd's algorithm** which provides good intuition into the k-means problem.
 --
 
-- By default, R implements the more sophisticated (and complicated **Hartigan Wong** algorithm).
+- By default, R implements the more sophisticated (and complicated) **Hartigan Wong** algorithm.
 
 ---
 
