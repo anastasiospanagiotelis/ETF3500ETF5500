@@ -1665,7 +1665,7 @@ kable(table(cl2,cl3),row.names = TRUE)
 ```{r,echo=TRUE,eval=FALSE}
 km2<-kmeans(Wholesale,2)
 kmcl2<-km2$cluster
-km3<-kmeans(Wholesale,2)
+km3<-kmeans(Wholesale,3)
 kmcl3<-km3$cluster
 table(kmcl2,kmcl3)
 ```
