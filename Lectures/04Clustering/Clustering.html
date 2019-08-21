@@ -309,21 +309,21 @@ After clustering we get the following cluster means.
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18511 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 27574 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 12407 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2252 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 35941 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6044 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6289 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6714 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1040 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3049 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18511 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27574 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12407 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2252 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
@@ -1572,7 +1572,7 @@ table(cl2,cl3)
 km2&lt;-kmeans(Wholesale,2)
 kmcl2&lt;-km2$cluster
 km3&lt;-kmeans(Wholesale,2)
-kmcl3&lt;-km2$cluster
+kmcl3&lt;-km3$cluster
 table(kmcl2,kmcl3)
 ```
 &lt;table&gt;
