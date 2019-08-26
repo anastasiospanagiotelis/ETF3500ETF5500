@@ -483,7 +483,7 @@ mdsout%&gt;%
 - Note that the `\(\delta_{ij}\)` are high dimensional distances that come from the true data.
 --
 
-- The `\(d_{ij}\)` are high dimensional distances that come from the solution.
+- The `\(d_{ij}\)` are low dimensional distances that come from the solution.
 
 ---
 
@@ -666,10 +666,7 @@ mdsout%&gt;%
 
 #Rotating
 
-- Classical MDS rotates the points in high-dimensional space to get a 2D solution.
---
-
-- We can further rotate the points within 2 dimensions.&lt;!--D--&gt;
+- Once a solution is available, we rotate the points within 2 dimensions.&lt;!--D--&gt;
 --
 
   - The 2D rotation does not change any of the distances.&lt;!--D--&gt;
@@ -749,6 +746,9 @@ str(mdsout$GOF)
   + Classical MDS may not minimise Strain.&lt;!--D--&gt;
 --
 
+  + It minimises a slightly different function of the distances.
+--
+
   + Two fit measures will differ.&lt;!--D--&gt;
 --
 
@@ -770,6 +770,14 @@ str(dozout$eig)
 ```
 
 ```r
+str(dozout$eig[6:8])
+```
+
+```
+##  num [1:3] -311786 -1083294 -2179888
+```
+
+```r
 str(dozout$GOF)
 ```
 
@@ -787,7 +795,7 @@ str(dozout$GOF)
   + This occurs since road distances are not Euclidean&lt;!--D--&gt;
 --
 
-  + This also implies that classical MDS may not minimise strain.&lt;!--D--&gt;
+  + This also implies that classical MDS does not minimise strain.&lt;!--D--&gt;
 --
 
 - Both goodness of fit measures are quite high.&lt;!--D--&gt;
@@ -979,7 +987,7 @@ class: inverse, center, middle
 # Example
 
 - Consider the case where points are in 2D space and the aim is to summarise them in 1D space (across a line).
-- This specific problem is called *serialisation*.
+- The specific problem of doing multidimensional scaling where the lower dimension is 1 is called *seriation*.
 - It provides a ranking of the observations.
 --
 
@@ -993,7 +1001,7 @@ class: inverse, center, middle
 
 ---
 
-# Rotate
+# Rotate (Classical Solution)
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -1006,7 +1014,7 @@ class: inverse, center, middle
 
 ---
 
-# Rug plot
+# Rug plot (classical solution)
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -1022,7 +1030,7 @@ class: inverse, center, middle
 # Discussion
 
 - Classical MDS cannot account for non-linearity.  
-- The dark blue and yellow plots are represented as close to one another.
+- The dark blue and yellow points are represented as close to one another.
 - Sammon does account for non-linearity.
 - The blue and yellow points are represented as far apart.
 - Although they are not so far apart in the original space, these observations are downweighted relative to the local structure.
@@ -1056,7 +1064,7 @@ class: inverse, center, middle
   - Sine function is not monotone
 --
 
-- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change.
+- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change if we transform the input distances.
 
 ---
 

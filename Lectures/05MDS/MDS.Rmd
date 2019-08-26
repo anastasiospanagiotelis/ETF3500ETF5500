@@ -329,7 +329,7 @@ $$\mbox{Strain}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}(\delta^2_{ij}-d^2_{ij})
 - Note that the $\delta_{ij}$ are high dimensional distances that come from the true data.
 --
 
-- The $d_{ij}$ are high dimensional distances that come from the solution.
+- The $d_{ij}$ are low dimensional distances that come from the solution.
 
 ---
 
@@ -492,10 +492,7 @@ ggmap(oz)+geom_text(data=ozmdsout,aes(x=lng, y=lat,label=city),size=8,nudge_y = 
 
 #Rotating
 
-- Classical MDS rotates the points in high-dimensional space to get a 2D solution.
---
-
-- We can further rotate the points within 2 dimensions.<!--D-->
+- Once a solution is available, we rotate the points within 2 dimensions.<!--D-->
 --
 
   - The 2D rotation does not change any of the distances.<!--D-->
@@ -570,6 +567,9 @@ str(mdsout$GOF)
   + Classical MDS may not minimise Strain.<!--D-->
 --
 
+  + It minimises a slightly different function of the distances.
+--
+
   + Two fit measures will differ.<!--D-->
 --
 
@@ -583,6 +583,7 @@ str(mdsout$GOF)
 ```{r, roadeig,echo=TRUE}
 cmdscale(doz,eig=TRUE)->dozout
 str(dozout$eig)
+str(dozout$eig[6:8])
 str(dozout$GOF)
 ```
 
@@ -596,7 +597,7 @@ str(dozout$GOF)
   + This occurs since road distances are not Euclidean<!--D-->
 --
 
-  + This also implies that classical MDS may not minimise strain.<!--D-->
+  + This also implies that classical MDS does not minimise strain.<!--D-->
 --
 
 - Both goodness of fit measures are quite high.<!--D-->
@@ -788,7 +789,7 @@ $$\mbox{Stress}=\sum\limits_{i=1}^{n-1}\sum\limits_{j>i}\frac{(\delta_{ij}-d_{ij
 # Example
 
 - Consider the case where points are in 2D space and the aim is to summarise them in 1D space (across a line).
-- This specific problem is called *serialisation*.
+- The specific problem of doing multidimensional scaling where the lower dimension is 1 is called *seriation*.
 - It provides a ranking of the observations.
 --
 
@@ -829,7 +830,7 @@ ggplot(df,aes(x=x,y=y,col=rank))+geom_point()+scale_color_viridis_c()
 
 ---
 
-# Rotate
+# Rotate (Classical Solution)
 
 ```{r,echo=FALSE}
 ggplot(df,aes(x=xrot,y=yrot,col=rank))+geom_point()+scale_color_viridis_c()
@@ -846,7 +847,7 @@ ggplot(df,aes(x=classic,y=0,col=rank))+geom_point()+scale_color_viridis_c()
 
 ---
 
-# Rug plot
+# Rug plot (classical solution)
 
 ```{r,echo=FALSE}
 ggplot(df,aes(x=classic,col=rank))+geom_rug()+scale_color_viridis_c()
@@ -867,7 +868,7 @@ ggplot(df,aes(x=sammon,col=rank))+geom_rug()+scale_color_viridis_c()
 # Discussion
 
 - Classical MDS cannot account for non-linearity.  
-- The dark blue and yellow plots are represented as close to one another.
+- The dark blue and yellow points are represented as close to one another.
 - Sammon does account for non-linearity.
 - The blue and yellow points are represented as far apart.
 - Although they are not so far apart in the original space, these observations are downweighted relative to the local structure.
@@ -901,7 +902,7 @@ ggplot(df,aes(x=sammon,col=rank))+geom_rug()+scale_color_viridis_c()
   - Sine function is not monotone
 --
 
-- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change.
+- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change if we transform the input distances.
 
 ---
 
