@@ -825,7 +825,15 @@ df<-tibble(rank=xg,
            sammon=smds$points,
            xrot=pca$x[,1],
            yrot=pca$x[,2])
-ggplot(df,aes(x=x,y=y,col=rank))+geom_point()+scale_color_viridis_c()
+ggplot(df,aes(x=x,y=y))+geom_point()+coord_fixed()
+```
+
+---
+
+# Original Data
+
+```{r,echo=FALSE}
+ggplot(df,aes(x=x,y=y,col=rank))+geom_point()+scale_color_viridis_c()+coord_fixed()
 ```
 
 ---
@@ -833,7 +841,7 @@ ggplot(df,aes(x=x,y=y,col=rank))+geom_point()+scale_color_viridis_c()
 # Rotate (Classical Solution)
 
 ```{r,echo=FALSE}
-ggplot(df,aes(x=xrot,y=yrot,col=rank))+geom_point()+scale_color_viridis_c()
+ggplot(df,aes(x=xrot,y=yrot,col=rank))+geom_point()+scale_color_viridis_c()+coord_fixed()
 ```
 
 ---
@@ -902,7 +910,7 @@ ggplot(df,aes(x=sammon,col=rank))+geom_rug()+scale_color_viridis_c()
   - Sine function is not monotone
 --
 
-- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change if we transform the input distances.
+- By *invariant* we mean that the solution provided by Kruskal's does not change if we transform the input distances.
 
 ---
 
@@ -922,7 +930,7 @@ isoMDS(d)->kBeer
 kBeer$points%>%
   as_tibble()%>% 
   ggplot(aes(x=V1,y=V2))+
-  geom_text(size=10)
+  geom_point(size=10)
 ```
 
 ---

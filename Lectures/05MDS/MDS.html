@@ -1001,29 +1001,35 @@ class: inverse, center, middle
 
 ---
 
-# Rotate (Classical Solution)
+# Original Data
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Keep 1 Dimension
+# Rotate (Classical Solution)
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
-
 ---
 
-# Rug plot (classical solution)
+# Keep 1 Dimension
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
-# Sammon Mapping
+# Rug plot (classical solution)
 
 &lt;img src="MDS_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Sammon Mapping
+
+&lt;img src="MDS_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1064,7 +1070,7 @@ class: inverse, center, middle
   - Sine function is not monotone
 --
 
-- By *invariant* we mean that the configuration provided by the Sammon mapping doesn't change if we transform the input distances.
+- By *invariant* we mean that the solution provided by Kruskal's does not change if we transform the input distances.
 
 ---
 
@@ -1092,14 +1098,14 @@ isoMDS(d)-&gt;kBeer
 kBeer$points%&gt;%
   as_tibble()%&gt;% 
   ggplot(aes(x=V1,y=V2))+
-  geom_text(size=10)
+  geom_point(size=10)
 ```
 
 ---
 
 # Make plot
 
-&lt;img src="MDS_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="MDS_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1122,7 +1128,7 @@ isoMDS(d^2)-&gt;kBeer2
 
 # Solution
 
-&lt;img src="MDS_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="MDS_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
