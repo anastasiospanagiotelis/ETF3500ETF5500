@@ -7,7 +7,7 @@ output: pdf_document
 ```{r, echo = FALSE}
 #rmarkdown::render('PCA.Rmd',output_file='PCA.pdf')
 #rmarkdown::render('PCA.Rmd',output_file='PCASols.pdf')
-sols<-FALSE
+sols<-TRUE
 title<-ifelse(sols, 'HDDA Tutorial: PCA
 : Solutions','HDDA Tutorial: PCA'
 )
@@ -89,9 +89,9 @@ All remaining quesions should be answered using a biplot
 
 ```{r, eval=sols,echo=sols,message=FALSE,fig.align='center',fig.width=10,fig.height=10}
 #Correlation biplot used to answer Q7, Q8 and Q9
-biplot(pcaout)
-#Distance biplot used to answer Q10, Q11
 biplot(pcaout,scale=0)
+#Distance biplot used to answer Q10, Q11
+biplot(pcaout)
 #Either biplot can be used to answer Q12 and Q13
 ```
 

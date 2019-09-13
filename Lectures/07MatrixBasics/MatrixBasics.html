@@ -63,7 +63,7 @@ scalar.
 $$
 \begin{pmatrix}1 &amp; 2 \\\3 &amp; 3 \\\4 &amp; 5 \end{pmatrix}+\begin{pmatrix}6 &amp; 2 \\\4 &amp; 2 \\\5 &amp; 6 \end{pmatrix}=\begin{pmatrix}7 &amp; 4 \\\7 &amp; 5 \\\9 &amp; 11 \end{pmatrix}
 $$
-- Only matrices with the same dimesions can be added together
+- Only matrices with the same dimensions can be added together
 
 ---
 
@@ -96,7 +96,7 @@ class: inverse, middle, center
 
 # Matrix multiplication
 
-- A more confusion operation is matrix multiplication.
+- A more confusing operation is matrix multiplication.
 --
 
 - It does NOT involve simply multiplying corresponding elements.
@@ -266,10 +266,14 @@ When multiplying matrices check two things
 # Be careful!
 
 - Not all matrices can be multplied!
+--
+
 - Often two matrices can be added but NOT multiplied.
   - Consider the very first example of addition in these slides.
-- Sometimes `\(\mathbf{X}\mathbf{Y}\)` is possible but `\(\mathbf{Y}\mathbf{X}\)`.
-- Even when both `\(\mathbf{X}\mathbf{Y}\)` and `\(\mathbf{Y}\mathbf{X}\)` are both conformable they may still not be equal, i.e `\(\mathbf{X}\mathbf{Y}=\mathbf{Y}\mathbf{X}\)`.
+- Sometimes `\(\mathbf{X}\mathbf{Y}\)` is possible but not `\(\mathbf{Y}\mathbf{X}\)`.
+--
+
+- Even when both `\(\mathbf{X}\mathbf{Y}\)` and `\(\mathbf{Y}\mathbf{X}\)` are both conformable they may still not be equal, i.e `\(\mathbf{X}\mathbf{Y}\neq\mathbf{Y}\mathbf{X}\)`.
 
 ---
 class: inverse, middle centre
@@ -344,7 +348,7 @@ and
 - Since `\(\mathbf{y}\)` is a `\(2\times 1\)` matrix `\(\mathbf{y}\mathbf{y}'\)` will be a `\(2\times 1\)` vector multiplied by a `\(1\times 2\)` vector.
 --
 
-- This is a `\(2\times2\)` matrix?
+- This is a `\(2\times2\)` matrix.
 --
 
 - What is in this `\(2\times2\)`?
@@ -385,7 +389,7 @@ class: inverse, middle, center
 
 - We can add and multiply matrices.  Can we divide them?
 - Strictly speaking we cannot.
-- However it is possible to multiply be a *matrix inverse*.
+- However it is possible to multiply bu a *matrix inverse*.
 - What is a *matrix inverse*?
 
 ---
@@ -393,9 +397,15 @@ class: inverse, middle, center
 # Inverses for scalars
 
 - In scalar algebra dividing `\(a\)` by `\(b\)` is the same as multiplying `\(a\)` by `\(1/b\)`
+--
+
 - The inverse has the property that multiplying a number by its inverse yields an answer of 1.
+--
+
 - In scalar algebra this means `\(b\times 1/b=1\)`
-- What is the equivalent of 1 in matrix algebra.
+--
+
+- What is the equivalent of 1 in matrix algebra?
 
 ---
 
@@ -411,7 +421,7 @@ Multiplying any matrix by the identity matrix gives the *same* matrix.  I.e. `\(
 
 # Matrix Inverse
 
-- The matrix inverse of `\(\mathbf{X}\)` is denoted `\(\mathbf{X}^{-1}\)` is defined so that `$$\mathbf{X}^{-1}\mathbf{X}=\mathbf{XX}^{-1}=\mathbf{I}$$`
+- The matrix inverse of `\(\mathbf{X}\)` denoted `\(\mathbf{X}^{-1}\)` is defined so that `$$\mathbf{X}^{-1}\mathbf{X}=\mathbf{XX}^{-1}=\mathbf{I}$$`
 - This is only possible when `\(\mathbf{X}\)` is a *square* matrix
 - A *square* matrix has the same number of rows as columns.
 
@@ -425,7 +435,7 @@ Multiplying any matrix by the identity matrix gives the *same* matrix.  I.e. `\(
 $$
 \mathbf{R}^{-1}=\mathbf{R}'
 $$
-- Another way of stating this is the `\(\mathbf{R}'\mathbf{R}=\mathbf{I}\)`
+- Another way of stating this is that `\(\mathbf{R}'\mathbf{R}=\mathbf{I}\)`
 - The reason we call this a rotation will be covered later on.
 
 ---

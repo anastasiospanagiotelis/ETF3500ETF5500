@@ -70,7 +70,7 @@ rm(list=ls())
 
 # Summarising many variables
 
-- Often we aim to combine many variables into a single index?<!--D-->
+- Often we aim to combine many variables into a single index<!--D-->
 --
 
   + In finance a credit score summarises all the information about the likelihood of bankruptcy for a company.<!--D-->
@@ -441,8 +441,11 @@ years.<!--D-->
 
 # Different units
 
-- If income is measured in \$ ’000s then it will vary from about 3
-to 6, If Life Expectancy in measured in days rather than years
+- If income is measured in $ ’000s then it will vary from about 3
+to 6
+--
+
+- If Life Expectancy in measured in days rather than years
 it will vary from about 24800 days to 26900 days<!--D-->
 --
 
@@ -513,8 +516,8 @@ Analysis in R. We will use `prcomp`<!--D-->
 ```{r prcomp, echo=TRUE}
 StateSE%>%
   select_if(is.numeric)%>% #Only use numeric variables
-  prcomp(scale. = TRUE)->pcaout #Do pca 
-summary(pcaout) #summary of information
+  prcomp(scale. = TRUE)->pca #Do pca 
+summary(pca) #summary of information
 ```  
 
 ---
@@ -674,3 +677,15 @@ The rule is to select all PCs with a variance greater than 1.
 --
 
 - For survey data, Scree plots and Kaiser's rule can be used to select the number of underlying factors.
+
+---
+
+# To do
+
+- These issues will be investigated in the topic on *Factor Modelling* which has some similarites (but also some important distinctions) when compared to PCA.
+--
+
+- Later on we will also look more deeply into PCA proving some important results.
+--
+
+- For now the primary objective is to understand what PCA does and how to implement it in R.
