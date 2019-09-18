@@ -7,7 +7,7 @@ output: pdf_document
 ```{r, echo = FALSE}
 #rmarkdown::render('MatrixBasics.Rmd',output_file='MatrixBasics.pdf')
 #rmarkdown::render('MatrixBasics.Rmd',output_file='MatrixBasicsSols.pdf')
-sols<-FALSE
+sols<-TRUE
 title<-ifelse(sols, 'HDDA Tutorial: MatrixBasics
 : Solutions','HDDA Tutorial: MatrixBasics'
 )
@@ -61,7 +61,7 @@ Repeat all above questions using R.  Useful functions are `c` for setting a vect
 ```{r, eval=sols,echo=sols,message=FALSE}
 #Vectors
 
-a<-c(2,1)
+a<-c(2,4)
 b<-c(1,0)
 c<-c(-2,1)
 
@@ -105,7 +105,7 @@ where $y_{ij}$ is the value of variable $j$ for observation $i$
 
 2. How many columns are there in $\mathbf{Y}$?
 
-`r if(sols) '*There are p rows, i.e. each variable is a column*'`
+`r if(sols) '*There are p columns, i.e. each variable is a column*'`
 
 3. What are the dimensions of $\mathbf{Y}$?
 

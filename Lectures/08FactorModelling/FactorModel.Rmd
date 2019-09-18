@@ -42,7 +42,7 @@ rm(list=ls())
 
 # Boston Housing
 
-- In an earlier tutorial we considered the Boston Housing data
+- In an earlier tutorial we considered the Boston Housing data.
 --
 
 - Each observation is a town (suburb) in the Boston metropolitan area.
@@ -113,12 +113,15 @@ detailed model.
 - The factor model is defined as
 
 $$y_{ij}=\lambda_{j1}f_{1i}+\lambda_{j2}f_{2i}+\ldots+\xi_{ij}$$
+--
 
 - Or in matrix form
 
 $$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{f}_i+\boldsymbol{\xi}_i$$
 
 - $y$ are observed data, $\Lambda$ / $\lambda$ are coefficients, $f$ are latent factors, $\xi$ are error terms.
+--
+
 - The intercept is left out for simplicity.
 ---
 
@@ -145,6 +148,8 @@ $$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{f}_i+\boldsymbol{\xi}_i$$
   - In a regression model there are $x$ on the right hand side that
 are *observed*.
   - In a factor model these are replaced with $f$ that are *unobserved*.
+--
+
 - How can we estimate this model?
   
 ---
@@ -153,8 +158,12 @@ are *observed*.
 
 - Each idiosyncratic error has its own variance.
   - These variances are called unique variance or uniquenesses
+--
+
 - The idiosyncratic errors are uncorrelated with each other.
   - This is a crucial assumption
+--
+
 - Together these imply that $\mbox{Var-Cov}(\boldsymbol{\xi})=\boldsymbol{\Psi}$ is diagonal.
 
 ---
@@ -163,10 +172,16 @@ are *observed*.
 
 - The factor and idiosyncratic errors are uncorrelated.
   - This is similar to regression
+--
+
 - Each factor has a variance of 1.
   - This is harmless since the factor is latent.
+--
+
 - The factors are uncorrelated with each other
   - We relax this assumption later on.
+--
+
 - These imply that $\mbox{Var-Cov}(\mathbf{f})=\mathbf{I}$.
 
 ---
@@ -244,7 +259,12 @@ class: inverse, middle, center
 
 #Using R
 
-- Many packages in R do factor analysis, we use `factanal` from the `stats` package
+- Many packages in R do factor analysis
+--
+
+- We use `factanal` from the `stats` package
+--
+
 - First step use the following code
 
 ```{r, eval=T,echo=T,message=FALSE}
@@ -301,10 +321,12 @@ kable(fa_df)%>%
 The plot is clearer if arrows are used
 
 ```{r, eval=F,echo=T,message=FALSE}
-ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
-  geom_text()+theme_void()+
-  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
-  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+ggplot(fa_df,aes(x=fl1,y=fl2,
+                 label=variable))+
+  geom_segment(aes(xend=fl1,
+                   yend=fl2,x=0,y=0),
+               arrow = arrow())+
+  geom_text(color='red',nudge_y = -0.05)
 ```
 
 ---
@@ -312,9 +334,7 @@ ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
 
 ```{r, eval=T,echo=F,message=FALSE}
 ggplot(fa_df,aes(x=fl1,y=fl2,label=variable))+
-  geom_text()+theme_void()+
-  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
-  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+  geom_segment(aes(xend=fl1,yend=fl2,x=0,y=0),arrow = arrow())+geom_text(color='red',nudge_y = -0.05)
 ```
 
 ---
@@ -325,7 +345,7 @@ It is difficult to interpret these Factors
 - Factor 1 seems to take everything into account except the Charles river dummy.
 --
 
-- Factor 2 takes everything into account except pupil-teacher ratio, crime and race.
+- Factor 2 takes everything into account except crime and race.
 --
 
 - It would be easier to interpret the factors if Factor 1 loaded onto a small set of variables and Factor 2 loaded onto a different small set of variables.
@@ -402,9 +422,8 @@ kable(fav_df)%>%
 
 ```{r, eval=T,echo=F,message=FALSE}
 ggplot(fav_df,aes(x=fl1,y=fl2,label=variable))+
-  geom_text()+theme_void()+
-  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
-  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+  geom_segment(aes(xend=fl1,yend=fl2,x=0,y=0),arrow = arrow())+geom_text(color='red',nudge_y = -0.05)
+
 ```
 
 ---
@@ -414,7 +433,11 @@ ggplot(fav_df,aes(x=fl1,y=fl2,label=variable))+
 - An orthogonal rotation did not work so instead of considering a matrix where $\mathbf{R}\mathbf{R}=\mathbf{I}$, consider a
 matrix $\mathbf{G}\mathbf{G}^{-1}=\mathbf{I}$
 $$\mathbf{y}_i=\boldsymbol{\Lambda}\mathbf{G}\mathbf{G}^{-1}\mathbf{f}_i+\boldsymbol{\xi}_i$$
+--
+
 - Now we have new loadings $\tilde{\boldsymbol{\Lambda}}=\boldsymbol{\Lambda}\mathbf{G}$ and new factors $\tilde{\mathbf{f}_i}=\mathbf{G}^{-1}\mathbf{f}_i$
+--
+
 - By setting `rotation='promax'` in `factanal`, an oblique 'rotation' can be carried out.
 
 ---
@@ -448,9 +471,7 @@ kable(fap_df)%>%
 
 ```{r, eval=T,echo=F,message=FALSE}
 ggplot(fap_df,aes(x=fl1,y=fl2,label=variable))+
-  geom_text()+theme_void()+
-  geom_segment(aes(x=0,y=-1,xend=0,yend=1),arrow = arrow())+
-  geom_segment(aes(x=-1,y=0,xend=1,yend=0),arrow = arrow())
+  geom_segment(aes(xend=fl1,yend=fl2,x=0,y=0),arrow = arrow())+geom_text(color='red',nudge_y = -0.05)
 ```
 
 ---
