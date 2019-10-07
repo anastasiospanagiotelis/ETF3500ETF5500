@@ -54,7 +54,7 @@ class: inverse, center, middle
 
 # Linear Combination
 
-- Let `\(c_i=w_1y_1+\ldots+w_py_p\)` 
+- Let `\(c_i=w_1y_{i1}+\ldots+w_py_{ip}\)` 
 --
 
 - In matrix/vector form `\(c_i=\mathbf{w}'\mathbf{y}_i\)` 
@@ -79,7 +79,7 @@ class: inverse, center, middle
 
 # A trick
 
-- Note that `\(w_1y_1+\ldots+w_py_p\)` has been written as  `\(\mathbf{w}'\mathbf{y}_i\)`, but...
+- Note that `\(w_1y_{i1}+\ldots+w_py_{ip}\)` has been written as  `\(\mathbf{w}'\mathbf{y}_i\)`, but...
 --
 
 - ... it can also be written as `\(\mathbf{y}'_i\mathbf{w}\)`.
@@ -231,7 +231,7 @@ This is a very famous problem known as the **eigenvalue** problem. Suppose `\(\t
 
 # Multiple solutions
 
-- In general there are multiple solutions to the eigenvalue problem.
+- In general there are multiple pairs of `\((\tilde{\lambda},\tilde{\mathbf{w}})\)` that solve the eigenvalue problem.
 --
 
 - Which one maximises the variance?
@@ -301,7 +301,7 @@ Since `\(\mathbf{S}\)` is a symmetric matrix it can decomposed as
 - The full vector of principal components for observation `\(i\)` is given by `\(\mathbf{c}_i=\mathbf{W}'\mathbf{y}_i\)`
 --
 
-- The eigenvectors are also orthogonal (A proof of why this is true can be provided for anyone who is curious).
+- The eigenvectors of a symmetric matrix are also orthogonal (A proof of why this is true can be provided for anyone who is curious).
 --
 
 - Orthogonality implies that the matrix of eigenvectors `\(\mathbf{W}\)` is a *rotation* matrix.
