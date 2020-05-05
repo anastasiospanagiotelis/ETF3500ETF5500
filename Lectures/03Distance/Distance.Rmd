@@ -408,9 +408,9 @@ class:inverse, middle, center
 - Suppose there are three customers with the following favourite artists<!--D-->
 --
 
-  + Customer A: Maroon 5, Ariana Grande, Ed Sheeran, Cardi B
-  + Customer B: Maroon 5, Ed Sheeran, BTS
-  + Customer C: Cardi B, Drake, Future<!--D-->
+  + Customer A: Trippie Redd, Blackbear, Lil Peep, XXXTentacion
+  + Customer B: Trippie Redd, Lil Peep, Juice Wrld
+  + Customer C: XXXTentacion, Ski Mask, YungBlud<!--D-->
 --
 
 - How do we measure which customers have similar taste and which have different taste?
@@ -430,9 +430,9 @@ $$J(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 - In our example<!--D-->
 --
 
-  + $A\cap B = \left\{\mbox{Maroon 5, Ed Sheeran}\right\}$ 
+  + $A\cap B = \left\{\mbox{Trippie Redd, Lil Peep}\right\}$ 
   + $|A\cap B|=2$
-  + $\begin{align}A\cup B =& \{\mbox{Maroon 5, Ariana Grande,}\\& \mbox{Ed Sheeran, Cardi B, BTS}\}\end{align}$ 
+  + $\begin{align}A\cup B =& \{\mbox{Trippie Redd, Lil Peep,}\\& \mbox{Blackbear, XXXTentacion, Juice Wrld}\}\end{align}$ 
   + $|A\cup B|=5$<!--D-->
 --
 

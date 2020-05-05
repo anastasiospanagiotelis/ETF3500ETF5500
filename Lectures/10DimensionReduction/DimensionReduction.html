@@ -173,12 +173,12 @@ Differentiating w.r.t. `\(\mathbf{w}\)` gives
 
 Differentiating w.r.t. `\(\lambda\)` gives
 
-`$$\frac{\partial\left(\mathbf{w}'\mathbf{S}\mathbf{w}-\lambda(\mathbf{w}'\mathbf{w}-1)\right)}{\partial \lambda}=\mathbf{w}'\mathbf{w}-1$$`
+`$$\frac{\partial\left(\mathbf{w}'\mathbf{S}\mathbf{w}-\lambda(\mathbf{w}'\mathbf{w}-1)\right)}{\partial \lambda}=-(\mathbf{w}'\mathbf{w}-1)$$`
 ---
 
 # How did we do that?
 
-The key result is that for any square matrix `\(\mathbf{A}\)` it holds that
+The key result is that for any square, symmetric matrix `\(\mathbf{A}\)` it holds that
 
 `$$\frac{\partial \mathbf{w}'\mathbf{A}\mathbf{w}}{\partial\mathbf{w}}=2\mathbf{A}\mathbf{w}$$`
 This is the matrix version of the rule that the derivative of `\(\partial{aw^2}/\partial w = 2aw\)`.  From this result, the matrix result can be derived (but this is tedious).
@@ -376,7 +376,7 @@ The matrices `\(\mathbf{U}\)` and `\(\mathbf{V}\)` are rotations
 
 - The singular values are ordered from largest to smallest allowing for an approximation
 
-`$$\begin{align}\mathbf{Y}&amp; =\sum\limits_{j=1}^p{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\\\ &amp;\approx  \sum\limits_{j=1}^r{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\end{align}$$`
+`$$\begin{align}\mathbf{Y}&amp; =\sum\limits_{j=1}^{\min(n,p)}{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\\\ &amp;\approx  \sum\limits_{j=1}^r{d_j}{\mathbf{u}_j}{\mathbf{v}_j'}\end{align}$$`
 
 for `\(r&lt;&lt;min(n,p)\)`
 

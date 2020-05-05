@@ -7,7 +7,7 @@ output: pdf_document
 ```{r, echo = FALSE}
 #rmarkdown::render('MatrixGeometry.Rmd',output_file='MatrixGeometry.pdf')
 #rmarkdown::render('MatrixGeometry.Rmd',output_file='MatrixGeometrySols.pdf')
-sols<-TRUE
+sols<-FALSE
 title<-ifelse(sols, 'HDDA Tutorial: Matrices and Factor Analysis
 : Solutions','HDDA Tutorial: Matrices and Factor Analysis'
 )
@@ -39,7 +39,7 @@ where $\mathbf{y}$ is a $p\times 1$ vector of observed variables, $\mathbf{f}$ i
 
 `r if(sols) '*The key here is to recognise that $\\boldsymbol{\\Lambda}$ is not a random variable so can be taken outside the expectation.  In general for data that is not mean zero, an intercept can be included.*'`
 
-3. Derive the expected variance covariance matrix of $\mathbf{y}$.  Hint, you can use a rule of matrices that $(\mathbf{A}\mathbf{B})'=\mathbf{B}'\mathbf{A}$
+3. Derive the expected variance covariance matrix of $\mathbf{y}$.  Hint, you can use a rule of matrices that $(\mathbf{A}\mathbf{B})'=\mathbf{B}'\mathbf{A}'$
 
 `r if(sols) '\\begin{align}E\\left[\\mathbf{y}\\mathbf{y}\' \\right]&=E\\left[(\\boldsymbol{\\Lambda}\\mathbf{f}+\\boldsymbol{\\xi})(\\boldsymbol{\\Lambda}\\mathbf{f}+\\boldsymbol{\\xi})\' \\right] \\\\ &=E\\left[(\\boldsymbol{\\Lambda}\\mathbf{f}+\\boldsymbol{\\xi})(\\boldsymbol{(\\Lambda}\\mathbf{f})\'+\\boldsymbol{\\xi}\') \\right] \\\\ &=E\\left[(\\boldsymbol{\\Lambda}\\mathbf{f}+\\boldsymbol{\\xi})(\\boldsymbol{\\mathbf{f}\'\\Lambda}\'+\\boldsymbol{\\xi}\') \\right] \\\\&=E\\left[\\boldsymbol{\\Lambda}\\mathbf{f}\\boldsymbol{\\mathbf{f}\'\\Lambda}\'+\\boldsymbol{\\Lambda}\\mathbf{f}\\boldsymbol{\\xi}\'+\\boldsymbol{\\xi}\\boldsymbol{\\mathbf{f}\'\\Lambda}\'+\\boldsymbol{\\xi}\\boldsymbol{\\xi}\' \\right] \\\\ &=E\\left[\\boldsymbol{\\Lambda}\\mathbf{f}\\boldsymbol{\\mathbf{f}\'\\Lambda}\'\\right]+E\\left[\\boldsymbol{\\Lambda}\\mathbf{f}\\boldsymbol{\\xi}\'\\right]+E\\left[\\boldsymbol{\\xi}\\boldsymbol{\\mathbf{f}\'\\Lambda}\'\\right]+E\\left[\\boldsymbol{\\xi}\\boldsymbol{\\xi}\' \\right]  \\\\ &=\\boldsymbol{\\Lambda}E\\left[\\mathbf{f}\\mathbf{f}\'\\right]\\boldsymbol{\\Lambda}\'+\\boldsymbol{\\Lambda}E\\left[\\mathbf{f}\\boldsymbol{\\xi}\'\\right]+E\\left[\\boldsymbol{\\xi}\\mathbf{f}\'\\right]\\boldsymbol{\\Lambda}\'+E\\left[\\boldsymbol{\\xi}\\boldsymbol{\\xi}\' \\right] \\end{align}'`
 
