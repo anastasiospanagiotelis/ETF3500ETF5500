@@ -1,6 +1,7 @@
 ---
 title: "Cluster Analysis"
-author: "High Dimensional Data Analysis"
+subtitle: "High Dimensional Data Analysis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 4"
 output:
   xaringan::moon_reader:

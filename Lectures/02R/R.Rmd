@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with R"
 subtitle: "High Dimensional Data Analysis"
-author: "Anastasios Panagiotelis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 2"
 output:
   xaringan::moon_reader:

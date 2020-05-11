@@ -18,6 +18,7 @@ forcats
 plotly
 htmlwidgets
 widgetframe
+animation
 scatterplot3d
 DT
 rgl
