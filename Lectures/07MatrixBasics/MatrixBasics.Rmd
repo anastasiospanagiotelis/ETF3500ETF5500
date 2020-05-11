@@ -1,7 +1,7 @@
 ---
 title: "Foundation of Matrices"
 subtitle: "High Dimensional Data Analysis"
-author: "Anastasios Panagiotelis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 7"
 output:
   xaringan::moon_reader:

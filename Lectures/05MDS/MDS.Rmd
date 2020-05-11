@@ -1,7 +1,7 @@
 ---
 title: "Multidimensional Scaling"
 subtitle: "High Dimensional Data Analysis"
-author: "Anastasios Panagiotelis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 5"
 output:
   xaringan::moon_reader:
@@ -410,7 +410,6 @@ kable(as.matrix(doz))%>% kable_styling(bootstrap_options = c("striped","hover","
 
 
 ```{r ozmap,eval=TRUE,cache=TRUE, echo=FALSE,message=FALSE, warning=FALSE}
-
 oz<-get_map(location=c(134,-23.5),zoom=4,maptype = 'watercolor')
 coords<-data_frame(city=c("Sydney",
                   "Melbourne",

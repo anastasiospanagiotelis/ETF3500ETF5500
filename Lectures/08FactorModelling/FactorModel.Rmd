@@ -1,7 +1,7 @@
 ---
 title: "Factor Models"
 subtitle: "High Dimensional Data Analysis"
-author: "Anastasios Panagiotelis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 8"
 output:
   xaringan::moon_reader:

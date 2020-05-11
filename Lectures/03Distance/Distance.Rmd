@@ -1,7 +1,7 @@
 ---
 title: "Distance"
 subtitle: "High Dimensional Data Analysis"
-author: "Anastasios Panagiotelis"
+author: "Anastasios Panagiotelis & Ruben Loaiza-Maya"
 date: "Lecture 3"
 output:
   xaringan::moon_reader:
