@@ -588,6 +588,33 @@ dev.off()
 
 ---
 
+# Using R Markdown
+
+- If you want to avoid exporting graphics and then importing them into your document then [R Markdown](https://rmarkdown.rstudio.com/) is extremely useful.
+--
+
+- You can enclose code blocks within three tick marks and R Markdown does the rest.
+--
+
+- You can set `echo=TRUE` to present the code or `echo=FALSE` to hide it.
+
+---
+
+# Advantages of R markdown
+
+- Easy to **update** analysis.
+  + Consider that new data is obtained and all reports need to reflect the new data.
+--
+
+- Easy to **reproduce/audit** analyses.
+  + Suppose that some time after an analysis has been completed it is necessary to check what has gone wrong.
+--
+
+- Easy to **automate** analyses.
+  + Some tasks require the generation of reports that are tedious to do manually every time.
+
+---
+
 # Data Manipulation
 
 - There are several ways to manipulate data, but a particularly useful and easy package to use is called **dplyr**.
