@@ -18,7 +18,7 @@ output:
 
 class: inverse, center, middle
 
-# Housekeeping
+# A Data Story
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -42,18 +42,6 @@ require(ggrepel)
 ---
 
 
-# Welcome to HDDA!
-
-- Lecturer for the unit
-  - Anastasios Panagiotelis
-- Use the moodle forum to ask questions
-    + Feel free to answer each others questions.
-    + I will also provide answers.
-- Email anastasios.panagiotelis@monash.edu only for issues that are personal.
-- For details on consultation see Moodle  
-
----
-
 # High-Dimensional Data?
 
 - First what do we mean by *High Dimensional*?
@@ -64,11 +52,6 @@ require(ggrepel)
 --
 
 - The term, high-dimensional also relates thinking about and visualising data as points in space.
-
----
-class: inverse, middle, center
-
-# A Data Story
 
 ---
 
@@ -421,86 +404,4 @@ cadf%>%
 --
 
 - All of these types of data can be analysed using methods covered in the unit.
-
----
-  
-# What the unit involves
-
-- The focus is on learning the methods and applying them to real business problems.
---
-
-- To truly understand the methods requires us to learn about two things that students tend to be afraid of:
-  - Programming
-  - Maths
-- This unit has plenty of both!
-
----
-
-# Why programming is easy
-
-- Programming in this unit uses the *R language*
---
-
-- You will be given lots of support in both lectures and tutorials
---
-
-- Scripts will be provided on Moodle
---
-
-- The best way to learn R is to: 
-  - Practice 
-  - Make mistakes 
-  - Use the Internet!
-- In previous years students have found learning R extremely useful.
-
----
-
-# Why math is easy
-
-- People who hate math tend to hate memorising formulas
---
-
-- So do I...
---
-
-- The emphasis in this unit is 
- - Good intuition 
- - Recognising patterns 
- - Using your imagination.
-- Most of the math we cover has a *geometric* interpretation which is great for visual learners.
-
----
-
-# How the unit is delivered
-
-- There is no textbook.  The lecture notes and tutorials make up the content of the unit.
---
-
-- Lectures are recorded.
---
-
-- However, you will be asked to work in the middle of lectures while I walk around answering questions.
---
-
-- Install R on laptops and use in class.
---
-
-- Forget to bring a laptop? Share with a friend.
---
-
-- Tutorials will be a mix of reinforcing concepts from the lecture and using R.
-
----
-
-# How to succeed in this unit
-
-- If your only motivation is to pass the unit
-  - Follow lectures and attend tutorials.
-  - Submit assignments on time.
-  - Use common sense.
-- If your motivation is to get a high distinction
-  - Do all the above.
-  - Attempt the practice questions between lectures and tutorials.
-  - Try to teach yourselves how to do things in R. Treat it like a puzzle.
-  - Understand matrix algebra.
 

@@ -408,9 +408,9 @@ class:inverse, middle, center
 - Suppose there are three customers with the following favourite artists<!--D-->
 --
 
-  + Customer A: Trippie Redd, Blackbear, Lil Peep, XXXTentacion
-  + Customer B: Trippie Redd, Lil Peep, Juice Wrld
-  + Customer C: XXXTentacion, Ski Mask, YungBlud<!--D-->
+  + Customer A: Post Malone, Drake, Lil Peep, Billie Eilish
+  + Customer B: Post Malone, Lil Peep, Juice Wrld
+  + Customer C: Billie Eilish, Ed Sheeran, Ariana Grande<!--D-->
 --
 
 - How do we measure which customers have similar taste and which have different taste?
@@ -430,9 +430,9 @@ $$J(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 - In our example<!--D-->
 --
 
-  + $A\cap B = \left\{\mbox{Trippie Redd, Lil Peep}\right\}$ 
+  + $A\cap B = \left\{\mbox{Post Malone, Lil Peep}\right\}$ 
   + $|A\cap B|=2$
-  + $\begin{align}A\cup B =& \{\mbox{Trippie Redd, Lil Peep,}\\& \mbox{Blackbear, XXXTentacion, Juice Wrld}\}\end{align}$ 
+  + $\begin{align}A\cup B =& \{\mbox{Post Malone, Lil Peep,}\\& \mbox{Drake, Billie Eilish, Juice Wrld}\}\end{align}$ 
   + $|A\cup B|=5$<!--D-->
 --
 
@@ -450,6 +450,53 @@ $$J(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
 --
 
 - The usual distance measures such as Euclidean or Manhattan distance can then be used.
+
+---
+
+# Collaborative Filtering
+
+```{r}
+knitr::include_graphics('CollaborativeFiltering.jpeg')
+```
+
+Figure by Mohamed Ben Ellefi
+
+---
+
+# Recommender Systems
+
+- Famous recommender systems are used by Amazon, Netflix, Alibaba amongst others.
+- These systems are usually a hybrid of 
+  - Collaborative Filtering
+  - Content-based Filtering
+- The method we discussed is more specifically called memory-based collaborative filtering.
+
+---
+
+# Axioms of Distance
+
+- Care should be taken when using the word distance.
+- In formal mathematics a distance is a function with two inputs that has to satisfy four properties.
+- These four properties are called *axioms*.
+- The distance measures that we have discussed satisfy the axioms
+
+---
+
+# Axioms of Distance
+
+1. Non-negative: $d(x,y)\ge 0$
+  - There cannot be negative distance.
+2. Symmetry: $d(x,y)=d(y,x)$
+  - It cannot be a different distance from Melbourne to Brisbane that from Brisbane to Melbourne.
+
+---
+
+# Axioms of Distance
+
+3. Identity of indiscernables: if $d(x,y)=0$ then $x=y$ and vice versa
+  - The distance from Melbourne to some place is zero then that place is Melbourne.  Similarly the distance from Melbourne to itself is zero.
+4. Triangle inequality: $d(x,z)\leq d(x,y)+d(y,z)$ 
+  It cannot be closer to go from Melbourne to Brisbane via Sydney than it is to go from Melbourne to Brisbane directly.
 
 ---
 
@@ -478,30 +525,3 @@ $$J(A,B)=\frac{|A\cap B|}{|A\cup B|}$$
   + Find the first two tweets
   + Think of a way to compute a Jaccard distance between their tweets
 - Hint: Think of the words used in the tweet as a *set*
-
----
-
-# Axioms of Distance
-
-- Care should be taken when using the word distance.
-- In formal mathematics a distance is a function with two inputs that has to satisfy four properties.
-- These four properties are called *axioms*.
-- The distance measures that we have discussed satisfy the axioms
-
----
-
-# Axioms of Distance
-
-1. Non-negative: $d(x,y)\ge 0$
-  - There cannot be negative distance.
-2. Symmetry: $d(x,y)=d(y,x)$
-  - It cannot be a different distance from Melbourne to Brisbane that from Brisbane to Melbourne.
-
----
-
-# Axioms of Distance
-
-3. Identity of indiscernables: if $d(x,y)=0$ then $x=y$ and vice versa
-  - The distance from Melbourne to some place is zero then that place is Melbourne.  Similarly the distance from Melbourne to itself is zero.
-4. Triangle inequality: $d(x,z)\leq d(x,y)+d(y,z)$ 
-  It cannot be closer to go from Melbourne to Brisbane via Sydney than it is to go from Melbourne to Brisbane directly.
