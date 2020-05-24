@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="" xml:lang="">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Cluster Analysis</title>
     <meta charset="utf-8" />
@@ -310,15 +310,6 @@ After clustering we get the following cluster means.
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 18511 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 27574 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 12407 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2252 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 35941 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6044 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6289 &lt;/td&gt;
@@ -327,13 +318,22 @@ After clustering we get the following cluster means.
    &lt;td style="text-align:right;"&gt; 3049 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 8253 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3825 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5280 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2573 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1773 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18511 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27574 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12407 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2252 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;&lt;/div&gt;
@@ -736,7 +736,7 @@ class: inverse, center, middle
 - In the previous example
 --
 
-  + The three cluster solution in not stable
+  + The three cluster solution is not stable
 --
 
   + The two and four cluster solutions are stable
@@ -948,7 +948,7 @@ mem&lt;-cutree(CarsCluster,2)
 
 # Robustness
 
-- In general adding a single observation should not dramtically change the analysis.
+- In general adding a single observation should not dramatically change the analysis.
 --
 
 - In this instance the new observation was not even an *outlier*.
@@ -1209,11 +1209,13 @@ class: middle, center, inverse
 - The following condition must be satisfied:
 --
 
-  + Each point in a must be closest to the mean of its **own** cluster mean.
+  + Each point in a must be closer to its **own** cluster centroid rather than the centroid of a different cluster.
 --
 
-  + A point cannot be closer to the mean of a different cluster.
-  
+- Knowing the partition into clusters determines the mean.
+--
+
+- Knowing the means determines the clusters.
 
 ---
 
@@ -1238,13 +1240,13 @@ class: middle, center, inverse
 - The bad news is that NP-hard problems cannot be easily solved by computers.
 --
 
-- The good news is that your credit card security also relies on an NP-hard problem.
+- The good news is that your credit card security also relies on the fact that computers cannot easily solve NP-hard problems.
 
 ---
 
 # Heuristic
 
-- Fortunately there are algorithms that either provide either a reasonably good solution to the k-mean.
+- Fortunately there are algorithms that provide a reasonably good solution to the k-means problem.
 --
 
 - In some cases they may provide the exact solution, although there are no guarantees.
@@ -1781,24 +1783,7 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();
-// adds .remark-code-has-line-highlighted class to <pre> parent elements
-// of code chunks containing highlighted lines with class .remark-code-line-highlighted
-(function(d) {
-  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
-  const preParents = [];
-  const findPreParent = function(line, p = 0) {
-    if (p > 1) return null; // traverse up no further than grandparent
-    const el = line.parentElement;
-    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
-  };
-
-  for (let line of hlines) {
-    let pre = findPreParent(line);
-    if (pre && !preParents.includes(pre)) preParents.push(pre);
-  }
-  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
-})(document);</script>
+})();</script>
 
 <script>
 (function() {

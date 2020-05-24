@@ -755,7 +755,7 @@ CarsCluster%>%rect.hclust(k=4)
 - In the previous example
 --
 
-  + The three cluster solution in not stable
+  + The three cluster solution is not stable
 --
 
   + The two and four cluster solutions are stable
@@ -892,7 +892,7 @@ plot(sls,hang=-1,xlab='',sub='')
 
 # Robustness
 
-- In general adding a single observation should not dramtically change the analysis.
+- In general adding a single observation should not dramatically change the analysis.
 --
 
 - In this instance the new observation was not even an *outlier*.
@@ -1224,11 +1224,13 @@ class: middle, center, inverse
 - The following condition must be satisfied:
 --
 
-  + Each point in a must be closest to the mean of its **own** cluster mean.
+  + Each point in a must be closer to its **own** cluster centroid rather than the centroid of a different cluster.
 --
 
-  + A point cannot be closer to the mean of a different cluster.
-  
+- Knowing the partition into clusters determines the mean.
+--
+
+- Knowing the means determines the clusters.
 
 ---
 
@@ -1253,13 +1255,13 @@ $$\underset{{\mathbf C}}{\mbox{argmin}}\sum\limits_{h=1}^k S(\mathcal{C}_h)$$
 - The bad news is that NP-hard problems cannot be easily solved by computers.
 --
 
-- The good news is that your credit card security also relies on an NP-hard problem.
+- The good news is that your credit card security also relies on the fact that computers cannot easily solve NP-hard problems.
 
 ---
 
 # Heuristic
 
-- Fortunately there are algorithms that either provide either a reasonably good solution to the k-mean.
+- Fortunately there are algorithms that provide a reasonably good solution to the k-means problem.
 --
 
 - In some cases they may provide the exact solution, although there are no guarantees.
