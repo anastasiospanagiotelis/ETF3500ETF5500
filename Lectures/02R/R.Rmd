@@ -142,10 +142,10 @@ str(b)
 - Text can also be stored in a variable.  
 - Try to store your own name in a variable called *name*.
 ```{r, echo=TRUE,eval=TRUE}
-name<-'Anastasios'
+name<-'Ruben'
 str(name)
 ```
-- Use apostrophes so that R does not look for a variable called `Anastasios`.
+- Use apostrophes so that R does not look for a variable called `Ruben`.
 
 ---
 
@@ -183,7 +183,7 @@ str(name)
   - `이름`
 - Invalid:
   - `1Όνομα`
-  - `.название`
+  - `.1название`
   - `名 字`
 
 ---
@@ -238,7 +238,7 @@ getwd()
 - To change the Working directory use `setwd` 
 
 ```{r,eval=FALSE,echo=TRUE}
-setwd("/home/anastasios/Documents")
+setwd("/home/Ruben/Documents")
 ```
 
 ---
