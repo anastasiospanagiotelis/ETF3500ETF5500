@@ -650,7 +650,7 @@ Another way to think of it is as multiplying the rows of ${\mathbf M}$ by the co
   
 # Matrix Multiplication in General
 
-```{r matmult,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls',fig.cap='Click to see',ffmpeg.format='ogg'}
+```{r matmult,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls',fig.cap='Click to see',ffmpeg.format='mp4'}
 g=10
 grid2<-rbind(rnorm(80),rnorm(80))
 cols<-rep('black',80)
@@ -911,7 +911,7 @@ $$\mathbf{R}=\begin{bmatrix}0.8 & -0.6\\0.6 & 0.8\end{bmatrix}$$
 
 #Rotation Matrix
 
-```{r matmultr,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='ogg'}
+```{r matmultr,  fig.align='center',echo=FALSE,fig.show='animate',interval=0.5,aniopts='controls', fig.cap='Click to see',ffmpeg.format='mp4'}
 g=10
 grid2<-rbind(rnorm(80),rnorm(80))
 cols<-rep('black',80)
